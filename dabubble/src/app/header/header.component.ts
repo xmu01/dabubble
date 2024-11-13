@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDialogModule} from '@angular/material/dialog';
-
+import { ViewEncapsulation } from '@angular/core'; // Um Angular Mat-Styles zu überschreiben
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -13,6 +13,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatExpansionModule, MatDialogModule, 
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  //encapsulation: ViewEncapsulation.None, //Erstmal draußen, da es Probleme im Header gemacht hat (kaputtes Flex)
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })

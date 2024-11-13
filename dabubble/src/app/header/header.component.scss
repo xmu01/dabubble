@@ -1,14 +1,30 @@
 header {
     display: flex;
     justify-content: space-between;
+    align-items: space-between;
+    /*margin: 23px 14px 23px 14px;*/
+    height: max-content;
 }
 
+.logo-section-header {
+    height: max-content;
+}
 
 .input-section-header {
-    display: flex;
+    /*display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center;*/
+    position:relative;
+    display:inline-block;
+    .i-class-img {
+        position: absolute;
+        right:25px;
+        top: 15px;
 
+        img:hover {
+            cursor: pointer;
+        }
+    }
         input {
             border: none;
             border-radius: 30px;
@@ -24,4 +40,19 @@ header {
 .profile-section-header {
     display: flex;
     align-items: center;
+    height: max-content;
+
+    h2 {
+        font-size: 35px;
+        margin-top: auto;
+        cursor: pointer;
+        margin-right: 20px;
+    }
+    .pfp-header {
+        cursor: pointer;
+        margin-right: 20px;
+    }
+    .arrow-down {
+        cursor: pointer;
+    }
 }
