@@ -1,7 +1,7 @@
 <mat-drawer-container class="container">
     <mat-drawer #drawer class="sidenav" mode="side" opened="true">
         <mat-card class="nav" appearance="raised">
-            <mat-card-content>
+            <mat-card-content class="card-content">
                 <mat-card-header class="sidenav-header">
                     <div class="header-container">
                         <div class="title"><img src="./../../assets/img/workspace_logo.png"
@@ -10,26 +10,36 @@
                     </div>
                 </mat-card-header>
 
-                <mat-accordion>
+                <mat-accordion class="channels">
                     <mat-expansion-panel class="panel" (opened)="panelOpenState = true" (closed)="panelOpenState = false"
                         [expanded]="true"> <!-- Panel ist standardmäßig geöffnet -->
                         <mat-expansion-panel-header class="custom-header">
                             <mat-panel-title class="panel-title">
-                                Self aware panel
+                                Channels
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <ul>
-                            <li>Test</li>
-                            <li>Test</li>
-                            <li>Test</li>
-                            <li>Test</li>
-                            <li>Test</li>
-                            <li>Test</li>
+                        <ul class="list">
+                            <li># Entwicklerteam</li>
+                            <li># Office</li>
                         </ul>
                     </mat-expansion-panel>
                 </mat-accordion>
 
-
+                <mat-accordion class="directmessages">
+                    <mat-expansion-panel class="panel" (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+                        [expanded]="true"> <!-- Panel ist standardmäßig geöffnet -->
+                        <mat-expansion-panel-header class="custom-header">
+                            <mat-panel-title class="panel-title">
+                                Direktnachrichten
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <ul class="list">
+                            <li>Frederick Beck</li>
+                            <li>Hans Wurst</li>
+                            <li>Karl Karlsen</li>
+                        </ul>
+                    </mat-expansion-panel>
+                </mat-accordion>
             </mat-card-content>
         </mat-card>
     </mat-drawer>
