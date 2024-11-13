@@ -1,1 +1,13 @@
-<p>sidenav works!</p>
+<mat-drawer-container class="container">
+    <mat-drawer #drawer class="sidenav" mode="side" opened="true">
+        <mat-card class="nav" appearance="raised">
+            <mat-card-content>Simple card</mat-card-content>
+        </mat-card>
+    </mat-drawer>
+</mat-drawer-container> 
+
+<div class="sidenav-content">
+    <button type="button" (click)="drawer.toggle()">
+        Workspace-Menü schließen <img src="./../../assets/img/hide_navigation.png" alt="">
+    </button>
+</div>
