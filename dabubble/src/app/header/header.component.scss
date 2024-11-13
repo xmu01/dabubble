@@ -1,0 +1,26 @@
+header {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.input-section-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    input {
+        border: none;
+        border-radius: 30px;
+        height: 50px;
+        width: 500px;
+        padding: 30px;
+    }
+}
+
+
+
+.profile-section-header {
+    display: flex;
+    align-items: center;
+}
