@@ -133,6 +133,7 @@
         align-items: center;
         gap: 16px;
         padding-top: 4px;
+        cursor: pointer;
     }
 
     .add-channel {
@@ -161,8 +162,8 @@
 
 .directmessages {
     display: flex;
-    height: 60%;
-    padding-bottom: 20px;
+    height: 55%;
+    padding-bottom: 30px;
 }
 
 .rotate {
