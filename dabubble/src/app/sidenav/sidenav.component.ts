@@ -14,4 +14,8 @@ import { MainContentComponent } from '../main-content/main-content.component';
 })
 export class SidenavComponent {
   panelOpenState = true;
+
+  changePanelOpenState() {
+    this.panelOpenState = !this.panelOpenState;
+  }
 }

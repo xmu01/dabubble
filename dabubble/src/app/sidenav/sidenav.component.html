@@ -50,7 +50,11 @@
 </mat-drawer-container>
 
 <div class="sidenav-content">
-    <button type="button" (click)="drawer.toggle()">
-        Workspace-Menü schließen <img src="./../../assets/img/hide_navigation.png" alt="">
+    <button type="button" (click)="drawer.toggle()" (click)="changePanelOpenState()">
+        @if(panelOpenState) {
+            Workspace-Menü schließen <img class="rotate" src="./../../assets/img/hide_navigation.png" alt="">
+        } @else {
+            Workspace-Menü öffnen <img src="./../../assets/img/hide_navigation.png" alt="">
+        }
     </button>
 </div>
