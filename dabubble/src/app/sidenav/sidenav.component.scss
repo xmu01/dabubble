@@ -1,12 +1,12 @@
 .container {
     width: 100%;
-    height: calc(100% - 100px);
+    height: 100%;
     background: #ECEEFE;
 
     .sidenav {
         width: 366px;
         height: 100%;
-        padding: 32px 0 32px 30px;
+        padding: 32px 0 0 30px;
         background: #ECEEFE;
         border: none;
 
@@ -213,6 +213,8 @@
 ::ng-deep .mat-expansion-panel-content {
     overflow-y: scroll !important;
     height: 100%;
+    scrollbar-width: thin; /* macht die Scrollbar schmaler */
+    scrollbar-color: #9747FF #fff;
 }
 
 /* Scrollbar-Leiste */
