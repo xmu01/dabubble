@@ -1,9 +1,24 @@
+* {
+    box-sizing: border-box;
+   
+}
+
+
 header {
     display: flex;
     justify-content: space-between;
     align-items: space-between;
     /*margin: 23px 14px 23px 14px;*/
     height: max-content;
+    font-family: Nunito;
+
+    
+
+
+
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 .logo-section-header {
@@ -26,6 +41,8 @@ header {
         }
     }
         input {
+            font-family: Nunito;
+            font-weight: 700;
             border: none;
             border-radius: 30px;
             height: 50px;
@@ -43,6 +60,8 @@ header {
     height: max-content;
 
     h2 {
+        font-family: Nunito;
+        font-weight: 700;
         font-size: 35px;
         margin-top: auto;
         cursor: pointer;
@@ -51,8 +70,32 @@ header {
     .pfp-header {
         cursor: pointer;
         margin-right: 20px;
+        position: relative;
     }
     .arrow-down {
         cursor: pointer;
     }
+
+    .user-picture-dot-online {
+        border-radius: 100%;
+        background-color: #92C83E;
+        position: absolute;
+        bottom: 5px;
+        right: 0px;
+        width: 14px;
+        height: 14px;
+        border: 2px solid #fff;
+    }
+    
+    .user-picture-dot-offline {
+        border-radius: 100%;
+        background-color: #686868;
+        position: absolute;
+        bottom: 5px;
+        right: 0px;
+        width: 14px;
+        height: 14px;
+        border: 2px solid #fff;
+    }
 }
+
