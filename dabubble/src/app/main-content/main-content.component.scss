@@ -54,6 +54,7 @@
     align-items: center;
     position: relative;
     justify-content: center;
+    margin: 32px 0;
 }
 
 .date-element::before,
@@ -67,7 +68,6 @@
 .date {
     border: 1px solid #ADB0D9;
     border-radius: 30px;
-    width: 189px;
     height: 35px;
     padding: 5px 15px 5px 15px;
     text-align: center;
@@ -110,6 +110,39 @@
     border-radius: 30px;
 }
 
-.members-count{
+.members-count {
     width: 40px;
+}
+
+.direct-message-input {
+    height: 145px;
+    padding: 20px;
+    gap: 40px;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+    margin: 32px;
+
+    input {
+        width: 100%;
+        border: none;
+        outline: none;
+    }
+}
+
+.send-message-icons {
+    display: flex;
+    gap: 5px;
+    border-radius: 20px;
+
+    mat-icon {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+        gap: 10px;
+        color: #686868;
+
+        &:first-child {
+            border-right: 1px solid #686868;
+        }
+    }
 }
