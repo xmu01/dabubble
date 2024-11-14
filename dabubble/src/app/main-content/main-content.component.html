@@ -62,14 +62,14 @@
       </p>
     </mat-card-content>
     <div class="direct-message-input">
-      <textarea rows="2" type="text" placeholder="Nachricht an #Entwicklerteam"></textarea>
+      <textarea [(ngModel)]="message" rows="2" type="text" placeholder="Nachricht an #Entwicklerteam"></textarea>
       <div class="message-icon-bar">
         <div class="send-message-icons">
           <mat-icon>add</mat-icon>
           <mat-icon>sentiment_satisfied</mat-icon>
           <mat-icon>alternate_email</mat-icon>
         </div>
-        <div class="send-button">
+        <div (click)="getMessage()" class="send-button">
           <mat-icon>send_fill</mat-icon>
         </div>
       </div>
