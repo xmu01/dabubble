@@ -13,7 +13,16 @@
             <span class="user-picture-dot-online"></span>
             <img class="pfp-header" src="./../../assets/img/pfp_header.png" alt="">
             
-            <mat-icon class="arrow-down" fontIcon="keyboard_arrow_down" ></mat-icon>
+            <button mat-button [matMenuTriggerFor]="menu"> 
+                <mat-icon class="arrow-down" fontIcon="keyboard_arrow_down" ></mat-icon>
+            </button>
+
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item>Profil</button>
+                <button mat-menu-item>Log out</button>
+              </mat-menu>
+
+            
     </div>
 
 </header>
