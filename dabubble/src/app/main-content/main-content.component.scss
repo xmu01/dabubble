@@ -20,6 +20,27 @@
     padding: 25px 45px 25px 45px;
     box-shadow: 0px 10px 10px -5px #00000014;
     background-color: transparent;
+    justify-content: space-between;
+    align-items: center;
+
+    .direct-message-title {
+        display: flex;
+        align-items: center;
+    }
+
+    .button-add-person {
+        background: #ECEEFE;
+    }
+
+    .button-add-person {
+        color: #000;
+
+        &:hover {
+            transform: scale(1.05);
+            color: #535AF1;
+            ;
+        }
+    }
 }
 
 .direct-message-content {
@@ -28,22 +49,22 @@
     background-color: #fff;
 }
 
-.line {
+.date-element {
     display: flex;
     align-items: center;
     position: relative;
     justify-content: center;
 }
 
-.line::before,
-.line::after {
+.date-element::before,
+.date-element::after {
     content: "";
     flex-grow: 1;
     height: 1px;
     background-color: #ADB0D9;
 }
 
-.centered-element {
+.date {
     border: 1px solid #ADB0D9;
     border-radius: 30px;
     width: 189px;
@@ -56,7 +77,39 @@
     line-height: 18.55px;
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
-display: flex;
-align-items: center;
-justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.members-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.members-images {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    font-family: Nunito;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 27.28px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.members-image {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    border: 2px solid #FFFFFF;
+    border-radius: 30px;
+}
+
+.members-count{
+    width: 40px;
 }

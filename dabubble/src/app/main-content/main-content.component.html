@@ -2,11 +2,25 @@
 
   <mat-card appearance="outlined" class="messages">
     <mat-card-header class="direct-message-header">
-      <mat-card-title>Shiba Inu</mat-card-title>
+      <mat-card-title class="direct-message-title"># Entwicklerteam <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
+      </mat-card-title>
+      <div class="members-container">
+        <div class="members-images">
+          <img class="members-image" style="right: -25px;" src="./../../assets/img/pfp_header.png" alt="">
+          <img class="members-image" style="right: -10px;" src="./../../assets/img/pfp_header.png" alt="">
+          <img class="members-image" style="right: 5px;" src="./../../assets/img/pfp_header.png" alt="">
+          <span class="members-count">3</span>
+        </div>
+        <!-- <img src="./../../assets/img/add_members_button.png" alt=""> -->
+        <!-- <mat-icon fontIcon="person_add"></mat-icon> -->
+        <button mat-mini-fab class="button-add-person">
+          <mat-icon>person_add</mat-icon>
+        </button>
+      </div>
     </mat-card-header>
     <mat-card-content class="direct-message-content">
-      <div class="line">
-        <span class="centered-element">Dienstag, 14 Januar</span>
+      <div class="date-element">
+        <span class="date">Dienstag, 14 Januar</span>
       </div>
       <p>
         The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
