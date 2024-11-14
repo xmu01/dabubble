@@ -4,11 +4,12 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonModule} from '@angular/material/button';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MainContentComponent } from '../main-content/main-content.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [MatCardModule, MatSidenavModule, MatButtonModule, MatExpansionModule, MainContentComponent],
+  imports: [MatCardModule, MatSidenavModule, MatButtonModule, MatExpansionModule, MainContentComponent, MatIconModule],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss'
 })

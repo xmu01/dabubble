@@ -101,11 +101,47 @@
 
 .panel-title {
     flex: 1;
+    font-family: Nunito;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 27.28px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
 }
 
 .list {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
     list-style-type: none;
+    font-family: Nunito;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24.55px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .add-channel {
+        font-family: Nunito;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+
+    }
 }
+
 .card-content {
     display: flex;
     flex-direction: column;

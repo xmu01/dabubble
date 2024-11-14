@@ -11,26 +11,27 @@
                 </mat-card-header>
 
                 <mat-accordion class="channels">
-                    <mat-expansion-panel class="panel" (opened)="panelOpenState = true" (closed)="panelOpenState = false"
-                        [expanded]="true"> <!-- Panel ist standardmäßig geöffnet -->
+                    <mat-expansion-panel class="panel" (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false" [expanded]="true"> <!-- Panel ist standardmäßig geöffnet -->
                         <mat-expansion-panel-header class="custom-header">
                             <mat-panel-title class="panel-title">
-                                Channels
+                                <mat-icon>workspaces_outline</mat-icon> Channels
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <ul class="list">
                             <li># Entwicklerteam</li>
                             <li># Office</li>
+                            <li class="add-channel"><mat-icon>add_circle_outline</mat-icon>Channel hinzufügen</li>
                         </ul>
                     </mat-expansion-panel>
                 </mat-accordion>
 
                 <mat-accordion class="directmessages">
-                    <mat-expansion-panel class="panel" (opened)="panelOpenState = true" (closed)="panelOpenState = false"
-                        [expanded]="true"> <!-- Panel ist standardmäßig geöffnet -->
+                    <mat-expansion-panel class="panel" (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false" [expanded]="true"> <!-- Panel ist standardmäßig geöffnet -->
                         <mat-expansion-panel-header class="custom-header">
                             <mat-panel-title class="panel-title">
-                                Direktnachrichten
+                                <mat-icon>account_circle_outline</mat-icon>Direktnachrichten
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <ul class="list">
@@ -52,9 +53,9 @@
 <div class="sidenav-content">
     <button type="button" (click)="drawer.toggle()" (click)="changePanelOpenState()">
         @if(panelOpenState) {
-            Workspace-Menü schließen <img class="rotate" src="./../../assets/img/hide_navigation.png" alt="">
+        Workspace-Menü schließen <img class="rotate" src="./../../assets/img/hide_navigation.png" alt="">
         } @else {
-            Workspace-Menü öffnen <img src="./../../assets/img/hide_navigation.png" alt="">
+        Workspace-Menü öffnen <img src="./../../assets/img/hide_navigation.png" alt="">
         }
     </button>
 </div>
