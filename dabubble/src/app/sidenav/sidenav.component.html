@@ -11,33 +11,74 @@
                 </mat-card-header>
 
                 <mat-accordion class="channels">
-                    <mat-expansion-panel class="panel" (opened)="panelOpenState = true"
-                        (closed)="panelOpenState = false" [expanded]="true"> <!-- Panel ist standardmäßig geöffnet -->
+                    <mat-expansion-panel class="panel" (opened)="channelsOpenState = true"
+                        (closed)="channelsOpenState = false" [expanded]="true">
                         <mat-expansion-panel-header class="custom-header">
                             <mat-panel-title class="panel-title">
                                 <mat-icon>workspaces_outline</mat-icon> Channels
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <ul class="list">
-                            <li># Entwicklerteam</li>
-                            <li># Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon>Entwicklerteam</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
                             <li class="add-channel"><mat-icon>add_circle_outline</mat-icon>Channel hinzufügen</li>
                         </ul>
                     </mat-expansion-panel>
                 </mat-accordion>
 
                 <mat-accordion class="directmessages">
-                    <mat-expansion-panel class="panel" (opened)="panelOpenState = true"
-                        (closed)="panelOpenState = false" [expanded]="true"> <!-- Panel ist standardmäßig geöffnet -->
+                    <mat-expansion-panel class="panel" (opened)="messagesOpenState = true"
+                        (closed)="messagesOpenState = false" [expanded]="true">
                         <mat-expansion-panel-header class="custom-header">
                             <mat-panel-title class="panel-title">
-                                <mat-icon>account_circle_outline</mat-icon>Direktnachrichten
+                                <mat-icon class="outline-icon">account_circle</mat-icon>Direktnachrichten
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <ul class="list">
-                            <li>Frederick Beck</li>
-                            <li>Hans Wurst</li>
-                            <li>Karl Karlsen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-online"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Frederick Beck</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-online"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Hans Wurst</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
+                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Last one</li>
+                          
                         </ul>
                     </mat-expansion-panel>
                 </mat-accordion>
@@ -51,8 +92,8 @@
 </mat-drawer-container>
 
 <div class="sidenav-content">
-    <button type="button" (click)="drawer.toggle()" (click)="changePanelOpenState()">
-        @if(panelOpenState) {
+    <button type="button" (click)="drawer.toggle()" (click)="changeMenuOpenState()">
+        @if(menuOpenState) {
         Workspace-Menü schließen <img class="rotate" src="./../../assets/img/hide_navigation.png" alt="">
         } @else {
         Workspace-Menü öffnen <img src="./../../assets/img/hide_navigation.png" alt="">

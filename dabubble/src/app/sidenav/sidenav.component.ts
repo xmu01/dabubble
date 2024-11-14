@@ -5,18 +5,21 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MainContentComponent } from '../main-content/main-content.component';
 import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [MatCardModule, MatSidenavModule, MatButtonModule, MatExpansionModule, MainContentComponent, MatIconModule],
+  imports: [CommonModule ,MatCardModule, MatSidenavModule, MatButtonModule, MatExpansionModule, MainContentComponent, MatIconModule],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss'
 })
 export class SidenavComponent {
-  panelOpenState = true;
+  channelsOpenState = true;
+  messagesOpenState = true;
+  menuOpenState = true;
 
-  changePanelOpenState() {
-    this.panelOpenState = !this.panelOpenState;
+  changeMenuOpenState() {
+    this.menuOpenState = !this.menuOpenState;
   }
 }

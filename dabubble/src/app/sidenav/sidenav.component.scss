@@ -90,16 +90,18 @@
 
 .panel {
     box-shadow: none !important;
+    width: 100%;
+    height: 100%;
 }
 
 ::ng-deep .custom-header .mat-expansion-indicator {
     order: -1;
-    /* Verschiebt das Pfeilsymbol auf die linke Seite */
     margin-right: 8px;
-    /* Optional: Abstand rechts */
 }
 
 .panel-title {
+    display: flex;
+    gap: 13px;
     flex: 1;
     font-family: Nunito;
     font-size: 20px;
@@ -108,26 +110,29 @@
     text-align: left;
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
-
+    padding-left: 16px;
 }
 
 .list {
     display: flex;
     flex-direction: column;
-    gap: 13px;
+    gap: 25px;
     list-style-type: none;
     font-family: Nunito;
     font-size: 18px;
-    font-weight: 700;
     line-height: 24.55px;
     text-align: left;
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
+    padding-left: 32px;
+    height: 100%;
+    padding-bottom: 64px;
 
     li {
         display: flex;
         align-items: center;
         gap: 16px;
+        padding-top: 4px;
     }
 
     .add-channel {
@@ -138,7 +143,6 @@
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
-
     }
 }
 
@@ -147,6 +151,7 @@
     flex-direction: column;
     gap: 32px;
     height: 100%;
+    overflow: hidden;
 }
 
 .channels {
@@ -156,9 +161,77 @@
 
 .directmessages {
     display: flex;
-    height: 70%;
+    height: 60%;
+    padding-bottom: 20px;
 }
 
 .rotate {
     transform: rotate(180deg);
+}
+
+.outline-icon {
+    color: transparent;
+    -webkit-text-stroke: 2px #000;
+}
+
+.tag {
+    transform: rotate(5deg);
+}
+
+.user-picture {
+    position: relative;
+
+    img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+.user-picture-dot-online {
+    border-radius: 100%;
+    background-color: #92C83E;
+    position: absolute;
+    bottom: 5px;
+    right: 0px;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #fff;
+}
+
+.user-picture-dot-offline {
+    border-radius: 100%;
+    background-color: #686868;
+    position: absolute;
+    bottom: 5px;
+    right: 0px;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #fff;
+}
+
+::ng-deep .mat-expansion-panel-content {
+    overflow-y: scroll !important;
+    height: 100%;
+}
+
+/* Scrollbar-Leiste */
+::ng-deep .mat-expansion-panel-content::-webkit-scrollbar {
+    width: 4px; /* Breite der Scrollleiste */
+}
+
+/* Hintergrund der Scrollbar-Leiste */
+::ng-deep .mat-expansion-panel-content::-webkit-scrollbar-track {
+    background: #fff; /* Hintergrundfarbe der Leiste */
+}
+
+/* Scrollbar-Griff */
+::ng-deep .mat-expansion-panel-content::-webkit-scrollbar-thumb {
+    background-color: #9747FF; /* Farbe des Griffs */
+    border-radius: 10px; /* Rundung des Griffs */
+    height: 1px;
+}
+
+/* Scrollbar-Griff beim Hover */
+::ng-deep .mat-expansion-panel-content::-webkit-scrollbar-thumb:hover {
+    background-color: #444DF2; /* Farbe des Griffs beim Hover */
 }
