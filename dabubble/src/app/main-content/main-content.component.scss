@@ -2,11 +2,12 @@
     display: flex;
     width: 100%;
     flex-direction: row;
+    padding: 32px;
+    height: 100%;
 }
 
 .messages {
     flex: 1;
-    margin: 32px;
     border-radius: 30px;
 }
 
