@@ -9,7 +9,7 @@ header {
     justify-content: space-between;
     align-items: space-between;
     /*margin: 23px 14px 23px 14px;*/
-    height: max-content;
+    min-height: max-content;
     font-family: Nunito;
 
     
@@ -100,5 +100,16 @@ header {
         height: 14px;
         border: 2px solid #fff;
     }
+
+    
 }
 
+::ng-deep .menu-mat-style {
+    border-top-left-radius: 20% !important;
+    border-bottom-left-radius: 20% !important;
+    border-bottom-right-radius: 20% !important;
+    border-top-right-radius: 0% !important;
+
+    font-family: Nunito;
+    font-weight: 700;
+}
