@@ -13,6 +13,7 @@
 }
 
 .thread {
+    display: none;
     width: 35%;
 }
 
@@ -52,7 +53,8 @@
     padding: 25px 45px 25px 45px;
     background-color: #fff;
     overflow-y: scroll;
-    scrollbar-width: thin; /* macht die Scrollbar schmaler */
+    scrollbar-width: thin;
+    /* macht die Scrollbar schmaler */
     scrollbar-color: #9747FF #fff;
 
     ::ng-deep .mat-expansion-panel-content {
@@ -175,7 +177,8 @@
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
         resize: none;
-        scrollbar-width: thin; /* macht die Scrollbar schmaler */
+        scrollbar-width: thin;
+        /* macht die Scrollbar schmaler */
         scrollbar-color: #9747FF #fff;
 
         /* Scrollbar-Leiste */
@@ -234,4 +237,135 @@
 .send-button {
     display: flex;
     align-items: center;
+}
+
+.date-elements {
+    display: flex;
+    flex-direction: column;
+
+    .messages {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+
+        .left {
+            justify-content: flex-start;
+            flex-direction: row;
+        }
+
+        .right {
+            flex-direction: row-reverse;
+        }
+
+        .message-container {
+            display: flex;
+            gap: 10px;
+
+            .message-left {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .message-right {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+            }
+
+            img {
+                width: 70px;
+                height: 70px;
+                border-radius: 40px;
+            }
+
+            .time {
+                font-family: Nunito;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 19.1px;
+                text-align: left;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+                color: #686868;
+            }
+
+            .name {
+                display: flex;
+                flex-direction: row;
+                gap: 20px;
+                align-items: center;
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 24.55px;
+                text-align: left;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+            }
+
+            .name-right {
+                display: flex;
+                flex-direction: row-reverse;
+                gap: 20px;
+                align-items: center;
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 24.55px;
+                text-align: left;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+            }
+
+            .reactions {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 20px;
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+                color: #535AF1;
+
+
+            }
+
+            .text-left {
+                padding: 15px;
+                gap: 8px;
+                border-radius: 0px 30px 30px 30px;
+                background: #ECEEFE;
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+                margin-right: 75px;
+                width: fit-content;
+            }
+
+            .text-right {
+                padding: 15px;
+                gap: 8px;
+                border-radius: 30px 0px 30px 30px;
+                background: #ECEEFE;
+                font-family: Nunito;
+                font-size: 18px;
+                font-weight: 400;
+                line-height: 24.55px;
+                text-align: left;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+                margin-left: 75px;
+                width: fit-content;
+            }
+        }
+    }
 }

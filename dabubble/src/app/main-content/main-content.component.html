@@ -19,47 +19,51 @@
       </div>
     </mat-card-header>
     <mat-card-content class="direct-message-content">
-      <div class="date-element">
-        <span class="date">Dienstag, 14 Januar</span>
+      <div class="date-elements">
+        <div class="date-element">
+          <span class="date">Dienstag, 14 Januar</span>
+        </div>
+        <div class="messages">
+          <div class="message-container left">
+            <img src="./../../assets/img/pfp_header.png" alt="">
+            <div class="message-left">
+              <div class="name"><p>Noah Braun</p><p class="time">14:25 Uhr</p></div>
+              <p class="text-left">Hallo zusammen</p>
+            </div>
+          </div>
+          <div class="message-container right">
+            <img src="./../../assets/img/pfp_header.png" alt="">
+            <div class="message-right">
+              <div class="name-right"><p>Frederick Beck</p><p class="time">14:30 Uhr</p></div>
+              <p class="text-right">Hi, wie gehts dir?</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <p>
-        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-        bred for hunting.
-      </p>
 
-      <div class="date-element">
-        <span class="date">Mittwoch, 15 Januar</span>
+      <div class="date-elements">
+        <div class="date-element">
+          <span class="date">Heute</span>
+        </div>
+        <div class="messages">
+          <div class="message-container left">
+            <img src="./../../assets/img/pfp_header.png" alt="">
+            <div class="message-left">
+              <div class="name"><p class="name">Noah Braun</p><p class="time">14:25 Uhr</p></div>
+              <p class="text-left">Gut und dir?</p>
+                <div class="reactions"><p>2 Antworten</p><p class="time">Letzte Antwort 14:28 Uhr</p></div>
+            </div>
+          </div>
+          <div class="message-container right">
+            <img src="./../../assets/img/pfp_header.png" alt="">
+            <div class="message-right">
+              <div class="name-right"><p>Frederick Beck</p><p class="time">14:30 Uhr</p></div>
+              <p class="text-right">Mir auch</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <p>
-        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-        bred for hunting.
-      </p>
-      <div class="date-element">
-        <span class="date">Heute</span>
-      </div>
-      <p>
-        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-        bred for hunting.
-      </p>
-      <div class="date-element">
-        <span class="date">Heute</span>
-      </div>
-      <p>
-        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-        bred for hunting.
-      </p>
-      <div class="date-element">
-        <span class="date">Heute</span>
-      </div>
-      <p>
-        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-        bred for hunting.
-      </p>
+
     </mat-card-content>
     <div class="direct-message-input">
       <textarea [(ngModel)]="message" rows="2" type="text" placeholder="Nachricht an #Entwicklerteam"></textarea>
