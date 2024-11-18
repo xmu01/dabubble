@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, doc, getDoc, onSnapshot, query, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, collection, doc, getDoc, onSnapshot, query, where } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
@@ -44,23 +44,44 @@ export class UsersService {
     };
   }
 
-  getMessagesByUserId(userId: string): Observable<Messages[]> {
-    return new Observable<Messages[]>((observer) => {
+  getMessagesByUserId(userId: string): Observable<{ date: string; messages: Messages[] }[]> {
+    return new Observable<{ date: string; messages: Messages[] }[]>((observer) => {
       const messagesRef = collection(this.firestore, 'messages');
-      const q = query(messagesRef, where('userId', '==', userId)); 
-
+      const q = query(messagesRef, where('userId', '==', userId));
+  
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const messages: Messages[] = [];
         querySnapshot.forEach((doc) => {
-          messages.push({ ...(doc.data() as Messages), id: doc.id });
+          const data = doc.data() as Messages;
+  
+          const convertedTimestamp = data.timestamp instanceof Timestamp
+            ? data.timestamp.toDate()
+            : data.timestamp;
+  
+          messages.push({ ...data, timestamp: convertedTimestamp, id: doc.id });
         });
-        observer.next(messages); 
+  
+        const groupedMessages = messages.reduce((groups: Record<string, Messages[]>, message) => {
+          const date = (message.timestamp as Date).toLocaleDateString(); 
+          if (!groups[date]) {
+            groups[date] = [];
+          }
+          groups[date].push(message);
+          return groups;
+        }, {});
+  
+        const result = Object.entries(groupedMessages).map(([date, messages]) => ({
+          date,
+          messages,
+        }));
+  
+        observer.next(result);
       });
-
+  
       return () => unsubscribe();
     });
   }
-
+  
   setSelectedUserId(userId: string): void {
     this.selectedUserIdSubject.next(userId);
   }
