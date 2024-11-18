@@ -49,16 +49,12 @@ export class MainContentComponent {
   }
 
   getFormattedDate(dateString: string): string {
-    // Datum string in ein Array splitten (Format: DD.MM.YYYY)
     const [day, month, year] = dateString.split('.').map(Number);
 
-    // Ein neues Datum erstellen mit dem richtigen Format
     const inputDate = new Date(year, month - 1, day);
 
-    // Aktuelles Datum erstellen
     const today = new Date();
 
-    // Überprüfen, ob das Datum heute ist
     const isToday =
       today.getDate() === inputDate.getDate() &&
       today.getMonth() === inputDate.getMonth() &&
