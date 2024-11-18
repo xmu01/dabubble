@@ -20,7 +20,7 @@
     </mat-card-header>
     <mat-card-content class="direct-message-content">
       <div class="date-elements">
-        @for(message of messages; track message) {
+        <!-- @for(message of messages; track message) {
         <div class="date-element">
           <span class="date">Dienstag, 14 Januar</span>
         </div>
@@ -33,11 +33,31 @@
             </div>
           </div>
         </div>
+      } -->
+      @for (group of messages; track group.date) {
+        <div class="date-element">
+          <span class="date">{{ getFormattedDate(group.date) }}</span>
+        </div>
+        <div class="messages">
+          @for (message of group.messages; track message.id) {
+            <div class="message-container left">
+              <img src="./../../assets/img/pfp_header.png" alt="">
+              <div class="message-left">
+                <div class="name">
+                  <p>{{ message.firstName }} {{ message.lastName }}</p>
+                  <p class="time">{{ getTimeFromTimestamp(message.timestamp) }}</p>
+                </div>
+                <p class="text-left">{{ message.message }}</p>
+              </div>
+            </div>
+          }
+        </div>
       }
-      </div>
-    
+      
+        </div>
 
-      <!-- <div class="date-elements">
+
+        <!-- <div class="date-elements">
         <div class="date-element">
           <span class="date">Heute</span>
         </div>

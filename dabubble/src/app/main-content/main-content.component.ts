@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { Messages } from '../../shared/interfaces/messages';
 import { UsersService } from '../../shared/services/users.service';
 import { Users } from '../../shared/interfaces/users';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-main-content',
@@ -18,7 +19,7 @@ import { Users } from '../../shared/interfaces/users';
 })
 export class MainContentComponent {
   newMessage: string = '';
-  messages: Messages[] = [];
+  messages: { date: string; messages: Messages[] }[] = [];
 
   private usersService = inject(UsersService);
 
@@ -41,9 +42,31 @@ export class MainContentComponent {
     this.newMessage = '';
   }
 
-  getTimeFromTimestamp(timestamp: { toDate: () => Date }): string {
-    const date = timestamp.toDate(); // Firestore-Timestamp in JavaScript Date umwandeln
-    return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }); // Uhrzeit extrahieren
+  getTimeFromTimestamp(timestamp: Timestamp | Date): string {
+    const date = timestamp instanceof Timestamp ? timestamp.toDate() : timestamp;
+
+    return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
   }
 
+  getFormattedDate(dateString: string): string {
+    // Datum string in ein Array splitten (Format: DD.MM.YYYY)
+    const [day, month, year] = dateString.split('.').map(Number);
+
+    // Ein neues Datum erstellen mit dem richtigen Format
+    const inputDate = new Date(year, month - 1, day);
+
+    // Aktuelles Datum erstellen
+    const today = new Date();
+
+    // Überprüfen, ob das Datum heute ist
+    const isToday =
+      today.getDate() === inputDate.getDate() &&
+      today.getMonth() === inputDate.getMonth() &&
+      today.getFullYear() === inputDate.getFullYear();
+
+    return isToday ? 'Heute' : dateString;
+}
+
+  
+  
 }
