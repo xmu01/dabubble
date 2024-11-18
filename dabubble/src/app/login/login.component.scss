@@ -23,6 +23,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    text-align: center;
+
+    ::ng-deep mat-card {
+        border-top-left-radius: 20px !important;
+        border-bottom-left-radius: 20px !important;
+        border-bottom-right-radius: 20px !important;
+        border-top-right-radius: 20px !important;
+    
+    }
+
+    h2 {
+        color: #535AF1;
+    }
 }
 
 .bottom-login {
