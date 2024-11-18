@@ -1,0 +1,38 @@
+
+.top-login {
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+
+    img {
+        height: 70px;
+    }
+   
+    .create-acc {
+        height: 70px;
+
+        .create-acc-purple {
+            color: #535AF1;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    }
+}
+
+.login-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bottom-login {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    .imprint-tag, .privacy-policy-tag {
+        color: #535AF1;
+        cursor: pointer;
+        text-decoration: none;
+    }
+}
