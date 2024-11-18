@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, onSnapshot, query } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDoc, onSnapshot, query, where } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Users } from '../interfaces/users';
+import { Messages } from '../interfaces/messages';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,9 @@ export class UsersService {
 
   private usersSubject = new BehaviorSubject<Users[]>([]);
   users$ = this.usersSubject.asObservable();
+
+  private selectedUserIdSubject = new BehaviorSubject<string | null>(null);
+  selectedUserId$ = this.selectedUserIdSubject.asObservable();
 
   constructor() { 
     this.subUserList();
@@ -39,4 +43,26 @@ export class UsersService {
       avatar: obj.avatar || ""
     };
   }
+
+  getMessagesByUserId(userId: string): Observable<Messages[]> {
+    return new Observable<Messages[]>((observer) => {
+      const messagesRef = collection(this.firestore, 'messages');
+      const q = query(messagesRef, where('userId', '==', userId)); 
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const messages: Messages[] = [];
+        querySnapshot.forEach((doc) => {
+          messages.push({ ...(doc.data() as Messages), id: doc.id });
+        });
+        observer.next(messages); 
+      });
+
+      return () => unsubscribe();
+    });
+  }
+
+  setSelectedUserId(userId: string): void {
+    this.selectedUserIdSubject.next(userId);
+  }
+
 }

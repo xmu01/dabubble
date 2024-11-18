@@ -34,4 +34,9 @@ export class SidenavComponent implements OnInit {
   changeMenuOpenState() {
     this.menuOpenState = !this.menuOpenState;
   }
+
+
+  selectUser(userId: string): void {
+    this.usersService.setSelectedUserId(userId);
+  }
 }

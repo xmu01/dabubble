@@ -49,7 +49,7 @@
                         </mat-expansion-panel-header>
                         <ul class="list">
                             @for(user of users; track user) {
-                                <li>
+                                <li (click)="selectUser(user.userId)">
                                     <div class="user-picture"><span class="user-picture-dot-online"></span><img
                                             src="./../../assets/img/pfp_header.png" alt=""></div>{{user.firstName}} {{user.lastName}}
                                 </li>  
