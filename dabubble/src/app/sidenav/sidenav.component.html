@@ -48,36 +48,12 @@
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <ul class="list">
-                            <li><div class="user-picture"><span class="user-picture-dot-online"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Frederick Beck</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-online"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Hans Wurst</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Peter Petersen</li>
-                            <li><div class="user-picture"><span class="user-picture-dot-offline"></span><img src="./../../assets/img/pfp_header.png" alt=""></div>Last one</li>
+                            @for(user of users; track user) {
+                                <li>
+                                    <div class="user-picture"><span class="user-picture-dot-online"></span><img
+                                            src="./../../assets/img/pfp_header.png" alt=""></div>{{user.firstName}} {{user.lastName}}
+                                </li>  
+                            }
                         </ul>
                     </mat-expansion-panel>
                 </mat-accordion>
