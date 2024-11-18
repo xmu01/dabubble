@@ -1,0 +1,52 @@
+
+.top-login {
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+
+    img {
+        height: 70px;
+    }
+   
+    .create-acc {
+        height: 70px;
+
+        .create-acc-purple {
+            color: #535AF1;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    }
+}
+
+.login-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    ::ng-deep mat-card {
+        border-top-left-radius: 20px !important;
+        border-bottom-left-radius: 20px !important;
+        border-bottom-right-radius: 20px !important;
+        border-top-right-radius: 20px !important;
+    
+    }
+
+    h2 {
+        color: #535AF1;
+    }
+}
+
+.bottom-login {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    .imprint-tag, .privacy-policy-tag {
+        color: #535AF1;
+        cursor: pointer;
+        text-decoration: none;
+    }
+}
