@@ -67,6 +67,29 @@
         cursor: pointer;
         text-decoration: none;
     }
+
+    .oder-line {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+       
+
+        .first-line {
+            height: 1px;
+            width: 190px;
+            background-color: #535AF1;
+        }
+        .between-line {
+            margin-right: 20px;
+            margin-left: 20px;
+           
+        }
+        .second-line {
+            height: 1px;
+            width: 190px;
+            background-color: #535AF1;
+        }
+    }
 }
 
 .bottom-login {
