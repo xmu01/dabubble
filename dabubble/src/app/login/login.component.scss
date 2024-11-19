@@ -150,6 +150,18 @@
             background-color: #535AF1;
         }
     }
+
+    .google-div {
+        width: 100%;
+        background-color: #ECEEFE;
+        border-radius: 20px;
+        padding: 16px;
+        padding-right: 50px;
+        padding-left: 50px;
+
+        display: flex;
+        justify-content: center;
+    }
 }
 
 .bottom-login {
