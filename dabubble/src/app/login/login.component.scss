@@ -34,10 +34,32 @@
     
     }
 
+    .inside-mat-card {
+        margin-right: 20px;
+        margin-left: 20px;
+    }
+
     h2 {
         color: #535AF1;
     }
 
+    .input-fields {
+        display: flex;
+        flex-direction: column;
+
+        .email-login {
+            border-radius: 20px;
+            padding: 16px;
+            background-color: #ecefee;
+            border: none;
+        }
+        .password-login {
+            border-radius: 20px;
+            padding: 16px;
+            background-color: #ECEFEE;
+            border: none;
+        }
+    }
 
 
     .forgot-pw {
