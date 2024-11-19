@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../shared/services/users.service';
 import { Users } from '../../shared/interfaces/users';
+import { Messages } from '../../shared/interfaces/messages';
 
 @Component({
   selector: 'app-sidenav',
@@ -24,10 +25,15 @@ export class SidenavComponent implements OnInit {
   private usersService = inject(UsersService);
 
   users: Users[] = [];
+  messages: Messages[] = [];
 
   ngOnInit(): void {
     this.usersService.users$.subscribe((users) => {
       this.users = users;
+    });
+
+    this.usersService.messages$.subscribe((messages) => {
+      this.messages = messages;
     });
   }
 

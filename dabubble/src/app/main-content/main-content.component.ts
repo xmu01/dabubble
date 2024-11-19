@@ -9,17 +9,19 @@ import { Messages } from '../../shared/interfaces/messages';
 import { UsersService } from '../../shared/services/users.service';
 import { Users } from '../../shared/interfaces/users';
 import { Timestamp } from '@angular/fire/firestore';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-main-content',
   standalone: true,
-  imports: [MatCardModule, ThreadComponent, MatIconModule, MatButtonModule, MatInputModule, FormsModule],
+  imports: [MatCardModule, ThreadComponent, MatIconModule, MatButtonModule, MatInputModule, FormsModule, CommonModule],
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.scss'
 })
 export class MainContentComponent {
   newMessage: string = '';
   messages: { date: string; messages: Messages[] }[] = [];
+  user: Users | null = null;
 
   private usersService = inject(UsersService);
 
@@ -27,12 +29,20 @@ export class MainContentComponent {
     this.usersService.selectedUserId$.subscribe((userId) => {
       if (userId) {
         this.loadMessages(userId);
+        this.usersService.getUserById(userId).subscribe((user) => {
+          if (user) {
+            this.user = user;
+          } else {
+            console.log('User not found.');
+            this.user = null;
+          }
+        });
       }
     });
   }
 
   loadMessages(userId: string): void {
-    this.usersService.getMessagesByUserId(userId).subscribe((messages) => {
+    this.usersService.getSubMessagesByUserId(userId).subscribe((messages) => {
       this.messages = messages;
     });
   }
@@ -61,8 +71,5 @@ export class MainContentComponent {
       today.getFullYear() === inputDate.getFullYear();
 
     return isToday ? 'Heute' : dateString;
-}
-
-  
-  
+  }
 }

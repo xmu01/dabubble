@@ -7,5 +7,6 @@ export interface Messages {
     reaction?: string;
     timestamp: Timestamp | Date;
     firstName:string;
-    lastName:string
+    lastName:string;
+    userId: string;
 }
