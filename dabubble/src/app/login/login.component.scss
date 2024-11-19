@@ -43,22 +43,82 @@
         color: #535AF1;
     }
 
+    .recommend-login {
+        margin-bottom: 25px;
+    }
+
     .input-fields {
         display: flex;
         flex-direction: column;
 
-        .email-login {
-            border-radius: 20px;
-            padding: 16px;
-            background-color: #eceefe;
-            border: none;
+        .first-input {
+            position:relative;
+            display:inline-block;
+            
+            .i-class-img {
+                position: absolute;
+                left:25px;
+                top: 13px;
+        
+                img:hover {
+                    
+                }
+            }    
+
+            .email-login {
+                border-radius: 20px;
+                padding: 16px;
+                padding-left: 60px;
+                padding-right: 60px;
+
+                background-color: #eceefe;
+                border: none;
+                width: 100%;
+                margin-bottom: 25px;
+            }
+
+            .email-login:focus {
+                outline: #535AF1;
+                outline-width: 1px;
+                outline-color: #535AF1;
+                outline-style: auto;
+            
+            }
         }
-        .password-login {
-            border-radius: 20px;
-            padding: 16px;
-            background-color: #ECEEFE;
-            border: none;
+       
+        .second-input {
+            position:relative;
+            display:inline-block;
+
+            .i-class-img {
+                position: absolute;
+                left:25px;
+                top: 13px;
+        
+                img:hover {
+                    
+                }
+            }    
+
+            .password-login {
+                border-radius: 20px;
+                padding: 16px;
+                padding-left: 60px;
+                padding-right: 60px;
+
+                background-color: #ECEEFE;
+                border: none;
+                width: 100%;
+                margin-bottom: 25px;
+            }
+            .password-login:focus {
+                outline: #535AF1;
+                outline-width: 1px;
+                outline-color: #535AF1;
+                outline-style: auto;
+            }
         }
+        
     }
 
 
