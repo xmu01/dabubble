@@ -153,6 +153,7 @@
 
     .google-div {
         width: 100%;
+        height: 47px;
         background-color: #ECEEFE;
         border-radius: 20px;
         padding: 16px;
@@ -161,6 +162,20 @@
 
         display: flex;
         justify-content: center;
+        align-items: center;
+
+        .google-div-text {
+            color: #535AF1;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        img {
+            height: 30px;
+            width: 30px;
+        }
+
     }
 }
 
