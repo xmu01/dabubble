@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Firestore, Timestamp, collection, doc, getDoc, onSnapshot, query, where } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Users } from '../interfaces/users';
@@ -9,9 +9,10 @@ import { Messages } from '../interfaces/messages';
 })
 export class UsersService {
   private firestore = inject(Firestore);
+  users = signal<Users[]>([]);
 
-  private usersSubject = new BehaviorSubject<Users[]>([]);
-  users$ = this.usersSubject.asObservable();
+  // private usersSubject = new BehaviorSubject<Users[]>([]);
+  // users$ = this.usersSubject.asObservable();
 
   private messagesSubject = new BehaviorSubject<Messages[]>([]);
   messages$ = this.messagesSubject.asObservable();
@@ -20,8 +21,17 @@ export class UsersService {
   selectedUserId$ = this.selectedUserIdSubject.asObservable();
 
   constructor() {
-    this.subUserList();
+    // this.subUserList();
     this.subUserMessagesList();
+    this.loadUsers();
+  }
+
+  loadUsers() {
+    const usersQuery = query(collection(this.firestore, 'users'));
+    onSnapshot(usersQuery, (querySnapshot) => {
+      const users = querySnapshot.docs.map((doc) => this.setUserObject(doc.data(), doc.id));
+      this.users.set(users); // Update the users signal
+    }, (error) => console.error('Error loading users:', error));
   }
 
   private getUsersRef() {
@@ -33,16 +43,16 @@ export class UsersService {
     return collection(userDocRef, 'messages'); // Reference to the 'messages' subcollection
   }
 
-  private subUserList() {
-    const q = query(this.getUsersRef());
-    onSnapshot(q, (list) => {
-      const users: Users[] = [];
-      list.forEach((element) => {
-        users.push(this.setUserObject(element.data(), element.id));
-      });
-      this.usersSubject.next(users);
-    });
-  }
+  // private subUserList() {
+  //   const q = query(this.getUsersRef());
+  //   onSnapshot(q, (list) => {
+  //     const users: Users[] = [];
+  //     list.forEach((element) => {
+  //       users.push(this.setUserObject(element.data(), element.id));
+  //     });
+  //     this.usersSubject.next(users);
+  //   });
+  // }
 
   private subUserMessagesList() {
     this.selectedUserId$.subscribe((userId) => {
@@ -66,7 +76,8 @@ export class UsersService {
       userId: id,
       firstName: obj.firstName || "",
       lastName: obj.lastName || "",
-      avatar: obj.avatar || ""
+      avatar: obj.avatar || "",
+      email: obj.email || ""
     };
   }
 

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonModule} from '@angular/material/button';
@@ -24,17 +24,20 @@ export class SidenavComponent implements OnInit {
 
   private usersService = inject(UsersService);
 
-  users: Users[] = [];
+  users = computed(() => this.usersService.users());
   messages: Messages[] = [];
 
   ngOnInit(): void {
-    this.usersService.users$.subscribe((users) => {
-      this.users = users;
-    });
+    // this.usersService.users$.subscribe((users) => {
+    //   this.users = users;
+    // });
 
     this.usersService.messages$.subscribe((messages) => {
       this.messages = messages;
     });
+
+    this.usersService.users;
+
   }
 
   changeMenuOpenState() {

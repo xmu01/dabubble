@@ -1,1 +1,79 @@
-<p>privacy-policy works!</p>
+<!-- <section>
+    <h1>User Profiles</h1>
+    <ul>
+        @for(user of users; track user) {
+            <li  (click)="getId(user.userId)">
+            Name: {{user.firstName}} {{user.lastName}}<br> 
+            ID: {{user.userId}}<br> 
+            Email: {{user.email}}<br><br>
+        </li>
+        }
+        
+    </ul>
+
+    <h1>User Profile</h1>
+    <ul>
+        @for(person of user; track person) {
+            <li>
+            Name: {{person.firstName}} {{person.lastName}}<br> 
+            ID: {{person.userId}}<br> 
+            Email: {{person.email}}<br><br>
+        </li>
+        }
+        
+    </ul>
+</section> -->
+
+<!-- <section>
+    <h1>User Profiles</h1>
+    <ul>
+      @for (user of (users$ | async); track user) {
+        <li (click)="getId(user.userId)">
+          <strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}<br>
+          <strong>ID:</strong> {{ user.userId }}<br>
+          <strong>Email:</strong> {{ user.email }}<br><br>
+        </li>
+      }
+    </ul>
+  
+    <h1>Active User Profile</h1>
+<ul>
+  @if ((user$ | async)) {
+    <li>
+      <strong>Name:</strong> {{ (user$ | async)?.firstName }} {{ (user$ | async)?.lastName }}<br>
+      <strong>ID:</strong> {{ (user$ | async)?.userId }}<br>
+      <strong>Email:</strong> {{ (user$ | async)?.email }}<br><br>
+    </li>
+  } @else {
+    <p>No user selected. Please click on a user profile to view details.</p>
+  }
+</ul>
+  </section> -->
+  
+  <section>
+    <h1>User Profiles</h1>
+    <ul>
+      @for (user of users(); track user) {
+        <li (click)="getId(user.userId)">
+          <strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}<br>
+          <strong>ID:</strong> {{ user.userId }}<br>
+          <strong>Email:</strong> {{ user.email }}<br><br>
+        </li>
+      }
+    </ul>
+  
+    <h1>Active User Profile</h1>
+    <ul>
+      @if (activeUser()) {
+        <li>
+          <strong>Name:</strong> {{ activeUser()?.firstName }} {{ activeUser()?.lastName }}<br>
+          <strong>ID:</strong> {{ activeUser()?.userId }}<br>
+          <strong>Email:</strong> {{ activeUser()?.email }}<br><br>
+        </li>
+      } @else {
+        <p>No user selected. Please click on a user profile to view details.</p>
+      }
+    </ul>
+  </section>
+  
+  

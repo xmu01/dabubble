@@ -190,3 +190,12 @@
         text-decoration: none;
     }
 }
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+background-color: #ECEEFE !important;
+}
+
+::ng-deep .mdc-text-field--filled { 
+border-radius: 80px !important;
+}
+
