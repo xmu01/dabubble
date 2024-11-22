@@ -1,6 +1,5 @@
-import { Injectable, inject, signal } from '@angular/core';
-import { Firestore, Timestamp, collection, doc, getDoc, onSnapshot, query, where } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, inject, signal, effect } from '@angular/core';
+import { Firestore, Timestamp, collection, doc, getDoc, onSnapshot, query } from '@angular/fire/firestore';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
 
@@ -9,20 +8,14 @@ import { Messages } from '../interfaces/messages';
 })
 export class UsersService {
   private firestore = inject(Firestore);
+
+  // Reactive signals
   users = signal<Users[]>([]);
-
-  // private usersSubject = new BehaviorSubject<Users[]>([]);
-  // users$ = this.usersSubject.asObservable();
-
-  private messagesSubject = new BehaviorSubject<Messages[]>([]);
-  messages$ = this.messagesSubject.asObservable();
-
-  private selectedUserIdSubject = new BehaviorSubject<string | null>(null);
-  selectedUserId$ = this.selectedUserIdSubject.asObservable();
+  messages = signal<Messages[]>([]);
+  selectedUserId = signal<string | null>(null);
 
   constructor() {
-    // this.subUserList();
-    this.subUserMessagesList();
+    this.subUserMessagesList(); // Initialize the reactive subscription
     this.loadUsers();
   }
 
@@ -43,90 +36,72 @@ export class UsersService {
     return collection(userDocRef, 'messages'); // Reference to the 'messages' subcollection
   }
 
-  // private subUserList() {
-  //   const q = query(this.getUsersRef());
-  //   onSnapshot(q, (list) => {
-  //     const users: Users[] = [];
-  //     list.forEach((element) => {
-  //       users.push(this.setUserObject(element.data(), element.id));
-  //     });
-  //     this.usersSubject.next(users);
-  //   });
-  // }
-
   private subUserMessagesList() {
-    this.selectedUserId$.subscribe((userId) => {
+    // Use Angular's global `effect` function to create reactivity
+    effect(() => {
+      const userId = this.selectedUserId();
       if (!userId) {
+        this.messages.set([]);
         return;
       }
       const q = query(this.getUserMessagesRef(userId));
       onSnapshot(q, (list) => {
-        const messages: Messages[] = [];
-        list.forEach((element) => {
-          messages.push(this.setUserMessagesObject(element.data(), element.id));
-        });
-        this.messagesSubject.next(messages);
+        const messages: Messages[] = list.docs.map((doc) =>
+          this.setUserMessagesObject(doc.data(), doc.id)
+        );
+        this.messages.set(messages);
       });
     });
   }
 
-
   private setUserObject(obj: any, id: string): Users {
     return {
       userId: id,
-      firstName: obj.firstName || "",
-      lastName: obj.lastName || "",
-      avatar: obj.avatar || "",
-      email: obj.email || ""
+      firstName: obj.firstName || '',
+      lastName: obj.lastName || '',
+      avatar: obj.avatar || '',
+      email: obj.email || '',
     };
   }
 
   private setUserMessagesObject(obj: any, id: string): Messages {
     return {
       id: id,
-      firstName: obj.firstName || "",
-      lastName: obj.lastName || "",
-      message: obj.message || "",
-      imgLink: obj.firstName || "",
-      reaction: obj.reaction || "",
-      timestamp: obj.timestamp || "",
-      userId: obj.userId
+      firstName: obj.firstName || '',
+      lastName: obj.lastName || '',
+      message: obj.message || '',
+      imgLink: obj.imgLink || '',
+      reaction: obj.reaction || '',
+      timestamp: obj.timestamp || '',
+      userId: obj.userId,
     };
   }
 
-  getUserById(userId: string): Observable<Users | null> {
-    return new Observable<Users | null>((observer) => {
-      const userDocRef = doc(this.firestore, `users/${userId}`);
-
-      getDoc(userDocRef).then((docSnap) => {
-        if (docSnap.exists()) {
-          const user = this.setUserObject(docSnap.data(), docSnap.id);
-          observer.next(user);
-        } else {
-          observer.next(null);
-        }
-      }).catch((error) => {
-        console.error('Error fetching user:', error);
-        observer.error(error);
-      });
+  getUserById(userId: string): Promise<Users | null> {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    return getDoc(userDocRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        return this.setUserObject(docSnap.data(), docSnap.id);
+      }
+      return null;
+    }).catch((error) => {
+      console.error('Error fetching user:', error);
+      throw error;
     });
   }
 
-  getSubMessagesByUserId(userId: string): Observable<{ date: string; messages: Messages[] }[]> {
-    return new Observable<{ date: string; messages: Messages[] }[]>((observer) => {
-      const messagesRef = this.getUserMessagesRef(userId);
-      const q = query(messagesRef);
+  getSubMessagesByUserId(userId: string): Promise<{ date: string; messages: Messages[] }[]> {
+    const messagesRef = this.getUserMessagesRef(userId);
+    const q = query(messagesRef);
 
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const messages: Messages[] = [];
-        querySnapshot.forEach((doc) => {
+    return new Promise((resolve, reject) => {
+      onSnapshot(q, (querySnapshot) => {
+        const messages: Messages[] = querySnapshot.docs.map((doc) => {
           const data = doc.data() as Messages;
+          const convertedTimestamp =
+            data.timestamp instanceof Timestamp ? data.timestamp.toDate() : data.timestamp;
 
-          const convertedTimestamp = data.timestamp instanceof Timestamp
-            ? data.timestamp.toDate()
-            : data.timestamp;
-
-          messages.push({ ...data, timestamp: convertedTimestamp, id: doc.id });
+          return { ...data, timestamp: convertedTimestamp, id: doc.id };
         });
 
         const groupedMessages = messages.reduce((groups: Record<string, Messages[]>, message) => {
@@ -143,15 +118,12 @@ export class UsersService {
           messages,
         }));
 
-        observer.next(result);
-      });
-
-      return () => unsubscribe();
+        resolve(result);
+      }, (error) => reject(error));
     });
   }
 
   setSelectedUserId(userId: string): void {
-    this.selectedUserIdSubject.next(userId);
+    this.selectedUserId.set(userId);
   }
-
 }
