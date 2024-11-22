@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, user } from '@angular/fire/auth';
 import { MatCardModule } from '@angular/material/card';
 import { merge, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -50,6 +50,8 @@ export class LoginComponent {
     signInWithEmailAndPassword(this.auth, this.email2, this.password)
       .then(() => {
         this.router.navigate(['/']);
+        console.log(this.auth.currentUser?.uid);
+        
       })
       .catch((error) => {
         console.error('Anmeldung fehlgeschlagen:', error);
@@ -65,6 +67,8 @@ export class LoginComponent {
     // The signed-in user info.
     const user = result.user;
     this.router.navigate(['/']);
+    console.log(result.user.uid);
+    
 
     // IdP data available using getAdditionalUserInfo(result)
     // ...
