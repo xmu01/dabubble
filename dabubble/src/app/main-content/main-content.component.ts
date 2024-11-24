@@ -9,6 +9,7 @@ import { UsersService } from '../../shared/services/users.service';
 import { CommonModule } from '@angular/common';
 import { MatMenu, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-main-content',
@@ -23,8 +24,10 @@ export class MainContentComponent {
   newMessage: string = '';
 
   private firestoreService = inject(UsersService);
+  private auth = inject(AuthService);
 
   users = this.firestoreService.users;
+  loggedUser = this.auth.userSignal;
   activeUser = this.firestoreService.activeUser;
   groupedMessages = this.firestoreService.groupedMessages;
   today = signal(new Date().toISOString().split('T')[0]); // Heutiges Datum im Format "yyyy-MM-dd"
@@ -63,16 +66,25 @@ export class MainContentComponent {
     this.firestoreService.loadUsers();
   }
 
+  getLoggedUser() {
+    const userId = this.loggedUser()!.uid;
+    if (!userId) {
+      return null; // Kein Benutzer eingeloggt
+    }
+  
+    return this.users().find(user => user.userId === userId) || null;
+  }
+
   getMessage(): void {
     console.log(this.newMessage);
-
     this.firestoreService.saveMessage(this.activeUser()!.userId, {
       message: this.newMessage,
-      firstName: this.activeUser()!.firstName,
-      lastName: this.activeUser()!.lastName,
-      userId: this.activeUser()!.userId,
+      firstName: this.getLoggedUser()!.firstName,
+      lastName: this.getLoggedUser()!.lastName,
+      userId: this.loggedUser()?.uid!,
+      reaction: '',
+      imgLink: '',
     });
     this.newMessage = '';
   }
-
 }
