@@ -9,6 +9,7 @@ import { ViewEncapsulation } from '@angular/core'; // Um Angular Mat-Styles zu Ã
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { AuthService } from '../../shared/services/auth.service';
+import { UsersService } from '../../shared/services/users.service';
 
 @Component({
   selector: 'app-header',
@@ -23,13 +24,27 @@ import { AuthService } from '../../shared/services/auth.service';
 })
 export class HeaderComponent {
   private authService = inject(AuthService);
+  private firestoreService = inject(UsersService);
 
   // Use the signal directly without wrapping it in additional logic
   user = this.authService.userSignal;
+  users = this.firestoreService.users;
+
 
   signOut() {
     this.authService.signOut().catch((error) => {
       console.error('Error during sign-out:', error);
     });
   }
+
+  getLoggedUser() {
+    const user = this.user();
+    if (!user) {
+      return null; // Kein Benutzer eingeloggt
+    }
+  
+    const userId = user.uid;
+    return this.users().find(u => u.userId === userId) || null;
+  }
+  
 }

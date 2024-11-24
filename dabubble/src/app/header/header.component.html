@@ -9,7 +9,7 @@
     </div>
 
     <div class="profile-section-header">
-            <h2>{{ user()?.email }}</h2>
+            <h2>{{ getLoggedUser()?.firstName }} {{ getLoggedUser()?.lastName }}</h2>
             <span class="user-picture-dot-online"></span>
             <img class="pfp-header" src="./../../assets/img/pfp_header.png" alt="">
             
