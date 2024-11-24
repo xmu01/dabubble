@@ -1,1 +1,62 @@
-<p>signup works!</p>
+<div class="top-login">
+    <img src="./../../assets/img/header_icon.png" alt="">
+    <div class="create-acc">
+        <p>Neu bei DABubble?</p> 
+        <a href="sign-up" class="create-acc-purple">Konto erstellen</a>
+    </div>
+    
+</div>
+    
+
+<div class="login-card">
+    <mat-card >
+        <mat-card-content>
+            <form (submit)="continueSignUp()" class="inside-mat-card">
+                <h2>Anmeldung</h2>
+
+                <p class="recommend-login"> Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
+
+                <div class="input-fields">
+                    <!-- <mat-form-field>
+                        <mat-label>Enter your email</mat-label>
+                        <mat-icon matPrefix>mail</mat-icon>
+                        <input  matInput
+                               placeholder="pat@example.com"
+                               [formControl]="email"
+                               (blur)="updateErrorMessage()"
+                               required>
+                        @if (email.invalid) {
+                          <mat-error>{{errorMessage}}</mat-error>
+                        }
+                      </mat-form-field> -->
+                    <div class="first-input">
+                        <i class="i-class-img"><img src="./../../assets/img/mail-icon.png"></i>
+                    <input  class="email-login" type="text" name="email" id="" placeholder="beispielname@email.com"> <br>
+                    </div>
+                    <div class="second-input">
+                        <i class="i-class-img"><img src="./../../assets/img/lock-icon.png"></i>
+                        <input  class="password-login" type="text" name="password" id="" placeholder="Passwort"> <br>
+                    </div>
+
+                </div>
+                    
+                <a href="#" class="forgot-pw">Passwort vergessen?</a> <br><br>
+
+                <div class="oder-line">
+                    <div class="first-line"></div>
+                    <p class="between-line">ODER</p>
+                    <div class="second-line"></div>
+                </div>
+
+               
+
+                <button class="login-btn" type="submit" >Anmelden</button>
+                <button class="guest-btn">Gäste Login</button>
+            </form>    
+        </mat-card-content>
+    </mat-card>
+</div> 
+
+<div class="bottom-login">
+    <a href="#" class="imprint-tag">Impressum</a> &nbsp; <a href="#" class="privacy-policy-tag">Datenschutz</a>
+</div>
