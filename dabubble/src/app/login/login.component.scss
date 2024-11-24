@@ -177,6 +177,43 @@
         }
 
     }
+
+    .login-btn {
+        background-color: #535AF1;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px;
+        padding-right: 16px;
+        padding-left: 16px;
+        margin-right: 20px;
+        margin-top: 30px;
+        font-weight: 700;
+    }
+
+    .login-btn:hover {
+        cursor: pointer;
+        background-color: #536bf1dc;
+    }
+
+    .guest-btn {
+        background-color: white;
+        color: #535AF1;
+        border-color: #535AF1;
+        border-radius: 20px;
+        border-width: 1px;
+        padding: 10px;
+        padding-right: 16px;
+        padding-left: 16px;
+        font-weight: 700;
+    }
+    .guest-btn:hover {
+        
+        cursor: pointer;
+        background-color: #535AF1;
+        color: white;
+        
+    }
 }
 
 .bottom-login {
