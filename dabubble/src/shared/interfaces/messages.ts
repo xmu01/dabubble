@@ -5,7 +5,7 @@ export interface Messages {
     message?: string;
     imgLink?: string;
     reaction?: string;
-    timestamp: Timestamp | Date;
+    timestamp: Timestamp;
     firstName:string;
     lastName:string;
     userId: string;

@@ -24,7 +24,7 @@
 //   }
 
 //   ngOnChanges() {
-    
+
 
 //   }
 
@@ -152,9 +152,8 @@
 // }
 
 import { Component, OnInit, signal, effect, inject } from '@angular/core';
-import { Users } from '../../shared/interfaces/users';
-import { collection, doc, Firestore, onSnapshot, query } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
+import { UsersService } from '../../shared/services/users.service';
 
 @Component({
   selector: 'app-privacy-policy',
@@ -164,71 +163,27 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./privacy-policy.component.scss']
 })
 export class PrivacyPolicyComponent implements OnInit {
-  private firestore: Firestore = inject(Firestore); // Inject Cloud Firestore
+  private firestoreService = inject(UsersService);
 
-  users = signal<Users[]>([]); // Signal to store the list of all users
-  activeUser = signal<Users | null>(null); // Signal to store the currently active user
-  activeId = signal<string | null>(null); // Signal to store the current active ID
+  users = this.firestoreService.users;
+  activeUser = this.firestoreService.activeUser;
+  groupedMessages = this.firestoreService.groupedMessages;
+  today = signal(new Date().toISOString().split('T')[0]); // Heutiges Datum im Format "yyyy-MM-dd"
 
   constructor() {
-    // Effect to trigger loading of the active user without writing to signals directly
     effect(() => {
-      const id = this.activeId();
-      if (id) {
-        this.triggerLoadUser(id);
+      const activeId = this.firestoreService.activeUser()?.userId;
+      if (activeId) {
+        this.firestoreService.loadMessages(activeId);
       }
     });
   }
 
   ngOnInit() {
-    this.loadUsers(); // Load all users on component initialization
+    this.firestoreService.loadUsers();
   }
 
-  /**
-   * Loads all users from Firestore and updates the users signal.
-   */
-  loadUsers() {
-    const usersQuery = query(collection(this.firestore, 'users'));
-    onSnapshot(usersQuery, (querySnapshot) => {
-      const users = querySnapshot.docs.map((doc) => this.setUserObject(doc.data(), doc.id));
-      this.users.set(users); // Update the users signal
-    }, (error) => console.error('Error loading users:', error));
-  }
-
-  /**
-   * Triggers the process to load a user by ID and updates the activeUser signal outside of an effect.
-   * @param userId - The ID of the user to load.
-   */
-  triggerLoadUser(userId: string) {
-    onSnapshot(doc(this.firestore, 'users', userId), (doc) => {
-      if (doc.exists()) {
-        this.activeUser.set(this.setUserObject(doc.data(), doc.id)); // Update the activeUser signal
-      }
-    }, (error) => console.error('Error loading active user:', error));
-  }
-
-  /**
-   * Updates the active user ID.
-   * @param id - The ID of the user to activate.
-   */
-  getId(id: string) {
-    this.activeId.set(id); // Set the new active ID
-    console.log('Active ID updated to:', id);
-  }
-
-  /**
-   * Converts Firestore document data into a Users object.
-   * @param obj - Firestore document data.
-   * @param id - Firestore document ID.
-   * @returns A Users object.
-   */
-  private setUserObject(obj: any, id: string): Users {
-    return {
-      userId: id,
-      firstName: obj.firstName || '',
-      lastName: obj.lastName || '',
-      avatar: obj.avatar || '',
-      email: obj.email || ''
-    };
+  getId(userId: string) {
+    this.firestoreService.loadUser(userId);
   }
 }

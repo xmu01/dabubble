@@ -1,4 +1,4 @@
-import { Component, inject, effect, computed } from '@angular/core';
+import { Component, inject, effect, computed, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ThreadComponent } from '../thread/thread.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,7 +6,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { UsersService } from '../../shared/services/users.service';
-import { Timestamp } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -18,24 +17,25 @@ import { CommonModule } from '@angular/common';
 })
 export class MainContentComponent {
   newMessage: string = '';
-  messages = computed(() => this.usersService.messages()); // Signal for messages
-  user = computed(() => this.usersService.selectedUserId() ? this.usersService.users().find(u => u.userId === this.usersService.selectedUserId()) : null);
 
-  private usersService = inject(UsersService);
+  private firestoreService = inject(UsersService);
+
+  users = this.firestoreService.users;
+  activeUser = this.firestoreService.activeUser;
+  groupedMessages = this.firestoreService.groupedMessages;
+  today = signal(new Date().toISOString().split('T')[0]); // Heutiges Datum im Format "yyyy-MM-dd"
 
   constructor() {
-    // Reactive effect for selected user ID changes
     effect(() => {
-      const userId = this.usersService.selectedUserId();
-      if (userId) {
-        this.loadMessages(userId);
+      const activeId = this.firestoreService.activeUser()?.userId;
+      if (activeId) {
+        this.firestoreService.loadMessages(activeId);
       }
     });
   }
 
-  loadMessages(userId: string): void {
-    // Messages are now reactive via the signal, no subscription needed
-    console.log('Loading messages for user:', userId);
+  ngOnInit() {
+    this.firestoreService.loadUsers();
   }
 
   getMessage(): void {
@@ -43,22 +43,4 @@ export class MainContentComponent {
     this.newMessage = '';
   }
 
-  getTimeFromTimestamp(timestamp: Timestamp | Date): string {
-    const date = timestamp instanceof Timestamp ? timestamp.toDate() : timestamp;
-    return date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-  }
-
-  getFormattedDate(dateString: string): string {
-    const [day, month, year] = dateString.split('.').map(Number);
-    const inputDate = new Date(year, month - 1, day);
-
-    const today = new Date();
-
-    const isToday =
-      today.getDate() === inputDate.getDate() &&
-      today.getMonth() === inputDate.getMonth() &&
-      today.getFullYear() === inputDate.getFullYear();
-
-    return isToday ? 'Heute' : dateString;
-  }
 }

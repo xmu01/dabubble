@@ -1,23 +1,24 @@
 <div class="container">
-
   <mat-card appearance="outlined" class="messages">
     <mat-card-header class="direct-message-header">
       <mat-card-title class="direct-message-title">
-        @if(user){
+        @if (activeUser()) {
         <div class="user-image-container">
-          <img class="user-image" src="./../../assets/img/pfp_header.png" alt="">
+          <img class="user-image" src="./../../assets/img/pfp_header.png" alt="User Picture">
           <span class="user-picture-dot-online"></span>
         </div>
         }
-        <span class="userName">{{user?.firstName}} {{user?.lastName}}</span>
-        @if(!user){<mat-icon fontIcon="keyboard_arrow_down"></mat-icon>}
+        <span class="userName">{{ activeUser()?.firstName }} {{ activeUser()?.lastName }}</span>
+        @if (!activeUser()) {
+        <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
+        }
       </mat-card-title>
-      @if(!user){
+      @if (!activeUser()) {
       <div class="members-container">
         <div class="members-images">
-          <img class="members-image" style="right: -25px;" src="./../../assets/img/pfp_header.png" alt="">
-          <img class="members-image" style="right: -10px;" src="./../../assets/img/pfp_header.png" alt="">
-          <img class="members-image" style="right: 5px;" src="./../../assets/img/pfp_header.png" alt="">
+          <img class="members-image" style="right: -25px;" src="./../../assets/img/pfp_header.png" alt="Member 1">
+          <img class="members-image" style="right: -10px;" src="./../../assets/img/pfp_header.png" alt="Member 2">
+          <img class="members-image" style="right: 5px;" src="./../../assets/img/pfp_header.png" alt="Member 3">
           <span class="members-count">3</span>
         </div>
         <button mat-mini-fab class="button-add-person">
@@ -26,72 +27,38 @@
       </div>
       }
     </mat-card-header>
+
     <mat-card-content class="direct-message-content">
       <div class="date-elements">
-        <!-- @for(message of messages; track message) {
-        <div class="date-element">
-          <span class="date">Dienstag, 14 Januar</span>
-        </div>
-        <div class="messages">
-          <div class="message-container left">
-            <img src="./../../assets/img/pfp_header.png" alt="">
-            <div class="message-left">
-              <div class="name"><p>{{message.firstName}} {{message.lastName}}</p><p class="time">{{getTimeFromTimestamp(message.timestamp)}}</p></div>
-              <p class="text-left">{{message.message}}</p>
-            </div>
+        @for (group of groupedMessages(); track group.date) {
+          <div class="date-element">
+            <span class="date">@if (group.date === (today() | date: 'yyyy-MM-dd')) {
+              Heute
+            } @else {
+              {{ group.date | date: 'dd.MM.yyyy' }}
+            }</span>
           </div>
-        </div>
-      } -->
-        @for (group of messages; track group.date) {
-        <div class="date-element">
-          <span class="date">{{ getFormattedDate(group.date) }}</span>
-        </div>
-        <div class="messages">
-          @for (message of group.messages; track message.id) {
-          <div class="message-container" [ngClass]="message.userId == 'MOkjhWRdC97Pc5LM2vnz' ? 'left' : 'right'">
-            <img src="./../../assets/img/pfp_header.png" alt="">
-            <div [ngClass]="message.userId == 'MOkjhWRdC97Pc5LM2vnz' ? 'message-left' : 'message-right'">
-              <div [ngClass]="message.userId == 'MOkjhWRdC97Pc5LM2vnz' ? 'name-left' : 'name-right'">
-                <p>{{ message.firstName }} {{ message.lastName }}</p>
-                <p class="time">{{ getTimeFromTimestamp(message.timestamp) }}</p>
+          <div class="messages">
+            @for (message of group.messages; track message.id) {
+              <div class="message-container" [ngClass]="message.userId == 'MOkjhWRdC97Pc5LM2vnz' ? 'left' : 'right'">
+              <img src="./../../assets/img/pfp_header.png" alt="Message User">
+              <div [ngClass]="message.userId == 'MOkjhWRdC97Pc5LM2vnz' ? 'message-left' : 'message-right'">
+                <div [ngClass]="message.userId == 'MOkjhWRdC97Pc5LM2vnz' ? 'name-left' : 'name-right'">
+                  <p>{{ message.firstName }} {{ message.lastName }}</p>
+                  <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
+                </div>
+                <p [ngClass]="message.userId == 'MOkjhWRdC97Pc5LM2vnz' ? 'text-left' : 'text-right'">{{ message.message }}</p>
               </div>
-              <p [ngClass]="message.userId == 'MOkjhWRdC97Pc5LM2vnz' ? 'text-left' : 'text-right'">{{ message.message }}
-              </p>
             </div>
+            }
           </div>
-          }
-        </div>
         }
-
+        
       </div>
-
-
-      <!-- <div class="date-elements">
-        <div class="date-element">
-          <span class="date">Heute</span>
-        </div>
-        <div class="messages">
-          <div class="message-container left">
-            <img src="./../../assets/img/pfp_header.png" alt="">
-            <div class="message-left">
-              <div class="name"><p class="name">Noah Braun</p><p class="time">14:25 Uhr</p></div>
-              <p class="text-left">Gut und dir?</p>
-                <div class="reactions"><p>2 Antworten</p><p class="time">Letzte Antwort 14:28 Uhr</p></div>
-            </div>
-          </div>
-          <div class="message-container right">
-            <img src="./../../assets/img/pfp_header.png" alt="">
-            <div class="message-right">
-              <div class="name-right"><p>Frederick Beck</p><p class="time">14:30 Uhr</p></div>
-              <p class="text-right">Mir auch</p>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
     </mat-card-content>
+
     <div class="direct-message-input">
-      <textarea [(ngModel)]="newMessage" rows="2" type="text" placeholder="Nachricht an {{user?.firstName}} {{user?.lastName}}"></textarea>
+      <textarea [(ngModel)]="newMessage" rows="2" type="text" placeholder="Nachricht an {{ activeUser()?.firstName }} {{ activeUser()?.lastName }}"></textarea>
       <div class="message-icon-bar">
         <div class="send-message-icons">
           <mat-icon>add</mat-icon>
@@ -99,12 +66,11 @@
           <mat-icon>alternate_email</mat-icon>
         </div>
         <div (click)="getMessage()" class="send-button">
-          <mat-icon>send_fill</mat-icon>
+          <mat-icon>send</mat-icon>
         </div>
       </div>
     </div>
   </mat-card>
 
   <app-thread class="thread"></app-thread>
-
 </div>
