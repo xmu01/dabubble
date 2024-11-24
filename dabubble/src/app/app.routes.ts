@@ -6,6 +6,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { LegalNoticeComponent } from './legal-notice/legal-notice.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { SignupComponent } from './signup/signup.component';
 
 export const routes: Routes = [
 
@@ -16,5 +17,5 @@ export const routes: Routes = [
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'privacy-policy', component: PrivacyPolicyComponent },
     { path: 'legal-notice', component: LegalNoticeComponent },
-
+    { path: 'sign-up', component: SignupComponent },
 ];
