@@ -9,7 +9,7 @@
     </div>
 
     <div class="profile-section-header">
-            <h2>Frederik Beck</h2>
+            <h2>{{ user()?.email }}</h2>
             <span class="user-picture-dot-online"></span>
             <img class="pfp-header" src="./../../assets/img/pfp_header.png" alt="">
             
@@ -19,7 +19,7 @@
 
             <mat-menu #menu="matMenu" class="menu-mat-style">
                 <button mat-menu-item>Profil</button>
-                <button mat-menu-item>Log out</button>
+                <button mat-menu-item (click)="signOut()">Log out</button>
               </mat-menu>
 
             
