@@ -75,18 +75,19 @@
     </div> -->
 
     <div class="direct-message-input">
-      <button mat-button [matMenuTriggerFor]="aboveMenu" #menuTrigger="matMenuTrigger" style="opacity: 0; width: 0px; height: 0px "></button>
+      <button mat-button [matMenuTriggerFor]="aboveMenu" #menuTrigger="matMenuTrigger"
+        style="opacity: 0; width: 0px; height: 0px "></button>
 
       <textarea [(ngModel)]="newMessage" rows="2"
-          placeholder="Nachricht an {{ activeUser()?.firstName }} {{ activeUser()?.lastName }}"
-          (input)="onInput($event)" #textarea>
+        placeholder="Nachricht an {{ activeUser()?.firstName }} {{ activeUser()?.lastName }}" (input)="onInput($event)"
+        #textarea>
 </textarea>
 
-<mat-menu #aboveMenu="matMenu" yPosition="above">
-  <button mat-menu-item>Item 1</button>
-  <button mat-menu-item>Item 2</button>
-</mat-menu>
-
+      <mat-menu #aboveMenu="matMenu" yPosition="above">
+        @for(user of users(); track user) {
+        <button mat-menu-item>{{ user.firstName }} {{ user.lastName }}</button>
+        }
+      </mat-menu>
 
       <div class="message-icon-bar">
         <div class="send-message-icons">
