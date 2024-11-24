@@ -28,7 +28,7 @@
       }
     </mat-card-header>
 
-    <mat-card-content class="direct-message-content">
+    <mat-card-content class="direct-message-content" #scrollContainer>
       <div class="date-elements">
         @for (group of groupedMessages(); track group.date) {
         <div class="date-element">

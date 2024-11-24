@@ -32,6 +32,8 @@ export class MainContentComponent {
   groupedMessages = this.firestoreService.groupedMessages;
   today = signal(new Date().toISOString().split('T')[0]); // Heutiges Datum im Format "yyyy-MM-dd"
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
 
   onInput(event: Event): void {
     const input = event.target as HTMLTextAreaElement;
@@ -58,6 +60,7 @@ export class MainContentComponent {
       const activeId = this.firestoreService.activeUser()?.userId;
       if (activeId) {
         this.firestoreService.loadMessages(activeId);
+        this.scrollToBottom();
       }
     });
   }
@@ -86,5 +89,13 @@ export class MainContentComponent {
       imgLink: '',
     });
     this.newMessage = '';
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    setTimeout(() => {
+      const container = this.scrollContainer.nativeElement;
+      container.scrollTop = container.scrollHeight;
+    }, 100);
   }
 }
