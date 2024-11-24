@@ -45,6 +45,11 @@ export class MainContentComponent {
     this.menuTrigger.toggleMenu();
   }
 
+  addToMessage(selectedItem: string): void {
+    // Fügt den ausgewählten Punkt zum Text in der Textarea hinzu
+    this.newMessage += ` ${selectedItem}`;
+  }
+
   constructor() {
     effect(() => {
       const activeId = this.firestoreService.activeUser()?.userId;
@@ -60,6 +65,13 @@ export class MainContentComponent {
 
   getMessage(): void {
     console.log(this.newMessage);
+
+    this.firestoreService.saveMessage(this.activeUser()!.userId, {
+      message: this.newMessage,
+      firstName: this.activeUser()!.firstName,
+      lastName: this.activeUser()!.lastName,
+      userId: this.activeUser()!.userId,
+    });
     this.newMessage = '';
   }
 

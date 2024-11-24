@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Firestore, collection, doc, onSnapshot, orderBy, query } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, onSnapshot, orderBy, query } from '@angular/fire/firestore';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
 
@@ -84,6 +84,34 @@ export class UsersService {
       email: obj.email || '',
     };
   }
+
+  saveMessage(userId: string, message: { 
+    message: string, 
+    imgLink?: string, 
+    reaction?: string, 
+    timestamp?: Date, 
+    firstName: string, 
+    lastName: string, 
+    userId: string 
+  }) {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    const messagesCollectionRef = collection(userDocRef, 'messages');
+    
+    // Automatisch ein Timestamp hinzufügen, falls nicht angegeben
+    const newMessage = {
+      ...message,
+      timestamp: message.timestamp || new Date()
+    };
+  
+    return addDoc(messagesCollectionRef, newMessage)
+      .then(() => {
+        console.log('Message saved successfully');
+      })
+      .catch((error) => {
+        console.error('Error saving message:', error);
+      });
+  }
+  
 
   private setMessageObject(obj: any, id: string): Messages {
     return {

@@ -75,19 +75,21 @@
     </div> -->
 
     <div class="direct-message-input">
-      <button mat-button [matMenuTriggerFor]="aboveMenu" #menuTrigger="matMenuTrigger"
-        style="opacity: 0; width: 0px; height: 0px "></button>
+      <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu" #menuTrigger="matMenuTrigger"></button>
 
       <textarea [(ngModel)]="newMessage" rows="2"
         placeholder="Nachricht an {{ activeUser()?.firstName }} {{ activeUser()?.lastName }}" (input)="onInput($event)"
         #textarea>
-</textarea>
+      </textarea>
 
       <mat-menu #aboveMenu="matMenu" yPosition="above">
-        @for(user of users(); track user) {
-        <button mat-menu-item>{{ user.firstName }} {{ user.lastName }}</button>
+        @for (user of users(); track user) {
+          <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName)">
+            {{ user.firstName }} {{ user.lastName }}
+          </button>
         }
       </mat-menu>
+      
 
       <div class="message-icon-bar">
         <div class="send-message-icons">
