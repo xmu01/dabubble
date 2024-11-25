@@ -93,8 +93,17 @@
 
       <div class="message-icon-bar">
         <div class="send-message-icons">
-          <mat-icon>add</mat-icon>
-          <mat-icon>sentiment_satisfied</mat-icon>
+          @if(showEmojis) {
+          <emoji-mart 
+          [set]="'google'" 
+          class="emojis" 
+          (emojiClick)="addEmoji($event)" 
+          [showPreview]="false" 
+          [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
+          showSkinTones="true"></emoji-mart>
+          
+        }
+          <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
           <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>
         </div>
         <div (click)="getMessage()" class="send-button">
@@ -104,8 +113,5 @@
     </div>
 
   </mat-card>
-
-
-
   <app-thread class="thread"></app-thread>
 </div>
