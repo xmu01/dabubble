@@ -95,6 +95,7 @@
         <div class="send-message-icons">
           @if(showEmojis) {
           <emoji-mart 
+          #emojiPicker
           [set]="'google'" 
           class="emojis" 
           (emojiClick)="addEmoji($event)" 

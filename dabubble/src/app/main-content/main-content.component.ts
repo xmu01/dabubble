@@ -1,4 +1,4 @@
-import { Component, inject, effect, computed, signal, ViewChild, ElementRef, ChangeDetectorRef, OnInit, OnChanges, AfterViewInit } from '@angular/core';
+import { Component, inject, effect, signal, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ThreadComponent } from '../thread/thread.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -46,8 +46,6 @@ export class MainContentComponent implements AfterViewInit {
     } else {
     this.newMessage += event.emoji.native;
     }
-
-    console.log('Selected Emoji:', event.emoji);
   }
 
   convertToFlagEmoji(countryCode: string): string {
