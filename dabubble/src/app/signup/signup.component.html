@@ -1,20 +1,12 @@
-<div class="top-login">
-    <img src="./../../assets/img/header_icon.png" alt="">
-    <div class="create-acc">
-        <p>Neu bei DABubble?</p> 
-        <a href="sign-up" class="create-acc-purple">Konto erstellen</a>
-    </div>
-    
-</div>
     
 
 <div class="login-card">
     <mat-card >
         <mat-card-content>
             <form (submit)="continueSignUp()" class="inside-mat-card">
-                <h2>Anmeldung</h2>
+                <h2>Konto erstellen</h2>
 
-                <p class="recommend-login"> Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
+                <p class="recommend-login"> Mit deinem Namen und deiner E-Mail Adresse hast du dein neues DABubble-Konto.</p>
 
                 <div class="input-fields">
                     <!-- <mat-form-field>
@@ -29,13 +21,17 @@
                           <mat-error>{{errorMessage}}</mat-error>
                         }
                       </mat-form-field> -->
+                    <div class="name-input">
+                        <i class="i-class-img"><img src="./../../assets/img/mail-icon.png"></i>
+                    <input  class="name-login" type="text" name="email" id="" placeholder="Name und Nachname"> <br>
+                    </div>  
                     <div class="first-input">
                         <i class="i-class-img"><img src="./../../assets/img/mail-icon.png"></i>
-                    <input  class="email-login" type="text" name="email" id="" placeholder="beispielname@email.com"> <br>
+                    <input  class="email-login" type="email" name="email" id="" placeholder="beispielname@email.com"> <br>
                     </div>
                     <div class="second-input">
                         <i class="i-class-img"><img src="./../../assets/img/lock-icon.png"></i>
-                        <input  class="password-login" type="text" name="password" id="" placeholder="Passwort"> <br>
+                        <input  class="password-login" type="password" name="password" id="" placeholder="Passwort"> <br>
                     </div>
 
                 </div>
