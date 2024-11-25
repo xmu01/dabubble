@@ -215,7 +215,7 @@
         width: 100%;
         border: none;
         outline: none;
-        font-family: Nunito;
+        font-family: Nunito, 'Noto Color Emoji';
         font-size: 18px;
         font-weight: 400;
         line-height: 24.55px;
@@ -426,4 +426,9 @@
 ::ng-deep .mat-mdc-button .mat-mdc-button-touch-target {
     height: 0;
     width: 0;
+}
+
+.emojis {
+    position: absolute;
+    bottom: 180px;
 }

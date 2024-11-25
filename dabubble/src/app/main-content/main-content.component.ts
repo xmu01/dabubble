@@ -7,15 +7,17 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { UsersService } from '../../shared/services/users.service';
 import { CommonModule } from '@angular/common';
-import { MatMenu, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthService } from '../../shared/services/auth.service';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+
 
 @Component({
   selector: 'app-main-content',
   standalone: true,
-  imports: [MatCardModule, ThreadComponent, MatIconModule, MatButtonModule, MatInputModule, FormsModule, CommonModule, 
-    MatFormFieldModule, MatInputModule, MatMenuModule
+  imports: [MatCardModule, ThreadComponent, MatIconModule, MatButtonModule, MatInputModule, FormsModule, CommonModule,
+    MatFormFieldModule, MatInputModule, MatMenuModule, PickerComponent
   ],
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],
@@ -31,12 +33,34 @@ export class MainContentComponent implements AfterViewInit {
   loggedUser = this.auth.userSignal;
   activeUser = this.firestoreService.activeUser;
   groupedMessages = this.firestoreService.groupedMessages;
-  today = signal(new Date().toISOString().split('T')[0]); 
+  today = signal(new Date().toISOString().split('T')[0]);
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   private scrollAtBottom = signal(true);
+  showEmojis = false;
 
+  addEmoji(event: any): void {
+    if (event.emoji.unified && /^[A-Z]{2}$/.test(event.emoji.short_name)) {
+      // Es handelt sich um eine Flagge -> Umwandeln
+      this.newMessage += this.convertToFlagEmoji(event.emoji.short_name);
+    } else {
+    this.newMessage += event.emoji.native;
+    }
 
+    console.log('Selected Emoji:', event.emoji);
+  }
+
+  convertToFlagEmoji(countryCode: string): string {
+    return countryCode
+      .toUpperCase()
+      .split('')
+      .map(char => String.fromCodePoint(127397 + char.charCodeAt(0)))
+      .join('');
+  }
+
+  toggleEmojis() {
+    this.showEmojis = !this.showEmojis;
+  }
 
   onInput(event: Event): void {
     const input = event.target as HTMLTextAreaElement;
@@ -71,7 +95,7 @@ export class MainContentComponent implements AfterViewInit {
     });
   }
 
-    ngAfterViewInit() {
+  ngAfterViewInit() {
     const container = this.scrollContainer.nativeElement;
 
     // Scroll-Event-Listener, um den Zustand zu überwachen
@@ -85,9 +109,9 @@ export class MainContentComponent implements AfterViewInit {
   getLoggedUser() {
     const userId = this.loggedUser()!.uid;
     if (!userId) {
-      return null; 
+      return null;
     }
-  
+
     return this.users().find(user => user.userId === userId) || null;
   }
 
@@ -105,13 +129,13 @@ export class MainContentComponent implements AfterViewInit {
       this.scrollToBottom();
     });
   }
-  
+
   scrollToBottom(): void {
     const container = this.scrollContainer.nativeElement;
-  
+
     // Sicherstellen, dass DOM-Änderungen abgeschlossen sind
     setTimeout(() => {
       container.scrollTop = container.scrollHeight;
     }, 150);
-  } 
+  }
 }
