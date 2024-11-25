@@ -28,7 +28,7 @@
       }
     </mat-card-header>
 
-    <mat-card-content class="direct-message-content" #scrollContainer>
+    <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false">
       <div class="date-elements">
         @for (group of groupedMessages(); track group.date) {
         <div class="date-element">
@@ -79,7 +79,7 @@
 
       <textarea [(ngModel)]="newMessage" rows="2"
         placeholder="Nachricht an {{ activeUser()?.firstName }} {{ activeUser()?.lastName }}" (input)="onInput($event)"
-        #textarea>
+        #textarea (focus)="showEmojis = false">
       </textarea>
 
       <mat-menu #aboveMenu="matMenu" yPosition="above">
