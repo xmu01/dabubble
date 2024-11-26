@@ -157,6 +157,22 @@
             }
         }
         
+        .check-input {
+            display: flex;
+            justify-content:flex-start;
+            align-items:flex-start;
+
+            input {
+                margin-top: 2px;
+                margin-right: 10px;
+                accent-color: #535AF1;
+            }
+
+            a {
+                text-decoration: none;
+                
+            }
+        }
     }
 
 
