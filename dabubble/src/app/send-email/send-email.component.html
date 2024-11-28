@@ -7,9 +7,9 @@
     <mat-card >
         <mat-card-content>
             <form (submit)="continueSignUp2()" class="inside-mat-card">
-                <h2>Konto erstellen</h2>
+                <h2>Passwort zurücksetzen</h2>
 
-                <p class="recommend-login"> Mit deinem Namen und deiner E-Mail Adresse hast du dein neues DABubble-Konto.</p>
+                <p class="recommend-login">Bitte geben Sie ihre E-Mail Adresse ein.</p>
 
                 <div class="input-fields">
                     <!-- <mat-form-field>
@@ -24,29 +24,22 @@
                           <mat-error>{{errorMessage}}</mat-error>
                         }
                       </mat-form-field> -->
-                    <div class="name-input">
-                        <i class="i-class-img"><img src="./../../assets/img/person-icon.png"></i>
-                    <input  class="name-login" type="text" name="email"  placeholder="Name und Nachname"> <br>
-                    </div>  
+                     
                     <div class="first-input">
                         <i class="i-class-img"><img src="./../../assets/img/mail-icon.png"></i>
                     <input  class="email-login" type="email" name="email"  placeholder="beispielname@email.com"> <br>
                     </div>
-                    <div class="second-input">
-                        <i class="i-class-img"><img src="./../../assets/img/lock-icon.png"></i>
-                        <input  class="password-login" type="password" name="password"  placeholder="Passwort"> <br>
-                    </div>
+                  
 
                     <div class="check-input">
-                        <input type="checkbox">
-                        <p>Ich stimme der <a class="purple-datenschutz" href="#">Datenschutzerklärung</a> zu.</p> 
+                        <p>Wir senden Ihnen eine E-Mail, über die Sie ihr Passwort ändern können.</p> 
                     </div>
 
                 </div>
 
 
                 <div class="div-btn-weiter">
-                    <button class="login-btn" type="submit" >Weiter</button>
+                    <button class="login-btn" type="submit" >E-Mail senden</button>
                 </div>
                     
                 
