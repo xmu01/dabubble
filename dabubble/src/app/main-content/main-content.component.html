@@ -40,14 +40,14 @@
         </div>
         <div class="messages">
           @for (message of group.messages; track message.id) {
-          <div class="message-container" [ngClass]="message.userId == activeUser()?.userId ? 'left' : 'right'">
+          <div class="message-container" [ngClass]="message.senderId == activeUser()?.userId ? 'left' : 'right'">
             <img src="./../../assets/img/pfp_header.png" alt="Message User">
-            <div [ngClass]="message.userId == activeUser()?.userId ? 'message-left' : 'message-right'">
-              <div [ngClass]="message.userId == activeUser()?.userId ? 'name-left' : 'name-right'">
-                <p>{{ message.firstName }} {{ message.lastName }}</p>
+            <div [ngClass]="message.senderId == activeUser()?.userId ? 'message-left' : 'message-right'">
+              <div [ngClass]="message.senderId == activeUser()?.userId ? 'name-left' : 'name-right'">
+                <p>{{ message.senderName }}</p>
                 <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
               </div>
-              <p [ngClass]="message.userId == activeUser()?.userId ? 'text-left' : 'text-right'">{{ message.message }}
+              <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'">{{ message.message }}
               </p>
             </div>
           </div>

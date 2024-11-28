@@ -151,39 +151,39 @@
 //   }
 // }
 
-import { Component, OnInit, signal, effect, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { UsersService } from '../../shared/services/users.service';
+// import { Component, OnInit, signal, effect, inject } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import { UsersService } from '../../shared/services/users.service';
 
-@Component({
-  selector: 'app-privacy-policy',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './privacy-policy.component.html',
-  styleUrls: ['./privacy-policy.component.scss']
-})
-export class PrivacyPolicyComponent implements OnInit {
-  private firestoreService = inject(UsersService);
+// @Component({
+//   selector: 'app-privacy-policy',
+//   standalone: true,
+//   imports: [CommonModule],
+//   templateUrl: './privacy-policy.component.html',
+//   styleUrls: ['./privacy-policy.component.scss']
+// })
+// export class PrivacyPolicyComponent implements OnInit {
+//   private firestoreService = inject(UsersService);
 
-  users = this.firestoreService.users;
-  activeUser = this.firestoreService.activeUser;
-  groupedMessages = this.firestoreService.groupedMessages;
-  today = signal(new Date().toISOString().split('T')[0]); // Heutiges Datum im Format "yyyy-MM-dd"
+//   users = this.firestoreService.users;
+//   activeUser = this.firestoreService.activeUser;
+//   groupedMessages = this.firestoreService.groupedMessages;
+//   today = signal(new Date().toISOString().split('T')[0]); // Heutiges Datum im Format "yyyy-MM-dd"
 
-  constructor() {
-    effect(() => {
-      const activeId = this.firestoreService.activeUser()?.userId;
-      if (activeId) {
-        this.firestoreService.loadMessages(activeId);
-      }
-    });
-  }
+//   constructor() {
+//     effect(() => {
+//       const activeId = this.firestoreService.activeUser()?.userId;
+//       if (activeId) {
+//         this.firestoreService.loadMessages(activeId);
+//       }
+//     });
+//   }
 
-  ngOnInit() {
-    this.firestoreService.loadUsers();
-  }
+//   ngOnInit() {
+//     this.firestoreService.loadUsers();
+//   }
 
-  getId(userId: string) {
-    this.firestoreService.loadUser(userId);
-  }
-}
+//   getId(userId: string) {
+//     this.firestoreService.loadUser(userId);
+//   }
+// }
