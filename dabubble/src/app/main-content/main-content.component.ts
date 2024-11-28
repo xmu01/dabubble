@@ -11,6 +11,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthService } from '../../shared/services/auth.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { Timestamp } from '@angular/fire/firestore';
 
 
 @Component({
@@ -85,7 +86,8 @@ export class MainContentComponent implements AfterViewInit {
       const activeId = this.firestoreService.activeUser()?.userId;
 
       if (activeId) {
-        this.firestoreService.loadMessages(activeId);
+        // this.firestoreService.loadMessages(activeId);
+        this.firestoreService.loadMessagePrivateChat(activeId, this.loggedUser()!.uid)
         if (this.scrollAtBottom()) {
           this.scrollToBottom();
         }
@@ -114,15 +116,15 @@ export class MainContentComponent implements AfterViewInit {
   }
 
   getMessage(): void {
-    console.log(this.newMessage);
-    this.firestoreService.saveMessage(this.activeUser()!.userId, {
+    const count = [this.loggedUser()!.uid, this.activeUser()!.userId].sort();
+    this.firestoreService.saveMessage({
+      chatParticipants: count,
       message: this.newMessage,
-      firstName: this.getLoggedUser()!.firstName,
-      lastName: this.getLoggedUser()!.lastName,
-      userId: this.loggedUser()?.uid!,
-      reaction: '',
-      imgLink: '',
-    }).then(() => {
+      senderName: this.getLoggedUser()!.firstName + this.getLoggedUser()!.lastName || '',  
+      senderId: this.loggedUser()!.uid || '',
+      receiverName: this.activeUser()!.firstName + this.activeUser()!.lastName || '',
+      receiverId: this.activeUser()!.userId || ''
+       }).then(() => {
       this.newMessage = '';
       this.scrollToBottom();
     });

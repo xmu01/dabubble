@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Firestore, addDoc, collection, doc, onSnapshot, orderBy, query } from '@angular/fire/firestore';
+import { Firestore, Timestamp, addDoc, collection, doc, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
 
@@ -43,15 +43,33 @@ export class UsersService {
    * Loads messages for a specific user and groups them by date.
    * @param userId - The ID of the user whose messages to load.
    */
-  loadMessages(userId: string) {
-    const userDocRef = doc(this.firestore, `users/${userId}`);
-    const messagesQuery = query(
-      collection(userDocRef, 'messages'),
+  // loadMessages(userId: string) {
+  //   const userDocRef = doc(this.firestore, `users/${userId}`);
+  //   const messagesQuery = query(
+  //     collection(userDocRef, 'messages'),
+  //     orderBy('timestamp', 'asc')
+  //   );
+
+  //   onSnapshot(messagesQuery, (querySnapshot) => {
+  //     const messages = querySnapshot.docs.map((doc) => this.setMessageObject(doc.data(), doc.id));
+  //     const grouped = this.groupMessagesByDate(messages);
+  //     this.groupedMessages.set(grouped);
+  //   });
+  // }
+
+  loadMessagePrivateChat(sender: string, receiver: string) {
+    const participants = [sender, receiver].sort();
+
+    const q = query(
+      collection(this.firestore, "messages"),
+      where("chatParticipants", "==", participants),
       orderBy('timestamp', 'asc')
     );
 
-    onSnapshot(messagesQuery, (querySnapshot) => {
-      const messages = querySnapshot.docs.map((doc) => this.setMessageObject(doc.data(), doc.id));
+    onSnapshot(q, (querySnapshot) => {
+      const messages = querySnapshot.docs.map((doc) => this.setMessageObject(doc.data(), doc.id));      
+      console.log(messages);
+      
       const grouped = this.groupMessagesByDate(messages);
       this.groupedMessages.set(grouped);
     });
@@ -85,25 +103,24 @@ export class UsersService {
     };
   }
 
-  saveMessage(userId: string, message: { 
-    message: string, 
-    imgLink?: string, 
-    reaction?: string, 
-    timestamp?: Date, 
-    firstName: string, 
-    lastName: string, 
-    userId: string 
+  saveMessage(message: {
+    chatParticipants: string[],
+    message?: string,
+    receiverId: string,
+    senderId: string,
+    timestamp?: Timestamp,
+    senderName: string,
+    receiverName: string,
   }) {
-    const userDocRef = doc(this.firestore, `users/${userId}`);
-    const messagesCollectionRef = collection(userDocRef, 'messages');
-    
+    const userDocRef = collection(this.firestore, `messages`);
+
     // Automatisch ein Timestamp hinzufügen, falls nicht angegeben
     const newMessage = {
       ...message,
       timestamp: message.timestamp || new Date()
     };
-  
-    return addDoc(messagesCollectionRef, newMessage)
+
+    return addDoc(userDocRef, newMessage)
       .then(() => {
         console.log('Message saved successfully');
       })
@@ -111,18 +128,18 @@ export class UsersService {
         console.error('Error saving message:', error);
       });
   }
-  
+
 
   private setMessageObject(obj: any, id: string): Messages {
     return {
       id: id,
       message: obj.message || '',
-      imgLink: obj.imgLink || '',
-      reaction: obj.reaction || '',
+      senderName: obj.senderName || '',
+      receiverName: obj.receiverName || '',
       timestamp: obj.timestamp || null,
-      firstName: obj.firstName || '',
-      lastName: obj.lastName || '',
-      userId: obj.userId || '',
+      receiverId: obj.receiverId || '',
+      senderId: obj.senderId || '',
+      chatParticipants: obj.chatParticipants || [],
     };
   }
 }
