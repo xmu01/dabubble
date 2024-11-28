@@ -45,7 +45,7 @@ export class MainContentComponent implements AfterViewInit {
       // Es handelt sich um eine Flagge -> Umwandeln
       this.newMessage += this.convertToFlagEmoji(event.emoji.short_name);
     } else {
-    this.newMessage += event.emoji.native;
+      this.newMessage += event.emoji.native;
     }
   }
 
@@ -116,18 +116,20 @@ export class MainContentComponent implements AfterViewInit {
   }
 
   getMessage(): void {
-    const count = [this.loggedUser()!.uid, this.activeUser()!.userId].sort();
-    this.firestoreService.saveMessage({
-      chatParticipants: count,
-      message: this.newMessage,
-      senderName: this.getLoggedUser()!.firstName + this.getLoggedUser()!.lastName || '',  
-      senderId: this.loggedUser()!.uid || '',
-      receiverName: this.activeUser()!.firstName + this.activeUser()!.lastName || '',
-      receiverId: this.activeUser()!.userId || ''
-       }).then(() => {
-      this.newMessage = '';
-      this.scrollToBottom();
-    });
+    if (this.newMessage != '') {
+      const count = [this.loggedUser()!.uid, this.activeUser()!.userId].sort();
+      this.firestoreService.saveMessage({
+        chatParticipants: count,
+        message: this.newMessage,
+        senderName: this.getLoggedUser()!.firstName + this.getLoggedUser()!.lastName || '',
+        senderId: this.loggedUser()!.uid || '',
+        receiverName: this.activeUser()!.firstName + this.activeUser()!.lastName || '',
+        receiverId: this.activeUser()!.userId || ''
+      }).then(() => {
+        this.newMessage = '';
+        this.scrollToBottom();
+      });
+    }
   }
 
   scrollToBottom(): void {
