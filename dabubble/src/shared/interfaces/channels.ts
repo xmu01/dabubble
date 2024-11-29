@@ -1,5 +1,5 @@
 export interface Channels {
-    id?: string;
+    id: string;
     name: string;
     description?: string;
     created_by: string;

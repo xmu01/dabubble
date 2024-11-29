@@ -19,21 +19,9 @@
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <ul class="list">
-                            <li><mat-icon class="tag">tag</mat-icon>Entwicklerteam</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
-                            <li><mat-icon class="tag">tag</mat-icon> Office</li>
+                            @for(channel of channels(); track channel) {
+                            <li (click)="getChannel(channel.id)"><mat-icon class="tag">tag</mat-icon>{{channel.name}}</li>
+                            }
                             <li class="add-channel"><mat-icon>add_circle_outline</mat-icon>Channel hinzufügen</li>
                         </ul>
                     </mat-expansion-panel>

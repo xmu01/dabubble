@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Firestore, Timestamp, addDoc, collection, doc, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
+import { Channels } from '../interfaces/channels';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,9 @@ export class UsersService {
   private firestore = inject(Firestore);
 
   users = signal<Users[]>([]);
+  channels = signal<Channels[]>([]);
   activeUser = signal<Users | null>(null);
+  activeChannel = signal<Channels | null>(null);
   groupedMessages = signal<{ date: string; messages: Messages[] }[]>([]);
 
   constructor() { }
@@ -26,6 +29,17 @@ export class UsersService {
     });
   }
 
+    /**
+   * Loads all users from Firestore and updates the users signal.
+   */
+    loadChannels() {
+      const channelsQuery = query(collection(this.firestore, 'channels'));
+      onSnapshot(channelsQuery, (querySnapshot) => {
+        const channel = querySnapshot.docs.map((doc) => this.setChannelObject(doc.data(), doc.id));
+        this.channels.set(channel);
+      });
+    }
+
   /**
    * Loads a specific user by ID and updates the activeUser signal.
    * @param userId - The ID of the user to load.
@@ -39,23 +53,14 @@ export class UsersService {
     });
   }
 
-  /**
-   * Loads messages for a specific user and groups them by date.
-   * @param userId - The ID of the user whose messages to load.
-   */
-  // loadMessages(userId: string) {
-  //   const userDocRef = doc(this.firestore, `users/${userId}`);
-  //   const messagesQuery = query(
-  //     collection(userDocRef, 'messages'),
-  //     orderBy('timestamp', 'asc')
-  //   );
-
-  //   onSnapshot(messagesQuery, (querySnapshot) => {
-  //     const messages = querySnapshot.docs.map((doc) => this.setMessageObject(doc.data(), doc.id));
-  //     const grouped = this.groupMessagesByDate(messages);
-  //     this.groupedMessages.set(grouped);
-  //   });
-  // }
+  loadChannel(channelId: string) {
+    const channelDocRef = doc(this.firestore, 'channels', channelId);
+    onSnapshot(channelDocRef, (doc) => {
+      if (doc.exists()) {
+        this.activeChannel.set(this.setChannelObject(doc.data(), doc.id));
+      }
+    });
+  }
 
   loadMessagePrivateChat(sender: string, receiver: string) {
     const participants = [sender, receiver].sort();
@@ -100,6 +105,16 @@ export class UsersService {
       lastName: obj.lastName || '',
       avatar: obj.avatar || '',
       email: obj.email || '',
+    };
+  }
+
+  private setChannelObject(obj: any, id: string): Channels {
+    return {
+      id: id,
+      name: obj.name || '',
+      description: obj.description || '',
+      created_by: obj.created_by || '',
+      members: obj.members
     };
   }
 

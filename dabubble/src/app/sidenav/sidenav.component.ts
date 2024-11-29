@@ -27,14 +27,21 @@ export class SidenavComponent {
   private firestoreService = inject(UsersService);
 
   users = this.firestoreService.users;
+  channels = this.firestoreService.channels;
 
   constructor() {}
 
   ngOnInit() {
     this.firestoreService.loadUsers();
+    this.firestoreService.loadChannels();
   }
 
   getId(userId: string) {
     this.firestoreService.loadUser(userId);
+  }
+
+  getChannel(channelId: string) {
+    this.firestoreService.loadChannel(channelId);
+    console.log(channelId);
   }
 }

@@ -33,6 +33,7 @@ export class MainContentComponent implements AfterViewInit {
   users = this.firestoreService.users;
   loggedUser = this.auth.userSignal;
   activeUser = this.firestoreService.activeUser;
+  activeChannel = this.firestoreService.activeChannel;
   groupedMessages = this.firestoreService.groupedMessages;
   today = signal(new Date().toISOString().split('T')[0]);
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;

@@ -8,7 +8,12 @@
           <span class="user-picture-dot-online"></span>
         </div>
         }
+        @if (activeUser()) {
         <span class="userName">{{ activeUser()?.firstName }} {{ activeUser()?.lastName }}</span>
+      } @else {
+        <span class="userName">{{ activeChannel()?.name }}</span>
+
+      }
         @if (!activeUser()) {
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
         }
