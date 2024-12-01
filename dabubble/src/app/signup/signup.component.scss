@@ -41,8 +41,18 @@
         margin-left: 20px;
     }
 
+    .h2-arrow {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .arrow-back {
+      
+    }
+
     h2 {
         color: #535AF1;
+        margin-right: 200px;
     }
 
     .recommend-login {
