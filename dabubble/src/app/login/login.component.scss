@@ -34,7 +34,8 @@
         border-bottom-left-radius: 20px !important;
         border-bottom-right-radius: 20px !important;
         border-top-right-radius: 20px !important;
-    
+        height: 560px;
+        width: 500px;
     }
 
     .inside-mat-card {
@@ -43,10 +44,13 @@
     }
 
     h2 {
+        margin-top: 20px;
         color: #535AF1;
+        font-size: 36px;
     }
 
     .recommend-login {
+        margin-top: 25px;
         margin-bottom: 25px;
     }
 
@@ -162,6 +166,7 @@
         padding: 16px;
         padding-right: 50px;
         padding-left: 50px;
+        margin-top: 30px;
 
         display: flex;
         justify-content: center;

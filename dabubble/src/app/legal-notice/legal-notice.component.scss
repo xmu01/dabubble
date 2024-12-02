@@ -25,13 +25,16 @@
 
     text-align: center;
 
-
+   
 
     ::ng-deep mat-card {
         border-top-left-radius: 20px !important;
         border-bottom-left-radius: 20px !important;
         border-bottom-right-radius: 20px !important;
         border-top-right-radius: 20px !important;
+        width: 550px;
+        min-height: fit-content;
+        height: 300px;
     
     }
 
@@ -42,11 +45,14 @@
 
     .h2-arrow {
         display: flex;
-        justify-content:space-between;
+        justify-content: center;
+        
     }
 
     h2 {
         color: #535AF1;
+        display: flex;
+        justify-content: center;
     }
 
     .recommend-login {
