@@ -33,7 +33,8 @@
         border-bottom-left-radius: 20px !important;
         border-bottom-right-radius: 20px !important;
         border-top-right-radius: 20px !important;
-    
+        height: 560px;
+        width: 500px;
     }
 
     .inside-mat-card {
@@ -44,6 +45,7 @@
     .h2-arrow {
         display: flex;
         justify-content: space-between;
+        margin-top: 20px;
     }
 
     .arrow-back {
@@ -52,11 +54,13 @@
 
     h2 {
         color: #535AF1;
-        margin-right: 200px;
+        margin-right: 180px;
+        font-size: 29px;
     }
 
     .recommend-login {
-        margin-bottom: 25px;
+        margin-top: 20px;
+        margin-bottom:40px;
     }
 
     .input-fields {
@@ -256,7 +260,7 @@
             padding-right: 16px;
             padding-left: 16px;
             margin-right: 20px;
-            margin-top: 30px;
+            margin-top: 50px; /*war vorher 30px*/
             font-weight: 700;
             
         }
