@@ -19,4 +19,5 @@ export interface Messages {
     timestamp: Timestamp;
     senderName:string;
     receiverName:string;
+    reactions?: [];
 }

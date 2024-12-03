@@ -10,15 +10,15 @@
         }
         @if (activeUser()) {
         <span class="userName">{{ activeUser()?.firstName }} {{ activeUser()?.lastName }}</span>
-      } @else {
+        }
+        @if(activeChannel()) {
         <span class="userName">{{ activeChannel()?.name }}</span>
-
-      }
-        @if (!activeUser()) {
+        }
+        @if (activeChannel()) {
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
         }
       </mat-card-title>
-      @if (!activeUser()) {
+      @if (activeChannel()) {
       <div class="members-container">
         <div class="members-images">
           <img class="members-image" style="right: -25px;" src="./../../assets/img/pfp_header.png" alt="Member 1">
@@ -33,6 +33,7 @@
       }
     </mat-card-header>
 
+    @if(activeUser()) {
     <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false">
       <div class="date-elements">
         @for (group of groupedMessages(); track group.date) {
@@ -59,44 +60,77 @@
           }
         </div>
         }
-
       </div>
     </mat-card-content>
-
+  }
+  @else {
+    <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false">
+      <div class="date-elements">
+        @for (group of groupedChannelMessages(); track group.date) {
+        <div class="date-element">
+          <span class="date">@if (group.date === (today() | date: 'yyyy-MM-dd')) {
+            Heute
+            } @else {
+            {{ group.date | date: 'dd.MM.yyyy' }}
+            }</span>
+        </div>
+        <div class="messages">
+          @for (message of group.messages; track message.id) {
+          <div class="message-container" [ngClass]="message.senderId != loggedUser()?.uid ? 'left' : 'right'">
+            <img src="./../../assets/img/pfp_header.png" alt="Message User">
+            <div [ngClass]="message.senderId != loggedUser()?.uid ? 'message-left' : 'message-right'">
+              <div [ngClass]="message.senderId != loggedUser()?.uid ? 'name-left' : 'name-right'">
+                <p>{{ message.senderName }}</p>
+                <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
+              </div>
+              <p [ngClass]="message.senderId != loggedUser()?.uid ? 'text-left' : 'text-right'">{{ message.message }}
+              </p>
+            </div>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </mat-card-content>
+  }
     <div class="direct-message-input">
-      <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu" #menuTrigger="matMenuTrigger"></button>
+      <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu"
+        #menuTrigger="matMenuTrigger"></button>
 
+      @if(activeUser()){
       <textarea [(ngModel)]="newMessage" rows="2"
         placeholder="Nachricht an {{ activeUser()?.firstName }} {{ activeUser()?.lastName }}" (input)="onInput($event)"
         #textarea (focus)="showEmojis = false">
       </textarea>
+      }
+      @if(activeChannel()) {
+      <textarea [(ngModel)]="newMessage" rows="2"
+        placeholder="Nachricht an # {{ activeChannel()?.name }}" (input)="onInput($event)"
+        #textarea (focus)="showEmojis = false">
+      </textarea>
+    }
 
       <mat-menu #aboveMenu="matMenu" yPosition="above">
         @for (user of users(); track user) {
-          <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName)">
-            {{ user.firstName }} {{ user.lastName }}
-          </button>
+        <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName)">
+          {{ user.firstName }} {{ user.lastName }}
+        </button>
         }
       </mat-menu>
-      
+
 
       <div class="message-icon-bar">
         <div class="send-message-icons">
           @if(showEmojis) {
-          <emoji-mart 
-          #emojiPicker
-          [set]="'google'" 
-          class="emojis" 
-          (emojiClick)="addEmoji($event)" 
-          [showPreview]="false" 
-          [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-          showSkinTones="true"></emoji-mart>
-          
-        }
+          <emoji-mart #emojiPicker [set]="'google'" class="emojis" (emojiClick)="addEmoji($event)" [showPreview]="false"
+            [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
+            showSkinTones="true"></emoji-mart>
+
+          }
           <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
           <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>
         </div>
-        <div (click)="getMessage()" class="send-button">
+        <div (click)="saveMessage()" class="send-button">
           <mat-icon>send</mat-icon>
         </div>
       </div>

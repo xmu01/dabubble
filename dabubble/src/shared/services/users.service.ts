@@ -3,6 +3,7 @@ import { Firestore, Timestamp, addDoc, collection, doc, getDocs, onSnapshot, ord
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
 import { Channels } from '../interfaces/channels';
+import { ChannelMessage } from '../interfaces/channelMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,9 @@ export class UsersService {
   activeUser = signal<Users | null>(null);
   activeChannel = signal<Channels | null>(null);
   groupedMessages = signal<{ date: string; messages: Messages[] }[]>([]);
+  groupedChannelMessages = signal<{ date: string; messages: ChannelMessage[] }[]>([]);
 
-  constructor() { }
+  constructor() {}
 
   /**
    * Loads all users from Firestore and updates the users signal.
@@ -45,6 +47,7 @@ export class UsersService {
    * @param userId - The ID of the user to load.
    */
   loadUser(userId: string) {
+    this.activeChannel.set(null);
     const userDocRef = doc(this.firestore, 'users', userId);
     onSnapshot(userDocRef, (doc) => {
       if (doc.exists()) {
@@ -54,6 +57,7 @@ export class UsersService {
   }
 
   loadChannel(channelId: string) {
+    this.activeUser.set(null);
     const channelDocRef = doc(this.firestore, 'channels', channelId);
     onSnapshot(channelDocRef, (doc) => {
       if (doc.exists()) {
@@ -80,6 +84,22 @@ export class UsersService {
     });
   }
 
+  loadMessageChannelChat(channelId: string) {
+    const q = query(
+      collection(this.firestore, `channels/${channelId}/messages`),
+      orderBy('timestamp', 'asc')
+    );
+
+    onSnapshot(q, (querySnapshot) => {     
+      const messages = querySnapshot.docs.map((doc) => this.setChannelMessageObject(doc.data(), doc.id));      
+      console.log(messages);
+      
+      const grouped = this.groupChannelMessagesByDate(messages);
+      this.groupedChannelMessages.set(grouped);
+      
+    });
+  }
+
   /**
    * Groups messages by their date.
    */
@@ -97,6 +117,24 @@ export class UsersService {
       .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
       .map((date) => ({ date, messages: grouped[date] }));
   }
+
+    /**
+   * Groups messages by their date.
+   */
+    private groupChannelMessagesByDate(messages: ChannelMessage[]): { date: string; messages: ChannelMessage[] }[] {
+      const grouped = messages.reduce((acc, message) => {
+        const dateKey = message.timestamp?.toDate().toISOString().split('T')[0];
+        if (!acc[dateKey]) {
+          acc[dateKey] = [];
+        }
+        acc[dateKey].push(message);
+        return acc;
+      }, {} as Record<string, ChannelMessage[]>);
+  
+      return Object.keys(grouped)
+        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+        .map((date) => ({ date, messages: grouped[date] }));
+    }
 
   private setUserObject(obj: any, id: string): Users {
     return {
@@ -126,6 +164,7 @@ export class UsersService {
     timestamp?: Timestamp,
     senderName: string,
     receiverName: string,
+    reactions?: string[],
   }) {
     const userDocRef = collection(this.firestore, `messages`);
 
@@ -155,6 +194,17 @@ export class UsersService {
       receiverId: obj.receiverId || '',
       senderId: obj.senderId || '',
       chatParticipants: obj.chatParticipants || [],
+      reactions: obj.reactions || [],
+    };
+  }
+
+  private setChannelMessageObject(obj: any, id: string): ChannelMessage {
+    return {
+      id: id,
+      message: obj.message || '',
+      senderName: obj.senderName || '',
+      timestamp: obj.timestamp || null,
+      senderId: obj.senderId || '',
     };
   }
 }

@@ -42,6 +42,5 @@ export class SidenavComponent {
 
   getChannel(channelId: string) {
     this.firestoreService.loadChannel(channelId);
-    console.log(channelId);
   }
 }

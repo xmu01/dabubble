@@ -11,7 +11,6 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthService } from '../../shared/services/auth.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-import { Timestamp } from '@angular/fire/firestore';
 
 
 @Component({
@@ -35,6 +34,7 @@ export class MainContentComponent implements AfterViewInit {
   activeUser = this.firestoreService.activeUser;
   activeChannel = this.firestoreService.activeChannel;
   groupedMessages = this.firestoreService.groupedMessages;
+  groupedChannelMessages = this.firestoreService.groupedChannelMessages;
   today = signal(new Date().toISOString().split('T')[0]);
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -83,12 +83,22 @@ export class MainContentComponent implements AfterViewInit {
   }
 
   constructor() {
+    this.firestoreService.loadChannel('uYr4Z1UxNJW1qVyRlvlX');
+
     effect(() => {
       const activeId = this.firestoreService.activeUser()?.userId;
+      const channelId = this.firestoreService.activeChannel()?.id;
 
       if (activeId) {
         // this.firestoreService.loadMessages(activeId);
         this.firestoreService.loadMessagePrivateChat(activeId, this.loggedUser()!.uid)
+        if (this.scrollAtBottom()) {
+          this.scrollToBottom();
+        }
+      }
+
+      if(channelId) {
+        this.firestoreService.loadMessageChannelChat(channelId);
         if (this.scrollAtBottom()) {
           this.scrollToBottom();
         }
@@ -116,7 +126,7 @@ export class MainContentComponent implements AfterViewInit {
     return this.users().find(user => user.userId === userId) || null;
   }
 
-  getMessage(): void {
+  saveMessage(): void {
     if (this.newMessage != '') {
       const count = [this.loggedUser()!.uid, this.activeUser()!.userId].sort();
       this.firestoreService.saveMessage({
@@ -125,7 +135,8 @@ export class MainContentComponent implements AfterViewInit {
         senderName: this.getLoggedUser()!.firstName + this.getLoggedUser()!.lastName || '',
         senderId: this.loggedUser()!.uid || '',
         receiverName: this.activeUser()!.firstName + this.activeUser()!.lastName || '',
-        receiverId: this.activeUser()!.userId || ''
+        receiverId: this.activeUser()!.userId || '',
+        reactions: [],
       }).then(() => {
         this.newMessage = '';
         this.scrollToBottom();
