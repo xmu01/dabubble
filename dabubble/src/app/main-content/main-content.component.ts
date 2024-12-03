@@ -92,7 +92,8 @@ export class MainContentComponent implements AfterViewInit {
 
       if (activeId) {
         // this.firestoreService.loadMessages(activeId);
-        this.firestoreService.loadMessagePrivateChat(activeId, this.loggedUser()!.uid)
+        this.firestoreService.loadMessagePrivateChat(activeId, this.loggedUser()!.uid);
+        this.newMessage = '';
         if (this.scrollAtBottom()) {
           this.scrollToBottom();
         }
@@ -100,6 +101,7 @@ export class MainContentComponent implements AfterViewInit {
 
       if(channelId) {
         this.firestoreService.loadMessageChannelChat(channelId);
+        this.newMessage = '';
         if (this.scrollAtBottom()) {
           this.scrollToBottom();
         }
