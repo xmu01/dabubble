@@ -183,6 +183,24 @@ export class UsersService {
       });
   }
 
+  saveChannelMessage(message: ChannelMessage, id:string) {
+    const userDocRef = collection(this.firestore, `channels/${id}/messages`);
+
+    // Automatisch ein Timestamp hinzufügen, falls nicht angegeben
+    const newMessage = {
+      ...message,
+      timestamp: message.timestamp || new Date()
+    };
+
+    return addDoc(userDocRef, newMessage)
+      .then(() => {
+        console.log('Message saved successfully');
+      })
+      .catch((error) => {
+        console.error('Error saving message:', error);
+      });
+  }
+
 
   private setMessageObject(obj: any, id: string): Messages {
     return {

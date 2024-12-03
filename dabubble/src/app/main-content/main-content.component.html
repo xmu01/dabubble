@@ -63,7 +63,7 @@
       </div>
     </mat-card-content>
   }
-  @else {
+  @if(activeChannel()) {
     <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false">
       <div class="date-elements">
         @for (group of groupedChannelMessages(); track group.date) {
@@ -130,9 +130,15 @@
           <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
           <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>
         </div>
-        <div (click)="saveMessage()" class="send-button">
+        @if(activeUser()){
+          <div (click)="saveMessage()" class="send-button">
+            <mat-icon>send</mat-icon>
+          </div>
+        } @else {
+        <div (click)="saveChannelMessage(activeChannel()!.id)" class="send-button">
           <mat-icon>send</mat-icon>
         </div>
+      }
       </div>
     </div>
 

@@ -11,6 +11,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthService } from '../../shared/services/auth.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { Timestamp } from '@angular/fire/firestore';
 
 
 @Component({
@@ -138,6 +139,20 @@ export class MainContentComponent implements AfterViewInit {
         receiverId: this.activeUser()!.userId || '',
         reactions: [],
       }).then(() => {
+        this.newMessage = '';
+        this.scrollToBottom();
+      });
+    }
+  }
+
+  saveChannelMessage(id: string): void {
+    if (this.newMessage != '') {
+      this.firestoreService.saveChannelMessage({
+        message: this.newMessage,
+        senderName: this.getLoggedUser()!.firstName + this.getLoggedUser()!.lastName || '',
+        senderId: this.loggedUser()!.uid || '',
+        timestamp: Timestamp.now()
+      }, id).then(() => {
         this.newMessage = '';
         this.scrollToBottom();
       });
