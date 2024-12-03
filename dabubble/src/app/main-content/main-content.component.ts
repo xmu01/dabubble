@@ -152,7 +152,7 @@ export class MainContentComponent implements AfterViewInit {
     if (this.newMessage != '') {
       this.firestoreService.saveChannelMessage({
         message: this.newMessage,
-        senderName: this.getLoggedUser()!.firstName + this.getLoggedUser()!.lastName || '',
+        senderName: this.getLoggedUser()!.firstName + ' ' + this.getLoggedUser()!.lastName || '',
         senderId: this.loggedUser()!.uid || '',
         timestamp: Timestamp.now()
       }, id).then(() => {
