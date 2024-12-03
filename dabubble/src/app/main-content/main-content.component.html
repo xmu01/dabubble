@@ -12,7 +12,7 @@
         <span class="userName">{{ activeUser()?.firstName }} {{ activeUser()?.lastName }}</span>
         }
         @if(activeChannel()) {
-        <span class="userName">{{ activeChannel()?.name }}</span>
+        <mat-icon fontIcon="tag"></mat-icon><span class="userName">{{ activeChannel()?.name }}</span>
         }
         @if (activeChannel()) {
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>

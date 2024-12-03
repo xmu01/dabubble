@@ -91,7 +91,6 @@ export class MainContentComponent implements AfterViewInit {
       const channelId = this.firestoreService.activeChannel()?.id;
 
       if (activeId) {
-        // this.firestoreService.loadMessages(activeId);
         this.firestoreService.loadMessagePrivateChat(activeId, this.loggedUser()!.uid);
         this.newMessage = '';
         if (this.scrollAtBottom()) {
