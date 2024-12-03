@@ -93,6 +93,7 @@ export class MainContentComponent implements AfterViewInit {
       if (activeId) {
         this.firestoreService.loadMessagePrivateChat(activeId, this.loggedUser()!.uid);
         this.newMessage = '';
+        this.showEmojis = false;
         if (this.scrollAtBottom()) {
           this.scrollToBottom();
         }
@@ -101,6 +102,7 @@ export class MainContentComponent implements AfterViewInit {
       if(channelId) {
         this.firestoreService.loadMessageChannelChat(channelId);
         this.newMessage = '';
+        this.showEmojis = false;
         if (this.scrollAtBottom()) {
           this.scrollToBottom();
         }
@@ -134,9 +136,9 @@ export class MainContentComponent implements AfterViewInit {
       this.firestoreService.saveMessage({
         chatParticipants: count,
         message: this.newMessage,
-        senderName: this.getLoggedUser()!.firstName + this.getLoggedUser()!.lastName || '',
+        senderName: this.getLoggedUser()!.firstName + ' ' + this.getLoggedUser()!.lastName || '',
         senderId: this.loggedUser()!.uid || '',
-        receiverName: this.activeUser()!.firstName + this.activeUser()!.lastName || '',
+        receiverName: this.activeUser()!.firstName + ' ' + this.activeUser()!.lastName || '',
         receiverId: this.activeUser()!.userId || '',
         reactions: [],
       }).then(() => {
