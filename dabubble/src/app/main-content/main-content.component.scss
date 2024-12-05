@@ -313,6 +313,11 @@
 
             &:hover {
                 background-color: #ECEEFE;
+                cursor: pointer;
+
+                .text-left {
+                    background-color: #fff;
+                }
             }
 
             .message-left {
