@@ -61,9 +61,9 @@
         >
               <span class="reaction-bar-symbol">✅</span>
               <span class="reaction-bar-symbol">🙏🏻</span>
-              <mat-icon fontSet="material-icons-outlined">add_reaction</mat-icon>
-              <mat-icon fontSet="material-icons-outlined">comment</mat-icon>
-              <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
+              <mat-icon class="reaction-bar-symbol" (click)="toggleEmojis()" fontSet="material-icons-outlined">add_reaction</mat-icon>
+              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">comment</mat-icon>
+              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">more_vert</mat-icon>
             </div>
             <img src="./../../assets/img/pfp_header.png" alt="Message User">
             <div [ngClass]="message.senderId == activeUser()?.userId ? 'message-left' : 'message-right'">
@@ -99,9 +99,9 @@
             <div class="reaction-bar" [ngClass]="message.senderId != loggedUser()?.uid ? 'rbr' : 'rbl'" *ngIf="hoveredMessageId === message.id">
               <span class="reaction-bar-symbol">✅</span>
               <span class="reaction-bar-symbol">🙏🏻</span>
-              <mat-icon fontSet="material-icons-outlined">add_reaction</mat-icon>
-              <mat-icon fontSet="material-icons-outlined">comment</mat-icon>
-              <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
+              <mat-icon class="reaction-bar-symbol" (click)="toggleEmojis()" fontSet="material-icons-outlined">add_reaction</mat-icon>
+              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">comment</mat-icon>
+              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">more_vert</mat-icon>
             </div>
             <img src="./../../assets/img/pfp_header.png" alt="Message User">
             <div [ngClass]="message.senderId != loggedUser()?.uid ? 'message-left' : 'message-right'">

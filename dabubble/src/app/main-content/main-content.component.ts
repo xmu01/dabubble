@@ -78,9 +78,11 @@ clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
       .join('');
   }
 
-  toggleEmojis() {
+  toggleEmojis(): void {
     this.showEmojis = !this.showEmojis;
+    console.log('showEmojis:', this.showEmojis);
   }
+  
 
   onInput(event: Event): void {
     const input = event.target as HTMLTextAreaElement;
