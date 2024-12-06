@@ -310,6 +310,7 @@
             display: flex;
             gap: 14px;
             padding: 15px 35px;
+            position: relative;
 
             &:hover {
                 background-color: #ECEEFE;
@@ -318,6 +319,33 @@
                 .text-left {
                     background-color: #fff;
                 }
+            }
+
+            .reaction-bar {
+                position: absolute;
+                top: -30px;
+                width: 255px;
+                height: 46px;
+                padding: 3px 15px 3px 20px;
+                gap: 5px;
+                border-radius: 25px 25px 0px 25px;
+                border: 1px solid #ADB0D9;
+                background: #FFFFFF;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+
+                .reaction-bar-symbol {
+                    font-size: 20px;
+                }
+            }
+
+            .rbr {
+                right: 40px;
+            }
+
+            .rbl {
+                left: 40px
             }
 
             .message-left {

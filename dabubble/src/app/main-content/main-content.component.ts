@@ -41,6 +41,25 @@ export class MainContentComponent implements AfterViewInit {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   private scrollAtBottom = signal(true);
   showEmojis = false;
+  hoveredMessageId: string | null = null;
+
+setHoveredMessageId(messageId: string | undefined): void {
+  if (messageId) {
+    this.hoveredMessageId = messageId;
+  } else {
+    this.hoveredMessageId = null;
+  }
+}
+
+clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
+  const target = event.relatedTarget as HTMLElement | null;
+
+  // Überprüfe, ob target existiert und ob es sich innerhalb der relevanten Container befindet
+  if (!target || (!target.closest('.message-container') && !target.closest('.reaction-bar'))) {
+    this.hoveredMessageId = null;
+  }
+}
+
 
   addEmoji(event: any): void {
     if (event.emoji.unified && /^[A-Z]{2}$/.test(event.emoji.short_name)) {

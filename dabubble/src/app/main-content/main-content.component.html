@@ -46,7 +46,25 @@
         </div>
         <div class="messages">
           @for (message of group.messages; track message.id) {
-          <div class="message-container" [ngClass]="message.senderId == activeUser()?.userId ? 'left' : 'right'">
+            <div 
+            class="message-container" 
+            [ngClass]="message.senderId == activeUser()?.userId ? 'left' : 'right'" 
+            (mouseover)="setHoveredMessageId(message.id)" 
+            (mouseout)="clearHoveredMessageId(message.id, $event)"
+          >
+          <div 
+          class="reaction-bar" 
+          [ngClass]="(message.senderId != loggedUser()?.uid || activeUser()?.userId === loggedUser()?.uid) ? 'rbr' : 'rbl'" 
+          *ngIf="hoveredMessageId === message.id" 
+          (mouseover)="setHoveredMessageId(message.id)" 
+          (mouseout)="clearHoveredMessageId(message.id, $event)"
+        >
+              <span class="reaction-bar-symbol">✅</span>
+              <span class="reaction-bar-symbol">🙏🏻</span>
+              <mat-icon fontSet="material-icons-outlined">add_reaction</mat-icon>
+              <mat-icon fontSet="material-icons-outlined">comment</mat-icon>
+              <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
+            </div>
             <img src="./../../assets/img/pfp_header.png" alt="Message User">
             <div [ngClass]="message.senderId == activeUser()?.userId ? 'message-left' : 'message-right'">
               <div [ngClass]="message.senderId == activeUser()?.userId ? 'name-left' : 'name-right'">
@@ -59,6 +77,7 @@
           </div>
           }
         </div>
+        
         }
       </div>
     </mat-card-content>
@@ -76,7 +95,14 @@
         </div>
         <div class="messages">
           @for (message of group.messages; track message.id) {
-          <div class="message-container" [ngClass]="message.senderId != loggedUser()?.uid ? 'left' : 'right'">
+          <div class="message-container" [ngClass]="message.senderId != loggedUser()?.uid ? 'left' : 'right'" (mouseover)="setHoveredMessageId(message.id)" (mouseout)="clearHoveredMessageId(message.id, $event)">
+            <div class="reaction-bar" [ngClass]="message.senderId != loggedUser()?.uid ? 'rbr' : 'rbl'" *ngIf="hoveredMessageId === message.id">
+              <span class="reaction-bar-symbol">✅</span>
+              <span class="reaction-bar-symbol">🙏🏻</span>
+              <mat-icon fontSet="material-icons-outlined">add_reaction</mat-icon>
+              <mat-icon fontSet="material-icons-outlined">comment</mat-icon>
+              <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
+            </div>
             <img src="./../../assets/img/pfp_header.png" alt="Message User">
             <div [ngClass]="message.senderId != loggedUser()?.uid ? 'message-left' : 'message-right'">
               <div [ngClass]="message.senderId != loggedUser()?.uid ? 'name-left' : 'name-right'">
