@@ -73,6 +73,13 @@
               </div>
               <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'">{{ message.message }}
               </p>
+              <div class="reaction-container">
+                @for(reaction of message.reactions; track reaction) {
+                  <div class="givenReactions">              
+                <span class="reaction-symbol">{{reaction}}</span><span>1</span>
+              </div>
+              }
+            </div>
             </div>
           </div>
           }
