@@ -1,4 +1,4 @@
-import { Component, inject, effect, signal, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, inject, effect, signal, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit, viewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ThreadComponent } from '../thread/thread.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,7 +23,7 @@ import { Timestamp } from '@angular/fire/firestore';
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],
 })
-export class MainContentComponent implements AfterViewInit {
+export class MainContentComponent {
   newMessage: string = '';
 
   private firestoreService = inject(UsersService);
@@ -38,10 +38,10 @@ export class MainContentComponent implements AfterViewInit {
   groupedChannelMessages = this.firestoreService.groupedChannelMessages;
   today = signal(new Date().toISOString().split('T')[0]);
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
-  private scrollAtBottom = signal(true);
   showEmojis = false;
   hoveredMessageId: string | null = null;
+  contentElement = viewChild<ElementRef<HTMLDivElement>>('scrollContainer');
+
 
 setHoveredMessageId(messageId: string | undefined): void {
   if (messageId) {
@@ -109,36 +109,27 @@ clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
 
     effect(() => {
       const activeId = this.firestoreService.activeUser()?.userId;
-      const channelId = this.firestoreService.activeChannel()?.id;
 
       if (activeId) {
         this.firestoreService.loadMessagePrivateChat(activeId, this.loggedUser()!.uid);
         this.newMessage = '';
         this.showEmojis = false;
-        if (this.scrollAtBottom()) {
-          this.scrollToBottom();
-        }
+        this.triggerScrollToBottom();
       }
+
+      this.firestoreService.messageChanged();
+    });
+    effect(() => {
+      const channelId = this.firestoreService.activeChannel()?.id;
 
       if(channelId) {
         this.firestoreService.loadMessageChannelChat(channelId);
         this.newMessage = '';
         this.showEmojis = false;
-        if (this.scrollAtBottom()) {
-          this.scrollToBottom();
-        }
+        this.triggerScrollToBottom();
       }
-    });
-  }
+      this.firestoreService.channelMessageChanged();
 
-  ngAfterViewInit() {
-    const container = this.scrollContainer.nativeElement;
-
-    // Scroll-Event-Listener, um den Zustand zu überwachen
-    container.addEventListener('scroll', () => {
-      const isAtBottom =
-        container.scrollHeight - container.scrollTop <= container.clientHeight + 10;
-      this.scrollAtBottom.set(isAtBottom);
     });
   }
 
@@ -164,7 +155,7 @@ clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
         reactions: [],
       }).then(() => {
         this.newMessage = '';
-        this.scrollToBottom();
+        this.triggerScrollToBottom();
       });
     }
   }
@@ -178,17 +169,24 @@ clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
         timestamp: Timestamp.now()
       }, id).then(() => {
         this.newMessage = '';
-        this.scrollToBottom();
+        this.triggerScrollToBottom();
       });
     }
   }
 
-  scrollToBottom(): void {
-    const container = this.scrollContainer.nativeElement;
-
-    // Sicherstellen, dass DOM-Änderungen abgeschlossen sind
+  private triggerScrollToBottom() {
     setTimeout(() => {
-      container.scrollTop = container.scrollHeight;
-    }, 150);
+      this.scrollToBottom();
+    }, 0);
+  }
+
+  private scrollToBottom() {
+    const contentEl = this.contentElement();
+    if (contentEl) {
+      contentEl.nativeElement.scrollTo({
+        top: contentEl.nativeElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   }
 }

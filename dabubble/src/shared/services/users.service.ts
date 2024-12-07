@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { Firestore, Timestamp, addDoc, collection, doc, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
@@ -17,6 +17,8 @@ export class UsersService {
   activeChannel = signal<Channels | null>(null);
   groupedMessages = signal<{ date: string; messages: Messages[] }[]>([]);
   groupedChannelMessages = signal<{ date: string; messages: ChannelMessage[] }[]>([]);
+  messageChanged = computed(() => this.groupedMessages().length);
+  channelMessageChanged = computed(() => this.groupedChannelMessages().length);
 
   constructor() {}
 
