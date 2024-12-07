@@ -314,3 +314,13 @@ background-color: #ECEEFE !important;
 ::ng-deep .mdc-text-field--filled { 
 border-radius: 80px !important;
 }
+
+/* Ab dieser width, mobile Ansicht*/
+@media (max-width: 600px) {
+
+    .top-login {
+        display: flex;
+        justify-content: center;
+    }
+
+}
