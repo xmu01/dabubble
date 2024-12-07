@@ -235,6 +235,32 @@
         cursor: pointer;
         text-decoration: none;
     }
+
+   
+}
+
+.mobile-create-acc {
+    text-align: center;
+    display: none;
+    .mobile-create-acc-btn {
+        margin-bottom: 20px;
+
+        background-color: white;
+        color: #535AF1;
+        border-color: #535AF1;
+        border-radius: 20px;
+        border-width: 1px;
+        padding: 10px;
+        padding-right: 16px;
+        padding-left: 16px;
+        font-weight: 700;
+        }
+
+    .mobile-create-acc-btn:hover {
+        cursor: pointer;
+        background-color: #535AF1;
+        color: white;
+    }    
 }
 
 ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
@@ -245,3 +271,97 @@ background-color: #ECEEFE !important;
 border-radius: 80px !important;
 }
 
+/* Ab dieser width, mobile Ansicht*/
+@media (max-width: 600px) {
+    
+    .top-login {
+        padding: 18px;
+        display: flex;
+        justify-content: center;
+    
+        img {
+            height: 70px;
+        }
+       
+        .create-acc {
+           display: none;
+    
+            .create-acc-purple {
+                color: #535AF1;
+                cursor: pointer;
+                text-decoration: none;
+            }
+        }
+    }
+
+    .mobile-create-acc {
+        display: block;
+    }
+
+    .login-card {
+    
+        ::ng-deep mat-card {
+            border-top-left-radius: 20px !important;
+            border-bottom-left-radius: 20px !important;
+            border-bottom-right-radius: 20px !important;
+            border-top-right-radius: 20px !important;
+            height: 560px;
+            width: 400px;
+            margin-top: 50px;
+        }
+    }
+
+}
+
+
+/* noch kleiner*/
+@media (max-width: 450px) {
+
+    .login-card {
+    
+        ::ng-deep mat-card {
+            border-top-left-radius: 20px !important;
+            border-bottom-left-radius: 20px !important;
+            border-bottom-right-radius: 20px !important;
+            border-top-right-radius: 20px !important;
+            height: 560px;
+            width: 350px;
+            margin-top: 50px;
+        }
+    }
+
+}
+
+@media (max-width: 380px) {
+
+    .login-card {
+    
+        ::ng-deep mat-card {
+            border-top-left-radius: 20px !important;
+            border-bottom-left-radius: 20px !important;
+            border-bottom-right-radius: 20px !important;
+            border-top-right-radius: 20px !important;
+            height: 560px;
+            width: 320px;
+            margin-top: 50px;
+        }
+    }
+
+
+    @media (max-width: 340px) {
+
+        .login-card {
+        
+            ::ng-deep mat-card {
+                border-top-left-radius: 20px !important;
+                border-bottom-left-radius: 20px !important;
+                border-bottom-right-radius: 20px !important;
+                border-top-right-radius: 20px !important;
+                height: 560px;
+                width: 300px;
+                margin-top: 50px;
+            }
+        }
+    
+    }
+}
