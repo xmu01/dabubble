@@ -150,14 +150,26 @@ export class MainContentComponent {
     }
   }
 
-  addReactionToPrivateMessage(id: string | undefined, event: any) {
-    if(id){
-      console.log(event.emoji.native);
-      
-    this.firestoreService.addReactionToPrivateMessage(id, event.emoji.native);
-    this.activeEmojiPickerMessageId = null
+  addReactionToPrivateMessage(id: string, event: any | string): void {
+    let reaction: string;
+  
+    // Prüfe, ob der übergebene Wert ein String ist oder ein Event-Objekt
+    if (typeof event === 'string') {
+      reaction = event; // Direkt den String übernehmen
+    } else if (event && event.emoji && event.emoji.native) {
+      reaction = event.emoji.native; // Emoji-Wert aus dem Event-Objekt extrahieren
+    } else {
+      console.warn('Invalid reaction event:', event);
+      return; // Fehlerfall, keine Aktion ausführen
+    }
+  
+    // Füge die Reaktion hinzu
+    this.firestoreService.addReactionToPrivateMessage(id, reaction);
+  
+    // Emoji-Picker schließen
+    this.activeEmojiPickerMessageId = null;
   }
-  }
+  
 
   saveChannelMessage(id: string): void {
     if (this.newMessage != '') {
