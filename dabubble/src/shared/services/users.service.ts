@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Firestore, Timestamp, addDoc, collection, doc, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, addDoc, arrayUnion, collection, doc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
 import { Channels } from '../interfaces/channels';
@@ -226,5 +226,11 @@ export class UsersService {
       timestamp: obj.timestamp || null,
       senderId: obj.senderId || '',
     };
+  }
+
+  async addReactionToPrivateMessage(id: string, emoji: string) {
+    await updateDoc(doc(this.firestore, "messages", id), {
+      reactions: arrayUnion(emoji)
+  });
   }
 }

@@ -486,6 +486,16 @@
     bottom: 180px;
 }
 
+.left-emoji-picker {
+    left: 48px;
+    bottom: 200px;
+}
+
+.right-emoji-picker {
+    right: 48px;
+    bottom: 200px;
+}
+
 .reaction-container {
     display: flex;
     gap: 10px;
@@ -508,6 +518,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: Nunito, 'Noto Color Emoji';
 
             font-size: 20px;
         }

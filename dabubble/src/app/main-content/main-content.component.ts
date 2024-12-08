@@ -41,48 +41,39 @@ export class MainContentComponent {
   showEmojis = false;
   hoveredMessageId: string | null = null;
   contentElement = viewChild<ElementRef<HTMLDivElement>>('scrollContainer');
+  activeEmojiPickerMessageId: string | null = null;
 
 
-setHoveredMessageId(messageId: string | undefined): void {
-  if (messageId) {
-    this.hoveredMessageId = messageId;
-  } else {
-    this.hoveredMessageId = null;
-  }
-}
-
-clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
-  const target = event.relatedTarget as HTMLElement | null;
-
-  // Überprüfe, ob target existiert und ob es sich innerhalb der relevanten Container befindet
-  if (!target || (!target.closest('.message-container') && !target.closest('.reaction-bar'))) {
-    this.hoveredMessageId = null;
-  }
-}
-
-
-  addEmoji(event: any): void {
-    if (event.emoji.unified && /^[A-Z]{2}$/.test(event.emoji.short_name)) {
-      // Es handelt sich um eine Flagge -> Umwandeln
-      this.newMessage += this.convertToFlagEmoji(event.emoji.short_name);
+  setHoveredMessageId(messageId: string | undefined): void {
+    if (messageId) {
+      this.hoveredMessageId = messageId;
     } else {
-      this.newMessage += event.emoji.native;
+      this.hoveredMessageId = null;
     }
   }
 
-  convertToFlagEmoji(countryCode: string): string {
-    return countryCode
-      .toUpperCase()
-      .split('')
-      .map(char => String.fromCodePoint(127397 + char.charCodeAt(0)))
-      .join('');
+  clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
+    const target = event.relatedTarget as HTMLElement | null;
+
+    // Überprüfe, ob target existiert und ob es sich innerhalb der relevanten Container befindet
+    if (!target || (!target.closest('.message-container') && !target.closest('.reaction-bar'))) {
+      this.hoveredMessageId = null;
+    }
+  }
+
+
+  addEmoji(event: any): void {
+    this.newMessage += event.emoji.native;
   }
 
   toggleEmojis(): void {
     this.showEmojis = !this.showEmojis;
-    console.log('showEmojis:', this.showEmojis);
   }
-  
+
+  toggleEmojiPicker(messageId: string): void {
+    this.activeEmojiPickerMessageId = 
+      this.activeEmojiPickerMessageId === messageId ? null : messageId;
+  }
 
   onInput(event: Event): void {
     const input = event.target as HTMLTextAreaElement;
@@ -100,7 +91,6 @@ clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
   }
 
   addToMessage(selectedItem: string): void {
-    // Fügt den ausgewählten Punkt zum Text in der Textarea hinzu
     this.newMessage += ` ${selectedItem}`;
   }
 
@@ -122,7 +112,7 @@ clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
     effect(() => {
       const channelId = this.firestoreService.activeChannel()?.id;
 
-      if(channelId) {
+      if (channelId) {
         this.firestoreService.loadMessageChannelChat(channelId);
         this.newMessage = '';
         this.showEmojis = false;
@@ -158,6 +148,15 @@ clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
         this.triggerScrollToBottom();
       });
     }
+  }
+
+  addReactionToPrivateMessage(id: string | undefined, event: any) {
+    if(id){
+      console.log(event.emoji.native);
+      
+    this.firestoreService.addReactionToPrivateMessage(id, event.emoji.native);
+    this.activeEmojiPickerMessageId = null
+  }
   }
 
   saveChannelMessage(id: string): void {
