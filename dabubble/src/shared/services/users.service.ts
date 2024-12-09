@@ -79,8 +79,7 @@ export class UsersService {
 
     onSnapshot(q, (querySnapshot) => {
       const messages = querySnapshot.docs.map((doc) => this.setMessageObject(doc.data(), doc.id));      
-      console.log(messages);
-      
+     
       const grouped = this.groupMessagesByDate(messages);
       this.groupedMessages.set(grouped);
     });
@@ -94,7 +93,6 @@ export class UsersService {
 
     onSnapshot(q, (querySnapshot) => {     
       const messages = querySnapshot.docs.map((doc) => this.setChannelMessageObject(doc.data(), doc.id));      
-      console.log(messages);
       
       const grouped = this.groupChannelMessagesByDate(messages);
       this.groupedChannelMessages.set(grouped);
