@@ -1,6 +1,5 @@
 import { Component, inject, effect, signal, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit, viewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { ThreadComponent } from '../thread/thread.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -10,15 +9,16 @@ import { CommonModule } from '@angular/common';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthService } from '../../shared/services/auth.service';
-import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { Timestamp } from '@angular/fire/firestore';
+import { DirectMessagesComponent } from './direct-messages/direct-messages.component';
+import { ChannelMessagesComponent } from './channel-messages/channel-messages.component';
 
 
 @Component({
   selector: 'app-main-content',
   standalone: true,
-  imports: [MatCardModule, ThreadComponent, MatIconModule, MatButtonModule, MatInputModule, FormsModule, CommonModule,
-    MatFormFieldModule, MatInputModule, MatMenuModule, PickerComponent
+  imports: [MatCardModule, MatIconModule, MatButtonModule, MatInputModule, FormsModule, CommonModule,
+    MatFormFieldModule, MatInputModule, MatMenuModule, DirectMessagesComponent, ChannelMessagesComponent
   ],
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],

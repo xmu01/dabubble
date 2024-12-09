@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <mat-card appearance="outlined" class="messages">
     <mat-card-header class="direct-message-header">
       <mat-card-title class="direct-message-title">
@@ -72,9 +72,6 @@
             <img src="./../../assets/img/pfp_header.png" alt="Message User">
             <div [ngClass]="message.senderId == activeUser()?.userId ? 'message-left' : 'message-right'">
 
-              <!-- <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'">{{ message.message }}
-              </p> -->
-              <!-- Bearbeitungsmodus -->
               @if(editMessageId === message.id) {
               <div class="edit">
 
@@ -89,7 +86,6 @@
                 </div>
               </div>
               } @else {
-              <!-- Anzeigemodus -->
               <div [ngClass]="message.senderId == activeUser()?.userId ? 'name-left' : 'name-right'">
                 <p>{{ message.senderName }}</p>
                 <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
@@ -204,4 +200,11 @@
 
   </mat-card>
   <app-thread class="thread"></app-thread>
-</div>
+</div> -->
+
+@if(activeUser()){
+<app-direct-messages class="direct-message-container"></app-direct-messages>
+}
+@if(activeChannel()) {
+<app-channel-messages class="channel-message-container"></app-channel-messages>
+}

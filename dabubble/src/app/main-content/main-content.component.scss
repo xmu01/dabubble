@@ -606,6 +606,14 @@
     }
 }
 
+.direct-message-container {
+    flex: 1;
+}
+
+.channel-message-container {
+    flex: 1;
+}
+
 @media (max-width: 1024px) {
     .container {
         padding: 0;
