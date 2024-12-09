@@ -20,7 +20,7 @@ export class UsersService {
   messageChanged = computed(() => this.groupedMessages().length);
   channelMessageChanged = computed(() => this.groupedChannelMessages().length);
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Loads all users from Firestore and updates the users signal.
@@ -33,16 +33,16 @@ export class UsersService {
     });
   }
 
-    /**
-   * Loads all users from Firestore and updates the users signal.
-   */
-    loadChannels() {
-      const channelsQuery = query(collection(this.firestore, 'channels'));
-      onSnapshot(channelsQuery, (querySnapshot) => {
-        const channel = querySnapshot.docs.map((doc) => this.setChannelObject(doc.data(), doc.id));
-        this.channels.set(channel);
-      });
-    }
+  /**
+ * Loads all users from Firestore and updates the users signal.
+ */
+  loadChannels() {
+    const channelsQuery = query(collection(this.firestore, 'channels'));
+    onSnapshot(channelsQuery, (querySnapshot) => {
+      const channel = querySnapshot.docs.map((doc) => this.setChannelObject(doc.data(), doc.id));
+      this.channels.set(channel);
+    });
+  }
 
   /**
    * Loads a specific user by ID and updates the activeUser signal.
@@ -78,8 +78,8 @@ export class UsersService {
     );
 
     onSnapshot(q, (querySnapshot) => {
-      const messages = querySnapshot.docs.map((doc) => this.setMessageObject(doc.data(), doc.id));      
-     
+      const messages = querySnapshot.docs.map((doc) => this.setMessageObject(doc.data(), doc.id));
+
       const grouped = this.groupMessagesByDate(messages);
       this.groupedMessages.set(grouped);
     });
@@ -91,12 +91,12 @@ export class UsersService {
       orderBy('timestamp', 'asc')
     );
 
-    onSnapshot(q, (querySnapshot) => {     
-      const messages = querySnapshot.docs.map((doc) => this.setChannelMessageObject(doc.data(), doc.id));      
-      
+    onSnapshot(q, (querySnapshot) => {
+      const messages = querySnapshot.docs.map((doc) => this.setChannelMessageObject(doc.data(), doc.id));
+
       const grouped = this.groupChannelMessagesByDate(messages);
       this.groupedChannelMessages.set(grouped);
-      
+
     });
   }
 
@@ -118,23 +118,23 @@ export class UsersService {
       .map((date) => ({ date, messages: grouped[date] }));
   }
 
-    /**
-   * Groups messages by their date.
-   */
-    private groupChannelMessagesByDate(messages: ChannelMessage[]): { date: string; messages: ChannelMessage[] }[] {
-      const grouped = messages.reduce((acc, message) => {
-        const dateKey = message.timestamp?.toDate().toISOString().split('T')[0];
-        if (!acc[dateKey]) {
-          acc[dateKey] = [];
-        }
-        acc[dateKey].push(message);
-        return acc;
-      }, {} as Record<string, ChannelMessage[]>);
-  
-      return Object.keys(grouped)
-        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-        .map((date) => ({ date, messages: grouped[date] }));
-    }
+  /**
+ * Groups messages by their date.
+ */
+  private groupChannelMessagesByDate(messages: ChannelMessage[]): { date: string; messages: ChannelMessage[] }[] {
+    const grouped = messages.reduce((acc, message) => {
+      const dateKey = message.timestamp?.toDate().toISOString().split('T')[0];
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(message);
+      return acc;
+    }, {} as Record<string, ChannelMessage[]>);
+
+    return Object.keys(grouped)
+      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+      .map((date) => ({ date, messages: grouped[date] }));
+  }
 
   private setUserObject(obj: any, id: string): Users {
     return {
@@ -184,7 +184,7 @@ export class UsersService {
       });
   }
 
-  saveChannelMessage(message: ChannelMessage, id:string) {
+  saveChannelMessage(message: ChannelMessage, id: string) {
     const userDocRef = collection(this.firestore, `channels/${id}/messages`);
 
     // Automatisch ein Timestamp hinzufügen, falls nicht angegeben
@@ -230,12 +230,18 @@ export class UsersService {
   async addReactionToPrivateMessage(id: string, emoji: string) {
     await updateDoc(doc(this.firestore, "messages", id), {
       reactions: arrayUnion(emoji)
-  });
+    });
   }
 
   async updateUserStatus(id: string, status: string) {
     await updateDoc(doc(this.firestore, "users", id), {
       status: status
-  });
+    });
+  }
+
+  async updateMessage(id: string, message:string){
+    await updateDoc(doc(this.firestore, "messages", id), {
+      message: message
+    });
   }
 }

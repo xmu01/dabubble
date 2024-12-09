@@ -364,12 +364,14 @@
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
+                width: 100%;
             }
 
             .message-right {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-end;
+                width: 100%;
             }
 
             img {
@@ -521,6 +523,85 @@
             font-family: Nunito, 'Noto Color Emoji';
 
             font-size: 20px;
+        }
+    }
+}
+
+.edit {
+    width: 100%;
+    height: 180px;
+    padding: 20px;
+    gap: 16px;
+    border-radius: 20px;
+    border: 1px solid #ADB0D9;
+    background-color: #fff;
+
+    textarea {
+        width: 100%;
+        border: none;
+        outline: none;
+        height: 90px;
+        resize: none;
+        overflow-y: scroll;
+        overflow: auto;
+        /* Ermöglicht Scrollen */
+        scrollbar-width: none;
+        /* Für Firefox */
+        font-family: Nunito;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        color: #686868;
+
+        textarea::-webkit-scrollbar {
+            display: none;
+            /* Für Chrome, Safari und Edge */
+        }
+    }
+
+    .edit-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        mat-icon {
+            color: #686868;
+            cursor: pointer;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 32px;
+        }
+
+        button {
+            width: 141px;
+            height: 49px;
+            padding: 12px 25px 12px 25px;
+            gap: 10px;
+            border-radius: 50px;
+            border: 1px solid #797EF3;
+            font-family: Nunito;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 24.55px;
+            text-align: center;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            cursor: pointer;
+        }
+
+        .save {
+            background-color: #444DF2;
+            color: #fff;
+        }
+
+        .cancel {
+            background-color: #fff;
+            color: #797EF3;
         }
     }
 }

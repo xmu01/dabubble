@@ -46,63 +46,75 @@
         </div>
         <div class="messages">
           @for (message of group.messages; track message.id) {
-            <div 
-            class="message-container" 
-            [ngClass]="message.senderId == activeUser()?.userId ? 'left' : 'right'" 
-            (mouseover)="setHoveredMessageId(message.id)" 
-            (mouseout)="clearHoveredMessageId(message.id, $event)"
-          >
-          <div 
-          class="reaction-bar" 
-          [ngClass]="(message.senderId != loggedUser()?.uid || activeUser()?.userId === loggedUser()?.uid) ? 'rbr' : 'rbl'" 
-          *ngIf="hoveredMessageId === message.id" 
-          (mouseover)="setHoveredMessageId(message.id)" 
-          (mouseout)="clearHoveredMessageId(message.id, $event)"
-        >
+          <div class="message-container" [ngClass]="message.senderId == activeUser()?.userId ? 'left' : 'right'"
+            (mouseover)="setHoveredMessageId(message.id)" (mouseout)="clearHoveredMessageId(message.id, $event)">
+            <div class="reaction-bar"
+              [ngClass]="(message.senderId != loggedUser()?.uid || activeUser()?.userId === loggedUser()?.uid) ? 'rbr' : 'rbl'"
+              *ngIf="hoveredMessageId === message.id" (mouseover)="setHoveredMessageId(message.id)"
+              (mouseout)="clearHoveredMessageId(message.id, $event)">
               <span class="reaction-bar-symbol" (click)="addReactionToPrivateMessage(message.id, '✅')">✅</span>
               <span class="reaction-bar-symbol" (click)="addReactionToPrivateMessage(message.id, '🙏🏻')">🙏🏻</span>
-              <mat-icon class="reaction-bar-symbol" (click)="toggleEmojiPicker(message.id)" fontSet="material-icons-outlined">add_reaction</mat-icon>
+              <mat-icon class="reaction-bar-symbol" (click)="toggleEmojiPicker(message.id)"
+                fontSet="material-icons-outlined">add_reaction</mat-icon>
               <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">comment</mat-icon>
-              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">more_vert</mat-icon>
+              @if(message.senderId == loggedUser()?.uid){
+              <mat-icon (click)="startEditingMessage(message.id)" class="reaction-bar-symbol"
+                fontSet="material-icons-outlined">more_vert</mat-icon>
+              }
             </div>
 
-            <emoji-mart 
-            #emojiPickerReaction 
-            [set]="'google'" 
-            class="emojis message-emoji-picker"
-            [ngClass]="message.senderId == activeUser()?.userId ? 'right-emoji-picker' : 'left-emoji-picker'"  
-            (emojiClick)="addReactionToPrivateMessage(message.id, $event)" 
-            [showPreview]="false"
-            [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-            showSkinTones="true"
-            *ngIf="activeEmojiPickerMessageId === message.id"
-          ></emoji-mart>
+            <emoji-mart #emojiPickerReaction [set]="'google'" class="emojis message-emoji-picker"
+              [ngClass]="message.senderId == activeUser()?.userId ? 'right-emoji-picker' : 'left-emoji-picker'"
+              (emojiClick)="addReactionToPrivateMessage(message.id, $event)" [showPreview]="false"
+              [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
+              showSkinTones="true" *ngIf="activeEmojiPickerMessageId === message.id"></emoji-mart>
 
             <img src="./../../assets/img/pfp_header.png" alt="Message User">
             <div [ngClass]="message.senderId == activeUser()?.userId ? 'message-left' : 'message-right'">
+
+              <!-- <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'">{{ message.message }}
+              </p> -->
+              <!-- Bearbeitungsmodus -->
+              @if(editMessageId === message.id) {
+              <div class="edit">
+
+                <textarea [(ngModel)]="message.message" class="edit-input" rows="2"></textarea>
+                <div class="edit-controls">
+                  <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
+
+                  <div class="control-buttons">
+                    <button class="cancel" (click)="cancelEditing()">Abbrechen</button>
+                    <button class="save" (click)="saveEditedMessage(message.id, message.message!)">Speichern</button>
+                  </div>
+                </div>
+              </div>
+              } @else {
+              <!-- Anzeigemodus -->
               <div [ngClass]="message.senderId == activeUser()?.userId ? 'name-left' : 'name-right'">
                 <p>{{ message.senderName }}</p>
                 <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
               </div>
-              <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'">{{ message.message }}
+              <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'">
+                {{ message.message }}
               </p>
+              }
               <div class="reaction-container">
                 @for(reaction of message.reactions; track reaction) {
-                  <div class="givenReactions">              
-                <span class="reaction-symbol">{{reaction}}</span><span>1</span>
+                <div class="givenReactions">
+                  <span class="reaction-symbol">{{reaction}}</span><span>1</span>
+                </div>
+                }
               </div>
-              }
-            </div>
             </div>
           </div>
           }
         </div>
-        
+
         }
       </div>
     </mat-card-content>
-  }
-  @if(activeChannel()) {
+    }
+    @if(activeChannel()) {
     <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false">
       <div class="date-elements">
         @for (group of groupedChannelMessages(); track group.date) {
@@ -115,13 +127,18 @@
         </div>
         <div class="messages">
           @for (message of group.messages; track message.id) {
-          <div class="message-container" [ngClass]="message.senderId != loggedUser()?.uid ? 'left' : 'right'" (mouseover)="setHoveredMessageId(message.id)" (mouseout)="clearHoveredMessageId(message.id, $event)">
-            <div class="reaction-bar" [ngClass]="message.senderId != loggedUser()?.uid ? 'rbr' : 'rbl'" *ngIf="hoveredMessageId === message.id">
+          <div class="message-container" [ngClass]="message.senderId != loggedUser()?.uid ? 'left' : 'right'"
+            (mouseover)="setHoveredMessageId(message.id)" (mouseout)="clearHoveredMessageId(message.id, $event)">
+            <div class="reaction-bar" [ngClass]="message.senderId != loggedUser()?.uid ? 'rbr' : 'rbl'"
+              *ngIf="hoveredMessageId === message.id">
               <span class="reaction-bar-symbol">✅</span>
               <span class="reaction-bar-symbol">🙏🏻</span>
-              <mat-icon class="reaction-bar-symbol" (click)="toggleEmojis()" fontSet="material-icons-outlined">add_reaction</mat-icon>
+              <mat-icon class="reaction-bar-symbol" (click)="toggleEmojis()"
+                fontSet="material-icons-outlined">add_reaction</mat-icon>
               <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">comment</mat-icon>
+              @if(message.senderId == loggedUser()?.uid){
               <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">more_vert</mat-icon>
+              }
             </div>
             <img src="./../../assets/img/pfp_header.png" alt="Message User">
             <div [ngClass]="message.senderId != loggedUser()?.uid ? 'message-left' : 'message-right'">
@@ -138,7 +155,7 @@
         }
       </div>
     </mat-card-content>
-  }
+    }
     <div class="direct-message-input">
       <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu"
         #menuTrigger="matMenuTrigger"></button>
@@ -150,11 +167,10 @@
       </textarea>
       }
       @if(activeChannel()) {
-      <textarea [(ngModel)]="newMessage" rows="2"
-        placeholder="Nachricht an # {{ activeChannel()?.name }}" (input)="onInput($event)"
-        #textarea (focus)="showEmojis = false">
+      <textarea [(ngModel)]="newMessage" rows="2" placeholder="Nachricht an # {{ activeChannel()?.name }}"
+        (input)="onInput($event)" #textarea (focus)="showEmojis = false">
       </textarea>
-    }
+      }
 
       <mat-menu #aboveMenu="matMenu" yPosition="above">
         @for (user of users(); track user) {
@@ -175,14 +191,14 @@
           <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>
         </div>
         @if(activeUser()){
-          <div (click)="saveMessage()" class="send-button">
-            <mat-icon>send</mat-icon>
-          </div>
+        <div (click)="saveMessage()" class="send-button">
+          <mat-icon>send</mat-icon>
+        </div>
         } @else {
         <div (click)="saveChannelMessage(activeChannel()!.id)" class="send-button">
           <mat-icon>send</mat-icon>
         </div>
-      }
+        }
       </div>
     </div>
 

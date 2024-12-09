@@ -42,6 +42,20 @@ export class MainContentComponent {
   hoveredMessageId: string | null = null;
   contentElement = viewChild<ElementRef<HTMLDivElement>>('scrollContainer');
   activeEmojiPickerMessageId: string | null = null;
+  editMessageId: string | null = null;
+
+  startEditingMessage(messageId: string): void {
+    this.editMessageId = messageId; // Aktiviert den Bearbeitungsmodus für diese Nachricht
+  }
+
+  saveEditedMessage(id: string, message: string): void {
+    this.firestoreService.updateMessage(id, message)
+    this.editMessageId = null; // Beendet den Bearbeitungsmodus
+  }
+
+  cancelEditing(): void {
+    this.editMessageId = null; // Beendet den Bearbeitungsmodus ohne Änderungen
+  }
 
 
   setHoveredMessageId(messageId: string | undefined): void {

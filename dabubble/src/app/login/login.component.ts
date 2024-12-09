@@ -49,6 +49,7 @@ export class LoginComponent {
       .signInWithEmailAndPassword(this.email2, this.password)
       .then((user) => {
         console.log('User signed in:', user.uid);
+        sessionStorage.setItem('user', JSON.stringify({ uid: user.uid }));
       })
       .catch((error) => {
         this.errorMessage = 'Login failed. Please try again.';
@@ -61,6 +62,7 @@ export class LoginComponent {
       .signInWithGoogle()
       .then((user) => {
         console.log('User signed in with Google:', user.uid);
+        sessionStorage.setItem('user', JSON.stringify({ uid: user.uid }));
       })
       .catch((error) => {
         this.errorMessage = 'Google Login failed. Please try again.';
@@ -73,6 +75,7 @@ export class LoginComponent {
       .signOut()
       .then(() => {
         console.log('User signed out successfully');
+        sessionStorage.removeItem('user');
       })
       .catch((error) => {
         console.error('Error during sign-out:', error);
