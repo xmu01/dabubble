@@ -5,7 +5,7 @@
         @if (activeUser()) {
         <div class="user-image-container">
           <img class="user-image" src="./../../assets/img/pfp_header.png" alt="User Picture">
-          <span class="user-picture-dot-online"></span>
+          <span [ngClass]="activeUser()?.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
         </div>
         }
         @if (activeUser()) {
