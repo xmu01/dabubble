@@ -31,6 +31,7 @@ export class DirectMessagesComponent {
   editMessageId: string | null = null;
   newMessage: string = '';
   showEmojis = false;
+  temporaryMessage: string | null = null;
 
   constructor() {
     effect(() => {
@@ -47,17 +48,29 @@ export class DirectMessagesComponent {
     });
   }
 
-  startEditingMessage(messageId: string): void {
-    this.editMessageId = messageId; // Aktiviert den Bearbeitungsmodus für diese Nachricht
+  startEditingMessage(messageId: string, message: string): void {
+    this.editMessageId = messageId; 
+    this.temporaryMessage = message; 
   }
-
-  saveEditedMessage(id: string, message: string): void {
-    this.firestoreService.updateMessage(id, message)
-    this.editMessageId = null; // Beendet den Bearbeitungsmodus
-  }
-
+  
   cancelEditing(): void {
-    this.editMessageId = null; // Beendet den Bearbeitungsmodus ohne Änderungen
+    const message = this.groupedMessages().find(group =>
+      group.messages.some(msg => msg.id === this.editMessageId)
+    )?.messages.find(msg => msg.id === this.editMessageId);
+  
+    if (message) {
+      message.message = this.temporaryMessage!;
+    }
+  
+    this.editMessageId = null; 
+    this.temporaryMessage = null; 
+  }
+  
+  saveEditedMessage(id: string, message: string): void {
+    this.firestoreService.updateMessage(id, message).then(() => {
+      this.editMessageId = null; 
+      this.temporaryMessage = null; 
+    });
   }
 
 
@@ -72,7 +85,6 @@ export class DirectMessagesComponent {
   clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
     const target = event.relatedTarget as HTMLElement | null;  
 
-    // Überprüfe, ob target existiert und ob es sich innerhalb der relevanten Container befindet
     if (!target || (!target.closest('.message-container') && !target.closest('.reaction-bar'))) {
       this.hoveredMessageId = null;
     }
@@ -140,20 +152,17 @@ export class DirectMessagesComponent {
   addReactionToPrivateMessage(id: string, event: any | string): void {
     let reaction: string;
   
-    // Prüfe, ob der übergebene Wert ein String ist oder ein Event-Objekt
     if (typeof event === 'string') {
-      reaction = event; // Direkt den String übernehmen
+      reaction = event; 
     } else if (event && event.emoji && event.emoji.native) {
-      reaction = event.emoji.native; // Emoji-Wert aus dem Event-Objekt extrahieren
+      reaction = event.emoji.native; 
     } else {
       console.warn('Invalid reaction event:', event);
-      return; // Fehlerfall, keine Aktion ausführen
+      return; 
     }
   
-    // Füge die Reaktion hinzu
     this.firestoreService.addReactionToPrivateMessage(id, reaction);
   
-    // Emoji-Picker schließen
     this.activeEmojiPickerMessageId = null;
   }
 
