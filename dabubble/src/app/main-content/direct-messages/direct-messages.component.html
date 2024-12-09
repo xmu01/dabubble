@@ -25,11 +25,12 @@
                     @for (message of group.messages; track message.id) {
                     <div class="message-container"
                         [ngClass]="message.senderId == activeUser()?.userId ? 'left' : 'right'"
+                        [ngClass]="editMessageId != null ? 'bg-grey' : ''" 
                         (mouseover)="setHoveredMessageId(message.id)"
                         (mouseout)="clearHoveredMessageId(message.id, $event)">
                         <div class="reaction-bar"
                             [ngClass]="(message.senderId != loggedUser()?.uid || activeUser()?.userId === loggedUser()?.uid) ? 'rbr' : 'rbl'"
-                            *ngIf="hoveredMessageId === message.id" (mouseover)="setHoveredMessageId(message.id)"
+                            *ngIf="hoveredMessageId === message.id && editMessageId == null" (mouseover)="setHoveredMessageId(message.id)"
                             (mouseout)="clearHoveredMessageId(message.id, $event)">
                             <span class="reaction-bar-symbol"
                                 (click)="addReactionToPrivateMessage(message.id, '✅')">✅</span>
