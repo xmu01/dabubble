@@ -20,7 +20,7 @@
                         </mat-expansion-panel-header>
                         <ul class="list">
                             @for(channel of channels(); track channel) {
-                            <li (click)="getChannel(channel.id)"><mat-icon class="tag">tag</mat-icon>{{channel.name}}</li>
+                            <li (click)="getChannel(channel.id, drawer)"><mat-icon class="tag">tag</mat-icon>{{channel.name}}</li>
                             }
                             <li class="add-channel"><mat-icon>add_circle_outline</mat-icon>Channel hinzufügen</li>
                         </ul>
@@ -37,7 +37,7 @@
                         </mat-expansion-panel-header>
                         <ul class="list">
                             @for(user of users(); track user) {
-                                <li (click)="getId(user.userId)">
+                                <li (click)="getId(user.userId, drawer)">
                                     <div class="user-picture"><span class="user-picture-dot-online"></span><img
                                             src="./../../assets/img/pfp_header.png" alt=""></div>{{user.firstName}} {{user.lastName}}
                                 </li>  

@@ -4,25 +4,27 @@
     </div>
 
     <div class="input-section-header">
-        <input type="text" placeholder="Devspace durchsuchen">  
+        <input type="text" placeholder="Devspace durchsuchen">
         <i class="i-class-img"><img src="./../../assets/img/input_search.png"></i>
     </div>
 
     <div class="profile-section-header">
-            <h2>{{ getLoggedUser()?.firstName }} {{ getLoggedUser()?.lastName }}</h2>
+        <h2>{{ getLoggedUser()?.firstName }} {{ getLoggedUser()?.lastName }}</h2>
+        <div class="profile-picture-container">
             <span class="user-picture-dot-online"></span>
             <img class="pfp-header" src="./../../assets/img/pfp_header.png" alt="">
-            
-            <button mat-button [matMenuTriggerFor]="menu"> 
-                <mat-icon class="arrow-down" fontIcon="keyboard_arrow_down" ></mat-icon>
-            </button>
+            <img [matMenuTriggerFor]="menu" class="pfp-header-mobile" src="./../../assets/img/pfp_header.png" alt="">
+        </div>
+        <button mat-button [matMenuTriggerFor]="menu">
+            <mat-icon class="arrow-down" fontIcon="keyboard_arrow_down"></mat-icon>
+        </button>
 
-            <mat-menu #menu="matMenu" class="menu-mat-style">
-                <button mat-menu-item>Profil</button>
-                <button mat-menu-item (click)="signOut()">Log out</button>
-              </mat-menu>
+        <mat-menu #menu="matMenu" class="menu-mat-style">
+            <button mat-menu-item>Profil</button>
+            <button mat-menu-item (click)="signOut()">Log out</button>
+        </mat-menu>
 
-            
+
     </div>
 
 </header>

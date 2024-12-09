@@ -12,3 +12,11 @@
         height: calc(100% - 130px);
     }
 }
+
+@media (max-width: 1024px) {
+    .wrapper {
+        main {
+            height: 100%;
+        }
+    }  
+}

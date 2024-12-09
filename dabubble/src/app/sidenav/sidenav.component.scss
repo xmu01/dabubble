@@ -213,33 +213,62 @@
 ::ng-deep .mat-expansion-panel-content {
     overflow-y: scroll !important;
     height: 70%;
-    scrollbar-width: thin; /* macht die Scrollbar schmaler */
+    scrollbar-width: thin;
+    /* macht die Scrollbar schmaler */
     scrollbar-color: #9747FF #fff;
 }
 
 /* Scrollbar-Leiste */
 ::ng-deep .mat-expansion-panel-content::-webkit-scrollbar {
-    width: 4px; /* Breite der Scrollleiste */
+    width: 4px;
+    /* Breite der Scrollleiste */
 }
 
 /* Hintergrund der Scrollbar-Leiste */
 ::ng-deep .mat-expansion-panel-content::-webkit-scrollbar-track {
-    background: #fff; /* Hintergrundfarbe der Leiste */
+    background: #fff;
+    /* Hintergrundfarbe der Leiste */
 }
 
 /* Scrollbar-Griff */
 ::ng-deep .mat-expansion-panel-content::-webkit-scrollbar-thumb {
-    background-color: #9747FF; /* Farbe des Griffs */
-    border-radius: 10px; /* Rundung des Griffs */
+    background-color: #9747FF;
+    /* Farbe des Griffs */
+    border-radius: 10px;
+    /* Rundung des Griffs */
     height: 1px;
 }
 
 /* Scrollbar-Griff beim Hover */
 ::ng-deep .mat-expansion-panel-content::-webkit-scrollbar-thumb:hover {
-    background-color: #444DF2; /* Farbe des Griffs beim Hover */
+    background-color: #444DF2;
+    /* Farbe des Griffs beim Hover */
 }
 
 .main-container {
     display: flex;
     height: 100%;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        .sidenav {
+            width: 100%;
+            padding: 0;
+
+            .nav {
+                border-radius: 0;
+
+                .card-content {
+                    .sidenav-header {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    .sidenav-content {
+        display: none;
+    }
 }

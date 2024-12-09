@@ -524,3 +524,34 @@
         }
     }
 }
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 0;
+    }
+
+    .messages {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .reaction-container {
+        flex-wrap: wrap;
+    }
+
+    .direct-message-header {
+        height: 78px;
+        padding: 10px 16px 10px 16px;
+        align-items: flex-start;
+
+
+        .direct-message-title {
+            .user-image-container {
+                .user-image {
+                    width: 50px;
+                    height: 50px;
+                }
+            }
+        }
+    }
+}

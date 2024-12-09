@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-   
+
 }
 
 
@@ -13,7 +13,7 @@ header {
     font-family: Nunito;
     padding: 18px;
     width: 100%;
-    
+
     margin: 0 auto;
 }
 
@@ -22,7 +22,7 @@ header {
 
     .logo-header {
         width: 243px;
-       
+
     }
 }
 
@@ -30,27 +30,29 @@ header {
     /*display: flex;
     justify-content: center;
     align-items: center;*/
-    position:relative;
-    display:inline-block;
+    position: relative;
+    display: inline-block;
+
     .i-class-img {
         position: absolute;
-        right:25px;
+        right: 25px;
         top: 15px;
 
         img:hover {
             cursor: pointer;
         }
     }
-        input {
-            font-family: Nunito;
-            font-weight: 700;
-            border: none;
-            border-radius: 30px;
-            height: 50px;
-            width: 500px;
-            padding: 30px;
-        }
-       
+
+    input {
+        font-family: Nunito;
+        font-weight: 700;
+        border: none;
+        border-radius: 30px;
+        height: 50px;
+        width: 500px;
+        padding: 30px;
+    }
+
 }
 
 
@@ -69,40 +71,48 @@ header {
         cursor: pointer;
         margin-right: 20px;
     }
+
     .pfp-header {
         cursor: pointer;
         margin-right: 20px;
         position: relative;
     }
+
+    .pfp-header-mobile {
+        display: none;
+    }
+
     .arrow-down {
         cursor: pointer;
     }
 
-    .user-picture-dot-online {
-        border-radius: 100%;
-        background-color: #92C83E;
-        position: absolute;
-        bottom: 0px;
-        right: 0px;
-        left: 290px;
-        width: 14px;
-        height: 14px;
-        border: 2px solid #fff;
-        z-index: 1;
-    }
-    
-    .user-picture-dot-offline {
-        border-radius: 100%;
-        background-color: #686868;
-        position: absolute;
-        bottom: 5px;
-        right: 0px;
-        width: 14px;
-        height: 14px;
-        border: 2px solid #fff;
+    .profile-picture-container {
+        position: relative;
+
+        .user-picture-dot-online {
+            border-radius: 100%;
+            background-color: #92C83E;
+            position: absolute;
+            bottom: 5px;
+            right: 25px;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #fff;
+            z-index: 1;
+        }
+
+        .user-picture-dot-offline {
+            border-radius: 100%;
+            background-color: #686868;
+            position: absolute;
+            bottom: 5px;
+            right: 25px;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #fff;
+        }
     }
 
-    
 }
 
 ::ng-deep .menu-mat-style {
@@ -113,4 +123,51 @@ header {
 
     font-family: Nunito;
     font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+    .logo-section-header {
+        .logo-header {
+            width: 161.5px;
+            height: 45px;
+        }
+    }
+
+    .input-section-header {
+        display: none;
+    }
+
+    .profile-section-header {
+        h2 {
+            display: none;
+        }
+
+        .pfp-header {
+            display: none;
+        }
+
+        .pfp-header-mobile {
+            display: block;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+
+        .profile-picture-container {
+    
+            .user-picture-dot-online {
+                bottom: 0;
+                right: 0;
+            }
+    
+            .user-picture-dot-offline {
+                bottom: 0;
+                right: 0;
+            }
+        }
+
+        button {
+            display: none;
+        }
+    }
 }

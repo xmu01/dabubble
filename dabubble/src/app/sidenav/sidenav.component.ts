@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +7,7 @@ import { MainContentComponent } from '../main-content/main-content.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../shared/services/users.service';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-sidenav',
@@ -29,18 +30,29 @@ export class SidenavComponent {
   users = this.firestoreService.users;
   channels = this.firestoreService.channels;
 
-  constructor() {}
+  mobileQuery: MediaQueryList;
+
+  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
+    this.mobileQuery = media.matchMedia('(max-width: 1024px)');
+    this.mobileQuery.addEventListener('change', () => changeDetectorRef.detectChanges());
+  }
 
   ngOnInit() {
     this.firestoreService.loadUsers();
     this.firestoreService.loadChannels();
   }
 
-  getId(userId: string) {
+  getId(userId: string, drawer: any) {
     this.firestoreService.loadUser(userId);
+    if(this.mobileQuery.matches) {
+      drawer.toggle();
+    }
   }
 
-  getChannel(channelId: string) {
+  getChannel(channelId: string, drawer: any) {
     this.firestoreService.loadChannel(channelId);
+    if(this.mobileQuery.matches) {
+      drawer.toggle();
+    }
   }
 }
