@@ -4,5 +4,6 @@ export interface Users {
     lastName: string;
     userId: string;
     email: string;
+    status: string;
 }
 

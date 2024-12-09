@@ -1,6 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signInWithPopup, signOut, User, GoogleAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private auth = inject(Auth);
   private router = inject(Router);
+  private userService = inject(UsersService);
   private googleProvider = new GoogleAuthProvider();
 
   // Signal to store the logged-in user
@@ -28,6 +30,7 @@ export class AuthService {
       .then((userCredential) => {
         this.loggedInUser.set(userCredential.user);
         this.router.navigate(['/']);
+        this.userService.updateUserStatus(userCredential.user.uid, 'online');
         return userCredential.user;
       })
       .catch((error) => {
@@ -41,6 +44,7 @@ export class AuthService {
       .then((result) => {
         this.loggedInUser.set(result.user);
         this.router.navigate(['/']);
+        this.userService.updateUserStatus(result.user.uid, 'online');
         return result.user;
       })
       .catch((error) => {
@@ -64,4 +68,6 @@ export class AuthService {
   getLoggedInUser() {
     return this.loggedInUser();
   }
+
+
 }

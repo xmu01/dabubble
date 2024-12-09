@@ -145,6 +145,7 @@ export class UsersService {
       lastName: obj.lastName || '',
       avatar: obj.avatar || '',
       email: obj.email || '',
+      status: obj.status || '',
     };
   }
 
@@ -231,6 +232,12 @@ export class UsersService {
   async addReactionToPrivateMessage(id: string, emoji: string) {
     await updateDoc(doc(this.firestore, "messages", id), {
       reactions: arrayUnion(emoji)
+  });
+  }
+
+  async updateUserStatus(id: string, status: string) {
+    await updateDoc(doc(this.firestore, "users", id), {
+      status: status
   });
   }
 }

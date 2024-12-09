@@ -10,6 +10,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { AuthService } from '../../shared/services/auth.service';
 import { UsersService } from '../../shared/services/users.service';
+import { user } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-header',
@@ -32,7 +33,8 @@ export class HeaderComponent {
 
 
   signOut() {
-    this.authService.signOut().catch((error) => {
+    this.firestoreService.updateUserStatus(this.getLoggedUser()!.userId, 'offline')
+    this.authService.signOut().catch((error) => {          
       console.error('Error during sign-out:', error);
     });
   }
@@ -44,7 +46,7 @@ export class HeaderComponent {
     }
   
     const userId = user.uid;
+    
     return this.users().find(u => u.userId === userId) || null;
   }
-  
 }

@@ -38,11 +38,10 @@
                         <ul class="list">
                             @for(user of users(); track user) {
                                 <li (click)="getId(user.userId, drawer)">
-                                    <div class="user-picture"><span class="user-picture-dot-online"></span><img
+                                    <div class="user-picture"><span [ngClass]="user.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span><img
                                             src="./../../assets/img/pfp_header.png" alt=""></div>{{user.firstName}} {{user.lastName}}
                                 </li>  
                             }
-
                         </ul>
                     </mat-expansion-panel>
                 </mat-accordion>
