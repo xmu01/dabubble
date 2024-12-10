@@ -71,7 +71,6 @@
                                 </div>
                             </div>
                             } @else {
-                            <!-- Anzeigemodus -->
                             <div [ngClass]="message.senderId == activeUser()?.userId ? 'name-left' : 'name-right'">
                                 <p>{{ message.senderName }}</p>
                                 <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
@@ -80,21 +79,6 @@
                                 {{ message.message }}
                             </p>
                             }
-                            <!-- <div class="reaction-container">
-                                @for(reaction of message.reactions; track reaction) {
-                                <div class="givenReactions">
-                                    <span class="reaction-symbol">{{reaction}}</span><span>1</span>
-                                </div>
-                                }
-                            </div> -->
-                            <!-- <div class="reaction-container">
-                                @for(reaction of message.reactions; track reaction) {
-                                  <div class="givenReactions" (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)">
-                                    <span class="reaction-symbol">{{reaction}}</span>
-                                    <span>1</span>
-                                  </div>
-                                }
-                              </div> -->
                               <div class="reaction-container">
                                 @for(reaction of message.reactionsGrouped || []; track reaction.reaction) {
                                   <div class="givenReactions"
@@ -104,7 +88,6 @@
                                     <span class="reaction-symbol">{{ reaction.reaction }}</span>
                                     <span>{{ reaction.count }}</span> 
                               
-                                    <!-- Tooltip -->
                                     <div class="custom-tooltip" *ngIf="tooltipVisible">
                                       <p class="tooltip-reaction">{{ reaction.reaction }}</p>
                                       <p class="tooltip-text">{{ setTooltip(reaction.userNames) }}</p>

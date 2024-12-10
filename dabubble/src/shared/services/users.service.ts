@@ -257,7 +257,6 @@ export class UsersService {
         // Reaktion existiert bereits: Entfernen
         querySnapshot.forEach((doc) => {
           deleteDoc(doc.ref).then(() => {
-            console.log(`Reaction '${reaction}' von User '${userName}' entfernt.`);
           }).catch((error) => {
             console.error("Fehler beim Entfernen der Reaktion: ", error);
           });
@@ -266,7 +265,6 @@ export class UsersService {
         // Reaktion hinzufügen
         const reactionsRef = collection(this.firestore, `messages/${messageId}/reactions`);
         addDoc(reactionsRef, { userName, reaction }).then(() => {
-          console.log(`Reaction '${reaction}' von User '${userName}' hinzugefügt.`);
         }).catch((error) => {
           console.error("Fehler beim Hinzufügen der Reaktion: ", error);
         });
