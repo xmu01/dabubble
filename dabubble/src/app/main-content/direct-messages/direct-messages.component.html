@@ -98,7 +98,7 @@
                               <div class="reaction-container">
                                 @for(reaction of message.reactionsGrouped || []; track reaction.reaction) {
                                   <div class="givenReactions"
-                                       (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)"
+                                       (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, reaction.reaction)"
                                        (mouseover)="showTooltip($event)"
                                        (mouseleave)="hideTooltip($event)">
                                     <span class="reaction-symbol">{{ reaction.reaction }}</span>
