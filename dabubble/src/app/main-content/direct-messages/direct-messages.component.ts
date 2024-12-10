@@ -8,7 +8,7 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { collection, Firestore, onSnapshot } from '@angular/fire/firestore';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-direct-messages',
@@ -153,9 +153,9 @@ export class DirectMessagesComponent {
   //   this.activeEmojiPickerMessageId = null;
   // }
 
-  addReactionToPrivateMessage(messageId: string, userName:string, event: any | string): void {
+  addReactionToPrivateMessage(messageId: string, userName: string, event: any | string): void {
     let reaction: string;
-  
+
     if (typeof event === 'string') {
       reaction = event;
     } else if (event && event.emoji && event.emoji.native) {
@@ -164,9 +164,9 @@ export class DirectMessagesComponent {
       console.warn('Invalid reaction event:', event);
       return;
     }
-  
+
     this.firestoreService.toggleReaction(messageId, userName, reaction);
-  
+
     this.activeEmojiPickerMessageId = null;
   }
 
@@ -177,10 +177,10 @@ export class DirectMessagesComponent {
     const reactionsCollection = collection(this.firestore, `messages/${messageId}/reactions`);
     onSnapshot(reactionsCollection, (querySnapshot) => {
       const reactionsMap = new Map<string, { count: number; userNames: string[] }>();
-  
+
       querySnapshot.forEach((doc) => {
         const { reaction, userName } = doc.data();
-  
+
         if (reactionsMap.has(reaction)) {
           const entry = reactionsMap.get(reaction)!;
           entry.count++;
@@ -189,18 +189,18 @@ export class DirectMessagesComponent {
           reactionsMap.set(reaction, { count: 1, userNames: [userName] }); // Neue Reaktion mit Benutzernamen
         }
       });
-  
+
       const groupedReactions = Array.from(reactionsMap.entries()).map(([reaction, { count, userNames }]) => ({
         reaction,
         count,
         userNames,
       }));
-  
+
       // Nachricht um die gruppierten Reaktionen erweitern
       const group = this.groupedMessages().find((g) =>
         g.messages.some((msg) => msg.id === messageId)
       );
-  
+
       if (group) {
         const message = group.messages.find((msg) => msg.id === messageId);
         if (message) {
@@ -212,38 +212,38 @@ export class DirectMessagesComponent {
 
   setTooltip(names: string[]): string {
     const loggedUserFullName = `${this.getLoggedUser()?.firstName} ${this.getLoggedUser()?.lastName}`;
-    
+
     const isCurrentUser = names.includes(loggedUserFullName);
-  
+
     const otherNames = names.filter(name => name !== loggedUserFullName);
-  
+
     const formattedNames = otherNames.map(name => `${name}`);
-  
+
     if (isCurrentUser) {
       formattedNames.push('Du');
     }
-  
+
     if (formattedNames.length === 1) {
       return `${formattedNames[0]} hast reagiert.`;
     } else if (formattedNames.length === 2) {
-      return `${formattedNames[0]} und ${formattedNames[1]} haben reagiert.`;
+      return `${formattedNames[0]} und ${formattedNames[1]} haben reagiert`;
     } else if (formattedNames.length === 3) {
       const lastUser = formattedNames.pop();
-      return `${formattedNames.join(', ')} und ${lastUser} haben reagiert.`;
+      return `${formattedNames.join(', ')} und ${lastUser} haben reagiert`;
     } else {
-      return `${formattedNames[0]} und ${formattedNames.length - 1} weitere haben reagiert.`;
+      return `${formattedNames[0]} und ${formattedNames.length - 1} weitere haben reagiert`;
     }
   }
-  
+
   tooltipVisible: boolean = false;
 
-showTooltip(event: MouseEvent): void {
-  this.tooltipVisible = true;
-}
+  showTooltip(event: MouseEvent): void {
+    this.tooltipVisible = true;
+  }
 
-hideTooltip(event: MouseEvent): void {
-  this.tooltipVisible = false;
-}
+  hideTooltip(event: MouseEvent): void {
+    this.tooltipVisible = false;
+  }
 
   // Scroll functions
   private triggerScrollToBottom() {
