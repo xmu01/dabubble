@@ -20,4 +20,5 @@ export interface Messages {
     senderName:string;
     receiverName:string;
     reactions?: [];
+    reactionsGrouped?: { reaction: string; userNames: string[], count: number }[];
 }

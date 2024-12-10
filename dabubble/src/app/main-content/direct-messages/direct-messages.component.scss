@@ -640,3 +640,54 @@
         }
     }
 }
+
+
+
+.givenReactions {
+    position: relative;
+    cursor: pointer;
+}
+
+.custom-tooltip {
+    position: absolute;
+    bottom: 35px;
+    left: 110px;
+    transform: translateX(-50%);
+    background: #444DF2;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    z-index: 1000;
+    display: none;
+    /* Standardmäßig versteckt */
+    width: 158px;
+    height: 112px;
+    padding: 15px 10px 15px 10px;
+    gap: 5px;
+    border-radius: 30px 30px 30px 0px;
+}
+
+.givenReactions:hover .custom-tooltip {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tooltip-reaction {
+    font-size: 30px;
+    font-family: Nunito, 'Noto Color Emoji';
+}
+
+.tooltip-text {
+    max-width: 100%;
+    white-space: pre-line;
+    text-align: center;
+    font-family: Nunito;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16.55px;
+}

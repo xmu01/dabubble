@@ -36,9 +36,9 @@
                             *ngIf="hoveredMessageId === message.id && editMessageId == null" (mouseover)="setHoveredMessageId(message.id)"
                             (mouseout)="clearHoveredMessageId(message.id, $event)">
                             <span class="reaction-bar-symbol"
-                                (click)="addReactionToPrivateMessage(message.id, '✅')">✅</span>
+                                (click)="addReactionToPrivateMessage(message.id, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, '✅')">✅</span>
                             <span class="reaction-bar-symbol"
-                                (click)="addReactionToPrivateMessage(message.id, '🙏🏻')">🙏🏻</span>
+                                (click)="addReactionToPrivateMessage(message.id, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, '🙏🏻')">🙏🏻</span>
                             <mat-icon class="reaction-bar-symbol" (click)="toggleEmojiPicker(message.id)"
                                 fontSet="material-icons-outlined">add_reaction</mat-icon>
                             <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">comment</mat-icon>
@@ -50,7 +50,7 @@
 
                         <emoji-mart #emojiPickerReaction [set]="'google'" class="emojis message-emoji-picker"
                             [ngClass]="message.senderId == activeUser()?.userId ? 'right-emoji-picker' : 'left-emoji-picker'"
-                            (emojiClick)="addReactionToPrivateMessage(message.id, $event)" [showPreview]="false"
+                            (emojiClick)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)" [showPreview]="false"
                             [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
                             showSkinTones="true" *ngIf="activeEmojiPickerMessageId === message.id"></emoji-mart>
 
@@ -80,13 +80,39 @@
                                 {{ message.message }}
                             </p>
                             }
-                            <div class="reaction-container">
+                            <!-- <div class="reaction-container">
                                 @for(reaction of message.reactions; track reaction) {
                                 <div class="givenReactions">
                                     <span class="reaction-symbol">{{reaction}}</span><span>1</span>
                                 </div>
                                 }
-                            </div>
+                            </div> -->
+                            <!-- <div class="reaction-container">
+                                @for(reaction of message.reactions; track reaction) {
+                                  <div class="givenReactions" (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)">
+                                    <span class="reaction-symbol">{{reaction}}</span>
+                                    <span>1</span>
+                                  </div>
+                                }
+                              </div> -->
+                              <div class="reaction-container">
+                                @for(reaction of message.reactionsGrouped || []; track reaction.reaction) {
+                                  <div class="givenReactions"
+                                       (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)"
+                                       (mouseover)="showTooltip($event)"
+                                       (mouseleave)="hideTooltip($event)">
+                                    <span class="reaction-symbol">{{ reaction.reaction }}</span>
+                                    <span>{{ reaction.count }}</span> 
+                              
+                                    <!-- Tooltip -->
+                                    <div class="custom-tooltip" *ngIf="tooltipVisible">
+                                      <p class="tooltip-reaction">{{ reaction.reaction }}</p>
+                                      <p class="tooltip-text">{{ setTooltip(reaction.userNames) }}</p>
+                                    </div>
+                                  </div>
+                                }
+                              </div>
+                              
                         </div>
                     </div>
                     }

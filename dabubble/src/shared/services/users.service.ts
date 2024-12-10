@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Firestore, Timestamp, addDoc, arrayUnion, collection, doc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, addDoc, arrayUnion, collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
 import { Channels } from '../interfaces/channels';
@@ -244,4 +244,36 @@ export class UsersService {
       message: message
     });
   }
+
+  toggleReaction(messageId: string, userName: string, reaction: string) {
+    const q = query(
+      collection(this.firestore, `messages/${messageId}/reactions`),
+      where("userName", "==", userName),
+      where("reaction", "==", reaction)
+    );
+  
+    getDocs(q).then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        // Reaktion existiert bereits: Entfernen
+        querySnapshot.forEach((doc) => {
+          deleteDoc(doc.ref).then(() => {
+            console.log(`Reaction '${reaction}' von User '${userName}' entfernt.`);
+          }).catch((error) => {
+            console.error("Fehler beim Entfernen der Reaktion: ", error);
+          });
+        });
+      } else {
+        // Reaktion hinzufügen
+        const reactionsRef = collection(this.firestore, `messages/${messageId}/reactions`);
+        addDoc(reactionsRef, { userName, reaction }).then(() => {
+          console.log(`Reaction '${reaction}' von User '${userName}' hinzugefügt.`);
+        }).catch((error) => {
+          console.error("Fehler beim Hinzufügen der Reaktion: ", error);
+        });
+      }
+    }).catch((error) => {
+      console.error("Fehler beim Abrufen der Reaktion: ", error);
+    });
+  }
+  
 }

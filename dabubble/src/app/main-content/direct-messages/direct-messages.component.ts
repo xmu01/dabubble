@@ -7,15 +7,18 @@ import { UsersService } from '../../../shared/services/users.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { collection, Firestore, onSnapshot } from '@angular/fire/firestore';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-direct-messages',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, FormsModule, CommonModule, PickerComponent, MatMenuModule],
+  imports: [MatCardModule, MatIconModule, FormsModule, CommonModule, PickerComponent, MatMenuModule, MatTooltipModule],
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss'
 })
 export class DirectMessagesComponent {
+  private firestore = inject(Firestore);
   private firestoreService = inject(UsersService);
   private auth = inject(AuthService);
 
@@ -46,32 +49,16 @@ export class DirectMessagesComponent {
 
       this.firestoreService.messageChanged();
     });
-  }
 
-  startEditingMessage(messageId: string, message: string): void {
-    this.editMessageId = messageId; 
-    this.temporaryMessage = message; 
-  }
-  
-  cancelEditing(): void {
-    const message = this.groupedMessages().find(group =>
-      group.messages.some(msg => msg.id === this.editMessageId)
-    )?.messages.find(msg => msg.id === this.editMessageId);
-  
-    if (message) {
-      message.message = this.temporaryMessage!;
-    }
-  
-    this.editMessageId = null; 
-    this.temporaryMessage = null; 
-  }
-  
-  saveEditedMessage(id: string, message: string): void {
-    this.firestoreService.updateMessage(id, message).then(() => {
-      this.editMessageId = null; 
-      this.temporaryMessage = null; 
+    effect(() => {
+      this.groupedMessages().forEach((group) => {
+        group.messages.forEach((message) => {
+          this.loadReactions(message.id!);
+        });
+      });
     });
   }
+
 
 
   setHoveredMessageId(messageId: string | undefined): void {
@@ -83,7 +70,7 @@ export class DirectMessagesComponent {
   }
 
   clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
-    const target = event.relatedTarget as HTMLElement | null;  
+    const target = event.relatedTarget as HTMLElement | null;
 
     if (!target || (!target.closest('.message-container') && !target.closest('.reaction-bar'))) {
       this.hoveredMessageId = null;
@@ -99,7 +86,7 @@ export class DirectMessagesComponent {
   }
 
   toggleEmojiPicker(messageId: string): void {
-    this.activeEmojiPickerMessageId = 
+    this.activeEmojiPickerMessageId =
       this.activeEmojiPickerMessageId === messageId ? null : messageId;
   }
 
@@ -149,23 +136,116 @@ export class DirectMessagesComponent {
     }
   }
 
-  addReactionToPrivateMessage(id: string, event: any | string): void {
+  // addReactionToPrivateMessage(id: string, event: any | string): void {
+  //   let reaction: string;
+
+  //   if (typeof event === 'string') {
+  //     reaction = event;
+  //   } else if (event && event.emoji && event.emoji.native) {
+  //     reaction = event.emoji.native;
+  //   } else {
+  //     console.warn('Invalid reaction event:', event);
+  //     return;
+  //   }
+
+  //   this.firestoreService.addReactionToPrivateMessage(id, reaction);
+
+  //   this.activeEmojiPickerMessageId = null;
+  // }
+
+  addReactionToPrivateMessage(messageId: string, userName:string, event: any | string): void {
     let reaction: string;
   
     if (typeof event === 'string') {
-      reaction = event; 
+      reaction = event;
     } else if (event && event.emoji && event.emoji.native) {
-      reaction = event.emoji.native; 
+      reaction = event.emoji.native;
     } else {
       console.warn('Invalid reaction event:', event);
-      return; 
+      return;
     }
   
-    this.firestoreService.addReactionToPrivateMessage(id, reaction);
+    this.firestoreService.toggleReaction(messageId, userName, reaction);
   
     this.activeEmojiPickerMessageId = null;
   }
 
+  /**
+   * Lädt die Reaktionen einer Nachricht und gruppiert sie.
+   */
+  loadReactions(messageId: string): void {
+    const reactionsCollection = collection(this.firestore, `messages/${messageId}/reactions`);
+    onSnapshot(reactionsCollection, (querySnapshot) => {
+      const reactionsMap = new Map<string, { count: number; userNames: string[] }>();
+  
+      querySnapshot.forEach((doc) => {
+        const { reaction, userName } = doc.data();
+  
+        if (reactionsMap.has(reaction)) {
+          const entry = reactionsMap.get(reaction)!;
+          entry.count++;
+          entry.userNames.push(userName); // Benutzernamen zur Liste hinzufügen
+        } else {
+          reactionsMap.set(reaction, { count: 1, userNames: [userName] }); // Neue Reaktion mit Benutzernamen
+        }
+      });
+  
+      const groupedReactions = Array.from(reactionsMap.entries()).map(([reaction, { count, userNames }]) => ({
+        reaction,
+        count,
+        userNames,
+      }));
+  
+      // Nachricht um die gruppierten Reaktionen erweitern
+      const group = this.groupedMessages().find((g) =>
+        g.messages.some((msg) => msg.id === messageId)
+      );
+  
+      if (group) {
+        const message = group.messages.find((msg) => msg.id === messageId);
+        if (message) {
+          message.reactionsGrouped = groupedReactions;
+        }
+      }
+    });
+  }
+
+  setTooltip(names: string[]): string {
+    const loggedUserFullName = `${this.getLoggedUser()?.firstName} ${this.getLoggedUser()?.lastName}`;
+    
+    const isCurrentUser = names.includes(loggedUserFullName);
+  
+    const otherNames = names.filter(name => name !== loggedUserFullName);
+  
+    const formattedNames = otherNames.map(name => `${name}`);
+  
+    if (isCurrentUser) {
+      formattedNames.push('Du');
+    }
+  
+    if (formattedNames.length === 1) {
+      return `${formattedNames[0]} hast reagiert.`;
+    } else if (formattedNames.length === 2) {
+      return `${formattedNames[0]} und ${formattedNames[1]} haben reagiert.`;
+    } else if (formattedNames.length === 3) {
+      const lastUser = formattedNames.pop();
+      return `${formattedNames.join(', ')} und ${lastUser} haben reagiert.`;
+    } else {
+      return `${formattedNames[0]} und ${formattedNames.length - 1} weitere haben reagiert.`;
+    }
+  }
+  
+  tooltipVisible: boolean = false;
+
+showTooltip(event: MouseEvent): void {
+  this.tooltipVisible = true;
+}
+
+hideTooltip(event: MouseEvent): void {
+  this.tooltipVisible = false;
+}
+
+  // Scroll functions
   private triggerScrollToBottom() {
     setTimeout(() => {
       this.scrollToBottom();
@@ -181,4 +261,31 @@ export class DirectMessagesComponent {
       });
     }
   }
+
+  // Edit functions 
+  startEditingMessage(messageId: string, message: string): void {
+    this.editMessageId = messageId;
+    this.temporaryMessage = message;
+  }
+
+  cancelEditing(): void {
+    const message = this.groupedMessages().find(group =>
+      group.messages.some(msg => msg.id === this.editMessageId)
+    )?.messages.find(msg => msg.id === this.editMessageId);
+
+    if (message) {
+      message.message = this.temporaryMessage!;
+    }
+
+    this.editMessageId = null;
+    this.temporaryMessage = null;
+  }
+
+  saveEditedMessage(id: string, message: string): void {
+    this.firestoreService.updateMessage(id, message).then(() => {
+      this.editMessageId = null;
+      this.temporaryMessage = null;
+    });
+  }
+
 }
