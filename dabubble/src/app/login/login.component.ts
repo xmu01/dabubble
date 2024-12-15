@@ -32,6 +32,35 @@ export class LoginComponent {
 
   errorMessage = '';
 
+  showSplashScreen = true; // Steuert, ob der Splash-Screen angezeigt wird, Für die Animation
+  animateText = false; // Steuert die Animation des Texts
+ 
+  ngOnInit() {
+    const splashContent = document.querySelector('.splash-content') as HTMLElement;
+  
+    // 1. Text-Einblendung
+    setTimeout(() => {
+      this.animateText = true; // Text einblenden
+    }, 1000);
+  
+    // 2. Logo- und Textbewegung
+    setTimeout(() => {
+      splashContent.style.animation = 'move-to-header 1s forwards';
+      splashContent.addEventListener('animationend', () => {
+        console.log('Bewegung nach oben links beendet.');
+        // 3. Hintergrund ausblenden
+        const splashScreen = document.querySelector('.splash-screen') as HTMLElement;
+        splashScreen.classList.add('hidden');
+      });
+    }, 2000);
+  
+    // 4. Splash-Screen aus DOM entfernen
+    setTimeout(() => {
+      this.showSplashScreen = false;
+      console.log('Splash-Screen wurde entfernt.');
+    }, 3000);
+  }
+
   constructor() {}
 
   updateErrorMessage() {
