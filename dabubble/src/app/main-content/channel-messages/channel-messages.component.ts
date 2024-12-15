@@ -149,6 +149,14 @@ export class ChannelMessagesComponent {
       this.firestoreService.channelMessageChanged();
 
     });
+
+    effect(() => {
+      this.groupedChannelMessages().forEach((group) => {
+        group.messages.forEach((message) => {
+          this.loadReactions(message.id!);
+        });
+      });
+    });
   }
 
   getLoggedUser() {
@@ -195,12 +203,13 @@ export class ChannelMessagesComponent {
    * Lädt die Reaktionen einer Nachricht und gruppiert sie.
    */
   loadReactions(messageId: string): void {
-    const reactionsCollection = collection(this.firestore, `messages/${messageId}/reactions`);
+    const reactionsCollection = collection(this.firestore, `channels/${this.activeChannel()?.id}/messages/${messageId}/reactions`);    
+    
     onSnapshot(reactionsCollection, (querySnapshot) => {
       const reactionsMap = new Map<string, { count: number; userNames: string[] }>();
 
       querySnapshot.forEach((doc) => {
-        const { reaction, userName } = doc.data();
+        const { reaction, userName } = doc.data();        
 
         if (reactionsMap.has(reaction)) {
           const entry = reactionsMap.get(reaction)!;
@@ -218,14 +227,15 @@ export class ChannelMessagesComponent {
       }));
 
       // Nachricht um die gruppierten Reaktionen erweitern
-      const group = this.groupedMessages().find((g) =>
+      const group = this.groupedChannelMessages().find((g) =>
         g.messages.some((msg) => msg.id === messageId)
       );
 
       if (group) {
         const message = group.messages.find((msg) => msg.id === messageId);
+        
         if (message) {
-          message.reactionsGrouped = groupedReactions;
+          message.reactionsGrouped = groupedReactions;         
         }
       }
     });
