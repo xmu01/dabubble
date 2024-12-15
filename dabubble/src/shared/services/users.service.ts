@@ -273,5 +273,4 @@ export class UsersService {
       console.error("Fehler beim Abrufen der Reaktion: ", error);
     });
   }
-  
 }

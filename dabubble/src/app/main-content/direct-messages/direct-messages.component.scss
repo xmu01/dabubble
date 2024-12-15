@@ -560,7 +560,7 @@
         /* Ermöglicht Scrollen */
         scrollbar-width: none;
         /* Für Firefox */
-        font-family: Nunito;
+        font-family: Nunito, 'Noto Color Emoji';
         font-size: 18px;
         font-weight: 400;
         line-height: 24.55px;
@@ -698,4 +698,8 @@
     font-size: 14px;
     font-weight: 500;
     line-height: 16.55px;
+}
+
+:ng-deep .emoji-mart-category-label {
+    display: none;
 }

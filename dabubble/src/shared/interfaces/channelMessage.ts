@@ -6,4 +6,5 @@ export interface ChannelMessage {
     senderId?: string;
     timestamp: Timestamp;
     senderName:string;
+    reactionsGrouped?: { reaction: string; userNames: string[], count: number }[];
 }

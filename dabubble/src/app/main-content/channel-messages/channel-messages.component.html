@@ -2,7 +2,6 @@
   <mat-card appearance="outlined" class="messages">
     <mat-card-header class="direct-message-header">
       <mat-card-title class="direct-message-title">
-
         <mat-icon fontIcon="tag"></mat-icon><span class="userName">{{ activeChannel()?.name }}</span>
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
       </mat-card-title>
@@ -19,7 +18,7 @@
       </div>
     </mat-card-header>
 
-    
+
     <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false">
       <div class="date-elements">
         @for (group of groupedChannelMessages(); track group.date) {
@@ -34,30 +33,82 @@
           @for (message of group.messages; track message.id) {
           <div class="message-container" [ngClass]="message.senderId != loggedUser()?.uid ? 'left' : 'right'"
             (mouseover)="setHoveredMessageId(message.id)" (mouseout)="clearHoveredMessageId(message.id, $event)">
-            <div class="reaction-bar" [ngClass]="message.senderId != loggedUser()?.uid ? 'rbr' : 'rbl'"
-              *ngIf="hoveredMessageId === message.id">
-              <span class="reaction-bar-symbol">✅</span>
-              <span class="reaction-bar-symbol">🙏🏻</span>
-              <mat-icon class="reaction-bar-symbol" (click)="toggleEmojis()"
+            <div class="reaction-bar"
+              [ngClass]="(message.senderId != loggedUser()?.uid || activeUser()?.userId === loggedUser()?.uid) ? 'rbr' : 'rbl'"
+              *ngIf="hoveredMessageId === message.id && editMessageId == null"
+              (mouseover)="setHoveredMessageId(message.id)" (mouseout)="clearHoveredMessageId(message.id, $event)">
+              <span class="reaction-bar-symbol"
+                (click)="addReactionToPrivateMessage(message.id, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, '✅')">✅</span>
+              <span class="reaction-bar-symbol"
+                (click)="addReactionToPrivateMessage(message.id, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, '🙏🏻')">🙏🏻</span>
+              <mat-icon class="reaction-bar-symbol" (click)="toggleEmojiPicker(message.id)"
                 fontSet="material-icons-outlined">add_reaction</mat-icon>
               <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">comment</mat-icon>
               @if(message.senderId == loggedUser()?.uid){
-              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">more_vert</mat-icon>
+              <mat-icon (click)="startEditingMessage(message.id, message.message!)" class="reaction-bar-symbol"
+                fontSet="material-icons-outlined">more_vert</mat-icon>
               }
             </div>
+
+            <emoji-mart #emojiPickerReaction [set]="'google'" class="emojis message-emoji-picker"
+              [ngClass]="message.senderId == activeUser()?.userId ? 'right-emoji-picker' : 'left-emoji-picker'"
+              (emojiClick)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)"
+              [showPreview]="false"
+              [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
+              showSkinTones="true" *ngIf="activeEmojiPickerMessageId === message.id"></emoji-mart>
+
             <img src="./../../assets/img/pfp_header.png" alt="Message User">
             <div [ngClass]="message.senderId != loggedUser()?.uid ? 'message-left' : 'message-right'">
-              <div [ngClass]="message.senderId != loggedUser()?.uid ? 'name-left' : 'name-right'">
+              @if(editMessageId === message.id) {
+              <div class="edit">
+
+                <textarea [(ngModel)]="message.message" class="edit-input" rows="2"></textarea>
+                <div class="edit-controls">
+                  <mat-icon (click)="toggleEditEmojis()">sentiment_satisfied</mat-icon>
+
+                  <div class="control-buttons">
+                    <button class="cancel" (click)="cancelEditing()">Abbrechen</button>
+                    <button class="save" (click)="saveEditedMessage(message.id, message.message!)">Speichern</button>
+                  </div>
+                  @if(showEditEmojis) {
+                  <emoji-mart #emojEditiPicker [set]="'google'" class="emojis" (emojiClick)="addEditEmoji($event)"
+                    [showPreview]="false"
+                    [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
+                    showSkinTones="true"></emoji-mart>
+                  }
+                </div>
+              </div>
+              } @else {
+              <div [ngClass]="message.senderId == activeUser()?.userId ? 'name-left' : 'name-right'">
                 <p>{{ message.senderName }}</p>
                 <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
               </div>
-              <p [ngClass]="message.senderId != loggedUser()?.uid ? 'text-left' : 'text-right'">{{ message.message }}
+              <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'">
+                {{ message.message }}
               </p>
+              }
+              <div class="reaction-container">
+                @for(reaction of message.reactionsGrouped || []; track reaction.reaction) {
+                <div class="givenReactions"
+                  (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, reaction.reaction)"
+                  (mouseover)="showTooltip($event)" (mouseleave)="hideTooltip($event)">
+                  <span class="reaction-symbol">{{ reaction.reaction }}</span>
+                  <span>{{ reaction.count }}</span>
+
+                  <div class="custom-tooltip" *ngIf="tooltipVisible">
+                    <p class="tooltip-reaction">{{ reaction.reaction }}</p>
+                    <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
+                  </div>
+                </div>
+                }
+              </div>
             </div>
           </div>
           }
+
         </div>
         }
+
       </div>
     </mat-card-content>
     <div class="direct-message-input">

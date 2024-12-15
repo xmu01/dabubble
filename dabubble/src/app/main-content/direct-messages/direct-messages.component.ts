@@ -34,6 +34,7 @@ export class DirectMessagesComponent {
   editMessageId: string | null = null;
   newMessage: string = '';
   showEmojis = false;
+  showEditEmojis = false;
   temporaryMessage: string | null = null;
 
   constructor() {
@@ -81,8 +82,31 @@ export class DirectMessagesComponent {
     this.newMessage += event.emoji.native;
   }
 
+  addEditEmoji(event: any): void {
+    // Emoji hinzufügen
+    const emoji = event.emoji.native;
+  
+    // Nachricht anhand der `editMessageId` finden und aktualisieren
+    const group = this.groupedMessages().find(group =>
+      group.messages.some(msg => msg.id === this.editMessageId)
+    );
+  
+    if (group) {
+      const message = group.messages.find(msg => msg.id === this.editMessageId);
+  
+      if (message) {
+        // Emoji direkt zur Nachricht hinzufügen
+        message.message += emoji;
+      }
+    }
+  }
+  
+
   toggleEmojis(): void {
     this.showEmojis = !this.showEmojis;
+  }
+  toggleEditEmojis(): void {
+    this.showEditEmojis = !this.showEditEmojis;
   }
 
   toggleEmojiPicker(messageId: string): void {
@@ -217,14 +241,17 @@ export class DirectMessagesComponent {
 
     const otherNames = names.filter(name => name !== loggedUserFullName);
 
-    const formattedNames = otherNames.map(name => `${name}`);
+    const formattedNames = otherNames.map(name => `<b>${name}</b>`);
 
     if (isCurrentUser) {
-      formattedNames.push('Du');
+      formattedNames.push(`<b>Du</b>`);
     }
 
     if (formattedNames.length === 1) {
-      return `${formattedNames[0]} hast reagiert.`;
+      if(isCurrentUser){
+        return `${formattedNames[0]} hast reagiert`;
+      }
+      return `${formattedNames[0]} hat reagiert`;
     } else if (formattedNames.length === 2) {
       return `${formattedNames[0]} und ${formattedNames[1]} haben reagiert`;
     } else if (formattedNames.length === 3) {
@@ -279,6 +306,9 @@ export class DirectMessagesComponent {
 
     this.editMessageId = null;
     this.temporaryMessage = null;
+    if(this.showEditEmojis) {
+      this.toggleEditEmojis();
+    }
   }
 
   saveEditedMessage(id: string, message: string): void {
