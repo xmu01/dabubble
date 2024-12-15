@@ -1,11 +1,12 @@
-<div class="splash-screen" [class.hidden]="!showSplashScreen">
+<!-- Splash-Screen -->
+<div class="splash-screen" *ngIf="showSplashScreen">
     <div class="splash-content">
-      <img src="./../../assets/img/header_icon.png" alt="DABubble Logo" class="splash-logo">
-      <span class="splash-text" [class.animate-text]="animateText">DABubble</span>
+      <img src="./../../assets/img/header_icon.png" alt="Logo" class="splash-logo">
+      <span class="splash-text">DABubble</span>
     </div>
   </div>
 
-<div class="main-content" [class.hidden]="showSplashScreen">
+<div class="main-content" *ngIf="!showSplashScreen">
 
     <div class="top-login">
         <img src="./../../assets/img/header_icon.png" alt="">

@@ -1,53 +1,36 @@
-/* Splash-Screen */
+/* Splash-Screen Styles */
 .splash-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #6A0DAD; /* Violett */
+    background-color: #6A0DAD; /* Violetter Hintergrund */
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
     overflow: hidden;
   }
-
-  .splash-screen.hidden {
-    opacity: 0; /* Verblasst */
-    pointer-events: none; /* Verhindert Interaktion */
-  }
   
- 
-    .splash-content {
-        display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-origin: center;
-
-      }
-      
-
+  .splash-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: move-to-header 2s forwards ease-in-out 1s;
+  }
   
   .splash-logo {
     width: 150px;
     height: 150px;
-    
   }
   
   .splash-text {
     font-size: 2.5rem;
     color: white;
-    opacity: 0;
     margin-left: 1rem;
-    transition: opacity 1s ease-in-out;
+    animation: fade-in 1s ease-in-out 1s;
   }
-  
-  .splash-text.animate-text {
-    opacity: 1;
-  }
-  
-  
   
   @keyframes move-to-header {
     0% {
@@ -58,23 +41,20 @@
     }
   }
   
-  .hidden {
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Hauptinhaltscontainer versteckt, wenn Splash-Screen aktiv ist */
+  .main-content {
     display: none;
   }
   
-  /* Transition for hiding the purple background */
-  .splash-screen.fade-out {
-    animation: fade-out 1s forwards;
-  }
-  
-  @keyframes fade-out {
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-  }
 
 .top-login {
     padding: 18px;
