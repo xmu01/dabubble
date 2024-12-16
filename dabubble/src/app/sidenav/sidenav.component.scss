@@ -217,14 +217,14 @@
 ::ng-deep .mat-expansion-panel-content {
     overflow-y: scroll !important;
     height: 70%;
-    scrollbar-width: thin;
+    scrollbar-width: none;
     /* macht die Scrollbar schmaler */
     scrollbar-color: #9747FF #fff;
 }
 
 /* Scrollbar-Leiste */
 ::ng-deep .mat-expansion-panel-content::-webkit-scrollbar {
-    width: 4px;
+    width: 0px;
     /* Breite der Scrollleiste */
 }
 
@@ -240,7 +240,7 @@
     /* Farbe des Griffs */
     border-radius: 10px;
     /* Rundung des Griffs */
-    height: 1px;
+    height: 0px;
 }
 
 /* Scrollbar-Griff beim Hover */
