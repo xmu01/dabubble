@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
-import { collection, Firestore, onSnapshot, Timestamp } from '@angular/fire/firestore';
+import { collection, doc, Firestore, getDoc, onSnapshot, Timestamp } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,8 @@ import { UsersService } from '../../../shared/services/users.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { ThreadComponent } from '../../thread/thread.component';
 import { ChannelService } from '../../../shared/services/channel.service';
+import { Users } from '../../../shared/interfaces/users';
+import { from, map, Observable, shareReplay } from 'rxjs';
 
 @Component({
   selector: 'app-channel-messages',
@@ -65,6 +67,24 @@ export class ChannelMessagesComponent {
       this.temporaryMessage = null;
     });
   }
+
+  avatarsCache: Map<string, Observable<string | undefined>> = new Map();
+
+  getUserAvatar(senderId: string): Observable<string | undefined> {
+    if (!this.avatarsCache.has(senderId)) {
+      const ref = doc(this.firestore, `users/${senderId}`);
+      const avatar$ = from(getDoc(ref)).pipe(
+        map((docSnap) => {
+          const data = docSnap.data() as Users;
+          return data?.avatar || 'default-avatar.png'; // Fallback für fehlenden Avatar
+        }),
+        shareReplay(1) // Caching: Wiederholte Subscriptions verwenden denselben Wert
+      );
+      this.avatarsCache.set(senderId, avatar$);
+    }
+    return this.avatarsCache.get(senderId)!;
+  }
+
 
 
   setHoveredMessageId(messageId: string | undefined): void {
@@ -205,13 +225,13 @@ export class ChannelMessagesComponent {
    * Lädt die Reaktionen einer Nachricht und gruppiert sie.
    */
   loadReactions(messageId: string): void {
-    const reactionsCollection = collection(this.firestore, `channels/${this.activeChannel()?.id}/messages/${messageId}/reactions`);    
-    
+    const reactionsCollection = collection(this.firestore, `channels/${this.activeChannel()?.id}/messages/${messageId}/reactions`);
+
     onSnapshot(reactionsCollection, (querySnapshot) => {
       const reactionsMap = new Map<string, { count: number; userNames: string[] }>();
 
       querySnapshot.forEach((doc) => {
-        const { reaction, userName } = doc.data();        
+        const { reaction, userName } = doc.data();
 
         if (reactionsMap.has(reaction)) {
           const entry = reactionsMap.get(reaction)!;
@@ -235,9 +255,9 @@ export class ChannelMessagesComponent {
 
       if (group) {
         const message = group.messages.find((msg) => msg.id === messageId);
-        
+
         if (message) {
-          message.reactionsGrouped = groupedReactions;         
+          message.reactionsGrouped = groupedReactions;
         }
       }
     });

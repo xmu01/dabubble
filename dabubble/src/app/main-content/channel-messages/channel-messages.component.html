@@ -57,7 +57,10 @@
               [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
               showSkinTones="true" *ngIf="activeEmojiPickerMessageId === message.id"></emoji-mart>
 
-            <img src="./../../assets/img/pfp_header.png" alt="Message User">
+            <img [src]="message.senderId != loggedUser()?.uid 
+                      ? './../../../assets/img/profile-pictures/' + (getUserAvatar(message.senderId!) | async)
+                      : './../../../assets/img/profile-pictures/' + getLoggedUser()?.avatar" alt="Message User">
+
             <div [ngClass]="message.senderId != loggedUser()?.uid ? 'message-left' : 'message-right'">
               @if(editMessageId === message.id) {
               <div class="edit">
