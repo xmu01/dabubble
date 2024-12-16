@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
 import { collection, doc, Firestore, getDoc, onSnapshot, Timestamp } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -76,16 +76,24 @@ export class ChannelMessagesComponent {
       const avatar$ = from(getDoc(ref)).pipe(
         map((docSnap) => {
           const data = docSnap.data() as Users;
-          return data?.avatar || 'default-avatar.png'; // Fallback für fehlenden Avatar
+          return data?.avatar;
         }),
-        shareReplay(1) // Caching: Wiederholte Subscriptions verwenden denselben Wert
+        shareReplay(1) 
       );
       this.avatarsCache.set(senderId, avatar$);
     }
     return this.avatarsCache.get(senderId)!;
   }
 
+  memberAvatars = computed(() => {
+    const members = this.activeChannel()?.members;
+    if (!members) return []; // Kein aktiver Kanal oder keine Mitglieder
 
+    // Avatare der Mitglieder filtern und zurückgeben
+    return members
+      .map(memberId => this.users().find(user => user.userId === memberId)?.avatar)
+      .filter((avatar): avatar is string => !!avatar); // Typ-Filter für `string[]`
+  });
 
   setHoveredMessageId(messageId: string | undefined): void {
     if (messageId) {
