@@ -38,8 +38,13 @@
                         <ul class="list">
                             @for(user of users(); track user) {
                                 <li (click)="getId(user.userId, drawer)">
-                                    <div class="user-picture"><span [ngClass]="user.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span><img
-                                            src="./../../assets/img/pfp_header.png" alt=""></div>{{user.firstName}} {{user.lastName}}
+                                    <div class="user-picture"><span [ngClass]="user.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
+                                        @if(user.avatar) {
+                                            <img class="profile-pictures" src="./../../assets/img/profile-pictures/{{user.avatar}}" alt="">
+                                        } @else {
+                                            <img class="profile-pictures" src="./../../assets/img/profile-pictures/profile_default.png" alt="">
+                                        }
+                                    </div>{{user.firstName}} {{user.lastName}}
                                 </li>  
                             }
                         </ul>

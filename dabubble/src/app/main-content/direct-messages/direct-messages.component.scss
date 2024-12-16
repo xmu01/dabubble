@@ -35,13 +35,13 @@
         .user-image-container {
             position: relative;
 
-            .userImage {
+            .user-image {
                 width: 70px;
                 height: 70px;
                 object-fit: cover;
                 position: relative;
                 border: 2px solid #FFFFFF;
-                border-radius: 30px;
+                border-radius: 50%;
             }
 
             .user-picture-dot-online {

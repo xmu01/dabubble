@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { addDoc, collection, deleteDoc, doc, Firestore, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
+import { addDoc, collection, deleteDoc, doc, Firestore, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { Channels } from '../interfaces/channels';
 import { ChannelMessage } from '../interfaces/channelMessage';
 
@@ -31,6 +31,12 @@ export class ChannelService {
       }
     });
   }
+
+    async updateMessage(id: string, message:string){
+      await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}/messages`, id), {
+        message: message
+      });
+    }
 
   loadMessageChannelChat(channelId: string) {
     const q = query(
@@ -75,7 +81,23 @@ export class ChannelService {
   saveChannelMessage(message: ChannelMessage, id: string) {
     const userDocRef = collection(this.firestore, `channels/${id}/messages`);
 
-    // Automatisch ein Timestamp hinzufügen, falls nicht angegeben
+    const newMessage = {
+      ...message,
+      timestamp: message.timestamp || new Date()
+    };
+
+    return addDoc(userDocRef, newMessage)
+      .then(() => {
+        console.log('Message saved successfully');
+      })
+      .catch((error) => {
+        console.error('Error saving message:', error);
+      });
+  }
+
+  saveChannelAnswer(message: ChannelMessage, id: string) {
+    const userDocRef = collection(this.firestore, `channels/${this.activeChannel()?.id}/messages/answers`);
+
     const newMessage = {
       ...message,
       timestamp: message.timestamp || new Date()
@@ -102,7 +124,7 @@ export class ChannelService {
 
   toggleReaction(messageId: string, userName: string, reaction: string) {
     const q = query(
-      collection(this.firestore, `messages/${messageId}/reactions`),
+      collection(this.firestore, `channels/${this.activeChannel()?.id}/messages/${messageId}/reactions`),
       where("userName", "==", userName),
       where("reaction", "==", reaction)
     );
@@ -118,7 +140,7 @@ export class ChannelService {
         });
       } else {
         // Reaktion hinzufügen
-        const reactionsRef = collection(this.firestore, `messages/${messageId}/reactions`);
+        const reactionsRef = collection(this.firestore, `channels/${this.activeChannel()?.id}/messages/${messageId}/reactions`);
         addDoc(reactionsRef, { userName, reaction }).then(() => {
         }).catch((error) => {
           console.error("Fehler beim Hinzufügen der Reaktion: ", error);

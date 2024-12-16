@@ -12,8 +12,8 @@
         <h2>{{ getLoggedUser()?.firstName }} {{ getLoggedUser()?.lastName }}</h2>
         <div class="profile-picture-container">
             <span class="user-picture-dot-online"></span>
-            <img class="pfp-header" src="./../../assets/img/pfp_header.png" alt="">
-            <img [matMenuTriggerFor]="menu" class="pfp-header-mobile" src="./../../assets/img/pfp_header.png" alt="">
+            <img class="pfp-header" src="./../../assets/img/profile-pictures/{{ getLoggedUser()?.avatar }}" alt="">
+            <img [matMenuTriggerFor]="menu" class="pfp-header-mobile" src="./../../assets/img/profile-pictures/{{ getLoggedUser()?.avatar }}" alt="">
         </div>
         <button mat-button [matMenuTriggerFor]="menu">
             <mat-icon class="arrow-down" fontIcon="keyboard_arrow_down"></mat-icon>

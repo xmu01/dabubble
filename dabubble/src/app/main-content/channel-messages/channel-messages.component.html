@@ -83,7 +83,7 @@
                 <p>{{ message.senderName }}</p>
                 <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
               </div>
-              <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'">
+              <p [ngClass]="message.senderId == getLoggedUser()?.userId ? 'text-right' : 'text-left'">
                 {{ message.message }}
               </p>
               }

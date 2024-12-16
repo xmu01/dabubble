@@ -9,6 +9,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { UsersService } from '../../../shared/services/users.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { ThreadComponent } from '../../thread/thread.component';
+import { ChannelService } from '../../../shared/services/channel.service';
 
 @Component({
   selector: 'app-channel-messages',
@@ -21,14 +22,15 @@ export class ChannelMessagesComponent {
   newMessage: string = '';
   private firestore = inject(Firestore);
   private firestoreService = inject(UsersService);
+  private channelService = inject(ChannelService);
   private auth = inject(AuthService);
 
   users = this.firestoreService.users;
   loggedUser = this.auth.userSignal;
   activeUser = this.firestoreService.activeUser;
-  activeChannel = this.firestoreService.activeChannel;
+  activeChannel = this.channelService.activeChannel;
   groupedMessages = this.firestoreService.groupedMessages;
-  groupedChannelMessages = this.firestoreService.groupedChannelMessages;
+  groupedChannelMessages = this.channelService.groupedChannelMessages;
   today = signal(new Date().toISOString().split('T')[0]);
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   showEmojis = false;
@@ -58,7 +60,7 @@ export class ChannelMessagesComponent {
   }
 
   saveEditedMessage(id: string, message: string): void {
-    this.firestoreService.updateMessage(id, message).then(() => {
+    this.channelService.updateMessage(id, message).then(() => {
       this.editMessageId = null;
       this.temporaryMessage = null;
     });
@@ -135,18 +137,18 @@ export class ChannelMessagesComponent {
   }
 
   constructor() {
-    this.firestoreService.loadChannel('uYr4Z1UxNJW1qVyRlvlX');
+    this.channelService.loadChannel('uYr4Z1UxNJW1qVyRlvlX');
 
     effect(() => {
-      const channelId = this.firestoreService.activeChannel()?.id;
+      const channelId = this.channelService.activeChannel()?.id;
 
       if (channelId) {
-        this.firestoreService.loadMessageChannelChat(channelId);
+        this.channelService.loadMessageChannelChat(channelId);
         this.newMessage = '';
         this.showEmojis = false;
         this.triggerScrollToBottom();
       }
-      this.firestoreService.channelMessageChanged();
+      this.channelService.channelMessageChanged();
 
     });
 
@@ -170,7 +172,7 @@ export class ChannelMessagesComponent {
 
   saveChannelMessage(id: string): void {
     if (this.newMessage != '') {
-      this.firestoreService.saveChannelMessage({
+      this.channelService.saveChannelMessage({
         message: this.newMessage,
         senderName: this.getLoggedUser()!.firstName + ' ' + this.getLoggedUser()!.lastName || '',
         senderId: this.loggedUser()!.uid || '',
@@ -194,7 +196,7 @@ export class ChannelMessagesComponent {
       return;
     }
 
-    this.firestoreService.toggleReaction(messageId, userName, reaction);
+    this.channelService.toggleReaction(messageId, userName, reaction);
 
     this.activeEmojiPickerMessageId = null;
   }
