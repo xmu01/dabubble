@@ -44,7 +44,7 @@
                                         } @else {
                                             <img class="profile-pictures" src="./../../assets/img/profile-pictures/profile_default.png" alt="">
                                         }
-                                    </div>{{user.firstName}} {{user.lastName}}
+                                    </div>{{user.firstName}} {{user.lastName}} @if(user.userId == loggedUser()?.uid){ (Du)}
                                 </li>  
                             }
                         </ul>

@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../shared/services/users.service';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -26,8 +27,10 @@ export class SidenavComponent {
   }
 
   private firestoreService = inject(UsersService);
+  private auth = inject(AuthService);
 
   users = this.firestoreService.users;
+  loggedUser = this.auth.userSignal;
   channels = this.firestoreService.channels;
 
   mobileQuery: MediaQueryList;
