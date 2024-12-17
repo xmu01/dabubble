@@ -6,6 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
+import { trigger, transition, style, animate, keyframes } from '@angular/animations';
+
 
 @Component({
   selector: 'app-login',
@@ -22,6 +24,20 @@ import { AuthService } from '../../shared/services/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+
+  animations: [
+    trigger('bubbleAnimation', [
+      transition(':enter', [ // Startet beim Einfügen ins DOM
+        animate('3s ease-in-out', keyframes([
+          style({  transform: 'translate(0, 0) scale(1)', offset: 0 }),       // Startzustand
+          style({ transform: 'translate(-40vw, -40vh) scale(0.2)', offset: 1 }), // Zwischenzustand
+          
+        ]))
+      ])
+    ])
+  ]
+
+
 })
 export class LoginComponent {
   private authService = inject(AuthService);
@@ -33,6 +49,10 @@ export class LoginComponent {
   errorMessage = '';
 
   showSplashScreen: boolean = true; // Zeige Splash-Screen beim Start
+
+  onAnimationDone() {
+    this.showSplashScreen = false; // Entfernt den Splash-Screen nach der Animation
+  }
 
   ngOnInit() {
     // Entferne Splash-Screen nach 3 Sekunden

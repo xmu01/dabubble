@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: move-to-header 2s forwards ease-in-out 1s;
+   /* animation: move-to-header 2s forwards ease-in-out 1s;*/
   }
   
   .splash-logo {
@@ -52,9 +52,8 @@
   
   /* Hauptinhaltscontainer versteckt, wenn Splash-Screen aktiv ist */
   .main-content {
-    display: none;
+    display: block;
   }
-  
 
 .top-login {
     padding: 18px;
