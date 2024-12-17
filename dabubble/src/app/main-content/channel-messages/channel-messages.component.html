@@ -1,7 +1,7 @@
 <div class="container">
   <mat-card appearance="outlined" class="messages">
     <mat-card-header class="direct-message-header">
-      <mat-card-title class="direct-message-title">
+      <mat-card-title (click)="openDialog()" class="direct-message-title">
         <mat-icon fontIcon="tag"></mat-icon><span class="userName">{{ activeChannel()?.name }}</span>
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
       </mat-card-title>
@@ -11,7 +11,7 @@
             @for (avatar of memberAvatars(); track avatar; let i = $index;) {
               <img
                 class="members-image"
-                [style.right.px]="(i + 1) == 1 ? -10 : (-25 + (i * 15))"
+                [style.right.px]="memberAvatars()!.length == 1 ? -10 : (-25 + (i * 15))"
                 [src]="'./../../../assets/img/profile-pictures/' + avatar"
                 alt="Member {{ i + 1 }}"
               />

@@ -1,1 +1,46 @@
-<p>dialog-show-details works!</p>
+<h2 mat-dialog-title><span class="name-prefix" matTextPrefix>#</span>{{ data.name }}</h2>
+<mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
+
+<mat-dialog-content>
+  <div class="channel-name">
+    <div class="space-between">
+      <h3>Channel-Name</h3>
+      <button class="edit-button" mat-button disableRipple="true" (click)="toggleEdit('name', data.name)">
+        {{ isEditing.name ? 'Speichern' : 'Bearbeiten' }}
+      </button>
+    </div>
+
+    <p *ngIf="!isEditing.name">
+      <span class="name-prefix" matTextPrefix>#</span>{{ data.name }}
+    </p>
+    <mat-form-field class="input-group" *ngIf="isEditing.name">
+      <input class="name-input" matInput [(ngModel)]="data.name" placeholder="z.B. Kooperationsprojekte" />
+      <span matTextPrefix>#</span>
+    </mat-form-field>
+  </div>
+
+  <div class="channel-description">
+    <div class="space-between">
+      <h3>Beschreibung</h3>
+      <button class="edit-button" mat-button (click)="toggleEdit('description', data.description!)">
+        {{ isEditing.description ? 'Speichern' : 'Bearbeiten' }}
+      </button>
+    </div>
+    <p *ngIf="!isEditing.description">{{ data.description }}</p>
+    <mat-form-field *ngIf="isEditing.description">
+      <textarea class="no-scrollbar" matInput [(ngModel)]="data.description" placeholder="Dein Text hier"
+        cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="created_by">
+    <h3>Erstellt von</h3>
+    <p class="creator-name">{{ data.created_by }}</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button [disabled]="(data!.members.length || 0) < 2" class="leave-button" mat-button [mat-dialog-close]="data">
+    Channel verlassen
+  </button>
+</mat-dialog-actions>

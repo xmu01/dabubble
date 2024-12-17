@@ -72,18 +72,24 @@ export class SidenavComponent {
     const dialogRef = this.dialog.open(DialogNewChannelComponent, {
       data: { name: this.name, description: this.description },
     });
-
+  
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Dialog geschlossen mit Daten:', result);
+        
+        // Finde den aktuellen User anhand der UID
+        const currentUser = this.users().find(user => user.userId === this.loggedUser()?.uid);
+  
+        // Erstelle den neuen Channel mit Namen und Beschreibung
         this.channelService.saveNewChannel({
           name: result.name,
           description: result.description || "",
-          created_by: this.loggedUser()?.uid || "",
+          created_by: currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : "Unbekannt",
           members: [this.loggedUser()?.uid || ""]
         });
       }
     });
   }
+
 }
 

@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { addDoc, collection, deleteDoc, doc, Firestore, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, Firestore, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { Channels } from '../interfaces/channels';
 import { ChannelMessage } from '../interfaces/channelMessage';
 import { Users } from '../interfaces/users';
@@ -32,15 +32,40 @@ export class ChannelService {
         this.activeChannel.set(this.setChannelObject(doc.data(), doc.id));
       }
       console.log(this.activeChannel()?.name);
-      
-    });   
+
+    });
   }
 
-    async updateMessage(id: string, message:string){
-      await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}/messages`, id), {
-        message: message
+  async updateMessage(id: string, message: string) {
+    await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}/messages`, id), {
+      message: message
+    });
+  }
+
+  async updateChannel(category: string, text: string) {
+    if (category == 'name') {
+      await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}`), {
+        name: text
       });
     }
+    if (category == 'description') {
+      await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}`), {
+        description: text
+      });
+    }
+  }
+
+  async addMembers(userId: string) {
+    await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}`), {
+      members: arrayUnion(userId)
+    });
+  }
+
+  async removeMembers(userId: string) {
+    await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}`), {
+      members: arrayRemove(userId)
+    });
+  }
 
   loadMessageChannelChat(channelId: string) {
     const q = query(
@@ -84,16 +109,16 @@ export class ChannelService {
 
   saveNewChannel(channel: Channels) {
     const channelCollectionRef = collection(this.firestore, `channels`);
-  
+
     const newChannel = {
       ...channel
     };
-  
+
     // Erstelle das Hauptdokument (Channel)
     return addDoc(channelCollectionRef, newChannel)
       .then((channelDocRef) => {
         console.log('Channel saved successfully:', channelDocRef.id);
-  
+
       })
       .then(() => {
         console.log('Messages subcollection initialized successfully.');
