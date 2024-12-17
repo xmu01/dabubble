@@ -14,6 +14,8 @@ import { Users } from '../../../shared/interfaces/users';
 import { from, map, Observable, shareReplay } from 'rxjs';
 import { DialogShowDetailsComponent } from './dialog-show-details/dialog-show-details.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DialogShowMembersComponent } from './dialog-show-members/dialog-show-members.component';
+import { DialogAddMembersComponent } from './dialog-add-members/dialog-add-members.component';
 
 @Component({
   selector: 'app-channel-messages',
@@ -80,7 +82,7 @@ export class ChannelMessagesComponent {
           const data = docSnap.data() as Users;
           return data?.avatar;
         }),
-        shareReplay(1) 
+        shareReplay(1)
       );
       this.avatarsCache.set(senderId, avatar$);
     }
@@ -327,23 +329,36 @@ export class ChannelMessagesComponent {
   }
 
   name: string = '';
-    description: string = '';
-  
-    openDialog(): void {
-      const dialogRef = this.dialog.open(DialogShowDetailsComponent, {
-        data: { name: this.name, description: this.description },
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          console.log('Dialog geschlossen mit Daten:', result);
-          this.channelService.saveNewChannel({
-            name: result.name,
-            description: result.description || "",
-            created_by: this.loggedUser()?.uid || "",
-            members: [this.loggedUser()?.uid || ""]
-          });
-        }
-      });
-    }
+  description: string = '';
+
+  openDetailsDialog(): void {
+    const dialogRef = this.dialog.open(DialogShowDetailsComponent, {
+      data: { name: this.name, description: this.description },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Dialog geschlossen mit Daten:', result);
+        this.channelService.removeMembers(this.auth.getLoggedInUser()!.uid);
+      }
+    });
+  }
+
+  openMembersDialog() {
+    this.dialog.open(DialogShowMembersComponent, {
+      position: {
+        top: '240px',
+        right: '150px',
+      },
+    });
+  }
+
+  openAddMemberDialog() {
+    this.dialog.open(DialogAddMembersComponent, {
+      position: {
+        top: '240px',
+        right: '100px',
+      },
+    });
+  }
 }

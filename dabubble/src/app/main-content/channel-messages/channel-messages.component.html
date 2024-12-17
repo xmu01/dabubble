@@ -1,12 +1,12 @@
 <div class="container">
   <mat-card appearance="outlined" class="messages">
     <mat-card-header class="direct-message-header">
-      <mat-card-title (click)="openDialog()" class="direct-message-title">
+      <mat-card-title (click)="openDetailsDialog()" class="direct-message-title">
         <mat-icon fontIcon="tag"></mat-icon><span class="userName">{{ activeChannel()?.name }}</span>
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
       </mat-card-title>
       <div class="members-container">
-        <div class="members-images">
+        <div class="members-images" (click)="openMembersDialog()">
           @if (memberAvatars()!.length > 0) {
             @for (avatar of memberAvatars(); track avatar; let i = $index;) {
               <img
@@ -19,7 +19,7 @@
           } 
           <span class="members-count" [innerHTML]="memberAvatars()!.length"></span>
         </div>
-        <button mat-mini-fab class="button-add-person">
+        <button mat-mini-fab class="button-add-person" (click)="openAddMemberDialog()">
           <mat-icon fontSet="material-icons-outlined">person_add</mat-icon>
         </button>
       </div>

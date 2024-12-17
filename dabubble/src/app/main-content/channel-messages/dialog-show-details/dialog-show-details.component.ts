@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Channels } from '../../../../shared/interfaces/channels';
 import { ChannelService } from '../../../../shared/services/channel.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-dialog-show-details',
@@ -36,6 +37,7 @@ import { CommonModule } from '@angular/common';
 })
 export class DialogShowDetailsComponent {
   channelService = inject(ChannelService);
+  authService = inject(AuthService);
   channel = this.channelService.activeChannel();
 
   constructor(

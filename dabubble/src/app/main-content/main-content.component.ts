@@ -58,7 +58,6 @@ export class MainContentComponent {
     this.editMessageId = null; // Beendet den Bearbeitungsmodus ohne Änderungen
   }
 
-
   setHoveredMessageId(messageId: string | undefined): void {
     if (messageId) {
       this.hoveredMessageId = messageId;
