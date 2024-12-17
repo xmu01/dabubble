@@ -2,6 +2,8 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { addDoc, collection, deleteDoc, doc, Firestore, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { Channels } from '../interfaces/channels';
 import { ChannelMessage } from '../interfaces/channelMessage';
+import { Users } from '../interfaces/users';
+import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +31,9 @@ export class ChannelService {
       if (doc.exists()) {
         this.activeChannel.set(this.setChannelObject(doc.data(), doc.id));
       }
-    });
+      console.log(this.activeChannel()?.name);
+      
+    });   
   }
 
     async updateMessage(id: string, message:string){
@@ -76,6 +80,27 @@ export class ChannelService {
       created_by: obj.created_by || '',
       members: obj.members || []
     };
+  }
+
+  saveNewChannel(channel: Channels) {
+    const channelCollectionRef = collection(this.firestore, `channels`);
+  
+    const newChannel = {
+      ...channel
+    };
+  
+    // Erstelle das Hauptdokument (Channel)
+    return addDoc(channelCollectionRef, newChannel)
+      .then((channelDocRef) => {
+        console.log('Channel saved successfully:', channelDocRef.id);
+  
+      })
+      .then(() => {
+        console.log('Messages subcollection initialized successfully.');
+      })
+      .catch((error) => {
+        console.error('Error saving channel or initializing messages:', error);
+      });
   }
 
   saveChannelMessage(message: ChannelMessage, id: string) {

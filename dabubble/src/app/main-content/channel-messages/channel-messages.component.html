@@ -11,7 +11,7 @@
             @for (avatar of memberAvatars(); track avatar; let i = $index;) {
               <img
                 class="members-image"
-                [style.right.px]="-25 + (i * 15)"
+                [style.right.px]="(i + 1) == 1 ? -10 : (-25 + (i * 15))"
                 [src]="'./../../../assets/img/profile-pictures/' + avatar"
                 alt="Member {{ i + 1 }}"
               />
@@ -147,7 +147,7 @@
           <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
           <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>
         </div>
-        <div (click)="saveChannelMessage(activeChannel()!.id)" class="send-button">
+        <div (click)="saveChannelMessage(activeChannel()!.id!)" class="send-button">
           <mat-icon>send</mat-icon>
         </div>
       </div>

@@ -165,7 +165,6 @@ export class ChannelMessagesComponent {
   }
 
   constructor() {
-    this.channelService.loadChannel('uYr4Z1UxNJW1qVyRlvlX');
 
     effect(() => {
       const channelId = this.channelService.activeChannel()?.id;

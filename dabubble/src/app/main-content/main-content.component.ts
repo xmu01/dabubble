@@ -12,6 +12,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { Timestamp } from '@angular/fire/firestore';
 import { DirectMessagesComponent } from './direct-messages/direct-messages.component';
 import { ChannelMessagesComponent } from './channel-messages/channel-messages.component';
+import { ChannelService } from '../../shared/services/channel.service';
 
 
 @Component({
@@ -27,15 +28,15 @@ export class MainContentComponent {
   newMessage: string = '';
 
   private firestoreService = inject(UsersService);
+  private channelService = inject(ChannelService);
   private auth = inject(AuthService);
-  private cdr = inject(ChangeDetectorRef);
 
   users = this.firestoreService.users;
   loggedUser = this.auth.userSignal;
   activeUser = this.firestoreService.activeUser;
-  activeChannel = this.firestoreService.activeChannel;
+  activeChannel = this.channelService.activeChannel;
   groupedMessages = this.firestoreService.groupedMessages;
-  groupedChannelMessages = this.firestoreService.groupedChannelMessages;
+  groupedChannelMessages = this.channelService.groupedChannelMessages;
   today = signal(new Date().toISOString().split('T')[0]);
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   showEmojis = false;
@@ -109,7 +110,7 @@ export class MainContentComponent {
   }
 
   constructor() {
-    this.firestoreService.loadChannel('uYr4Z1UxNJW1qVyRlvlX');
+    this.channelService.loadChannel('uYr4Z1UxNJW1qVyRlvlX');
 
     effect(() => {
       const activeId = this.firestoreService.activeUser()?.userId;
@@ -124,15 +125,15 @@ export class MainContentComponent {
       this.firestoreService.messageChanged();
     });
     effect(() => {
-      const channelId = this.firestoreService.activeChannel()?.id;
+      const channelId = this.channelService.activeChannel()?.id;
 
       if (channelId) {
-        this.firestoreService.loadMessageChannelChat(channelId);
+        this.channelService.loadMessageChannelChat(channelId);
         this.newMessage = '';
         this.showEmojis = false;
         this.triggerScrollToBottom();
       }
-      this.firestoreService.channelMessageChanged();
+      this.channelService.channelMessageChanged();
 
     });
   }
@@ -187,7 +188,7 @@ export class MainContentComponent {
 
   saveChannelMessage(id: string): void {
     if (this.newMessage != '') {
-      this.firestoreService.saveChannelMessage({
+      this.channelService.saveChannelMessage({
         message: this.newMessage,
         senderName: this.getLoggedUser()!.firstName + ' ' + this.getLoggedUser()!.lastName || '',
         senderId: this.loggedUser()!.uid || '',
