@@ -61,8 +61,12 @@
               [ngClass]="message.senderId == activeUser()?.userId ? 'right-emoji-picker' : 'left-emoji-picker'"
               (emojiClick)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)"
               [showPreview]="false"
-              [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-              showSkinTones="true" *ngIf="activeEmojiPickerMessageId === message.id"></emoji-mart>
+              [enableSearch]="false"
+              [exclude]="['recent']"
+              [style]="'position: fixed'"
+              [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden' }"
+              *ngIf="activeEmojiPickerMessageId === message.id"
+              ></emoji-mart>
 
             <img [src]="message.senderId != loggedUser()?.uid 
                       ? './../../../assets/img/profile-pictures/' + (getUserAvatar(message.senderId!) | async)
@@ -84,7 +88,9 @@
                   <emoji-mart #emojEditiPicker [set]="'google'" class="emojis" (emojiClick)="addEditEmoji($event)"
                     [showPreview]="false"
                     [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-                    showSkinTones="true"></emoji-mart>
+                    showSkinTones="true" [enableSearch]="false"
+                    [exclude]="['recent']"
+                    [style]="'position: fixed'"></emoji-mart>
                   }
                 </div>
               </div>
