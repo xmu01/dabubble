@@ -17,6 +17,7 @@ import { Channels } from '../../../../shared/interfaces/channels';
 import { ChannelService } from '../../../../shared/services/channel.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../shared/services/auth.service';
+import { UsersService } from '../../../../shared/services/users.service';
 
 @Component({
   selector: 'app-dialog-show-details',
@@ -37,6 +38,7 @@ import { AuthService } from '../../../../shared/services/auth.service';
 })
 export class DialogShowDetailsComponent {
   channelService = inject(ChannelService);
+  userService = inject(UsersService);
   authService = inject(AuthService);
   channel = this.channelService.activeChannel();
 
@@ -68,5 +70,6 @@ export class DialogShowDetailsComponent {
     }
     this.isEditing[field] = !this.isEditing[field];
   }
+
 
 }
