@@ -5,12 +5,10 @@ import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDialogModule} from '@angular/material/dialog';
-import { ViewEncapsulation } from '@angular/core'; // Um Angular Mat-Styles zu überschreiben
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { AuthService } from '../../shared/services/auth.service';
 import { UsersService } from '../../shared/services/users.service';
-import { user } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-header',
@@ -19,7 +17,6 @@ import { user } from '@angular/fire/auth';
     MatExpansionModule, MatDialogModule, MatMenuModule, MatButtonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  //encapsulation: ViewEncapsulation.None, //Erstmal draußen, da es Probleme im Header gemacht hat (kaputtes Flex)
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -32,9 +29,9 @@ export class HeaderComponent {
   users = this.firestoreService.users;
 
 
-  signOut() {
-    this.firestoreService.updateUserStatus(this.getLoggedUser()!.userId, 'offline')
-    this.authService.signOut().catch((error) => {          
+  async signOut() {
+    await this.firestoreService.updateUserStatus(this.getLoggedUser()!.userId, 'offline')
+    await this.authService.signOut().catch((error) => {          
       console.error('Error during sign-out:', error);
     });
   }

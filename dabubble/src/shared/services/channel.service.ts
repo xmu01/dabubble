@@ -2,8 +2,6 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, Firestore, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { Channels } from '../interfaces/channels';
 import { ChannelMessage } from '../interfaces/channelMessage';
-import { Users } from '../interfaces/users';
-import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root'

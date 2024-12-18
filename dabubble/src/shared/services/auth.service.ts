@@ -69,5 +69,4 @@ export class AuthService {
     return this.loggedInUser();
   }
 
-
 }
