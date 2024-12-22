@@ -101,6 +101,7 @@ export class ChannelService {
       name: obj.name || '',
       description: obj.description || '',
       created_by: obj.created_by || '',
+      created_at: obj.created_at,
       members: obj.members || []
     };
   }

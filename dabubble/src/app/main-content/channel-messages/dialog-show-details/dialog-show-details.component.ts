@@ -50,6 +50,7 @@ export class DialogShowDetailsComponent {
       members: this.channel!.members || [], 
       name: this.channel!.name || '',
       description: this.channel!.description || '',
+      created_at: this.channel!.created_at,
       created_by: this.channel!.created_by || '',
     };
   }

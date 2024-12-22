@@ -46,6 +46,13 @@ export class ChannelMessagesComponent {
   editMessageId: string | null = null;
   temporaryMessage: string | null = null;
   showEditEmojis = false;
+  threadActive = false;
+
+  loadThread(id:string |undefined) {
+    console.log('Hey warum geht das nicht?');
+    
+    this.threadActive = true;
+  }
 
   startEditingMessage(messageId: string, message: string): void {
     this.editMessageId = messageId;
@@ -187,6 +194,7 @@ export class ChannelMessagesComponent {
       this.groupedChannelMessages().forEach((group) => {
         group.messages.forEach((message) => {
           this.loadReactions(message.id!);
+          this.loadAnswersCountAndLastTime(message.id!);
         });
       });
     });
@@ -273,6 +281,40 @@ export class ChannelMessagesComponent {
       }
     });
   }
+
+  loadAnswersCountAndLastTime(messageId: string): void {
+    const answersCollection = collection(this.firestore, `channels/${this.activeChannel()?.id}/messages/${messageId}/answers`);
+  
+    onSnapshot(answersCollection, (querySnapshot) => {
+      let answersCount = 0;
+      let lastAnswerTime: Date | null = null;
+  
+      querySnapshot.forEach((doc) => {
+        const { timestamp } = doc.data();       
+  
+        answersCount++;
+        const answerTime = timestamp?.toDate(); // Firebase-Timestamp in Date umwandeln
+        if (answerTime && (!lastAnswerTime || answerTime > lastAnswerTime)) {
+          lastAnswerTime = answerTime; // Neueste Antwortzeit aktualisieren
+        }
+      });
+  
+      // Nachricht mit den Antworten-Infos erweitern
+      const group = this.groupedChannelMessages().find((g) =>
+        g.messages.some((msg) => msg.id === messageId)
+      );
+  
+      if (group) {
+        const message = group.messages.find((msg) => msg.id === messageId);
+  
+        if (message) {
+          message.answersCount = answersCount;
+          message.lastAnswerTime = lastAnswerTime;
+        }
+      }
+    });
+  }
+  
 
   setTooltip(names: string[]): string {
     const loggedUserFullName = `${this.getLoggedUser()?.firstName} ${this.getLoggedUser()?.lastName}`;

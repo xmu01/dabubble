@@ -12,6 +12,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogNewChannelComponent } from './dialog-new-channel/dialog-new-channel.component';
 import { ChannelService } from '../../shared/services/channel.service';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-sidenav',
@@ -85,6 +86,7 @@ export class SidenavComponent {
           name: result.name,
           description: result.description || "",
           created_by: currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : "Unbekannt",
+          created_at: Timestamp.fromDate(new Date()),
           members: [this.loggedUser()?.uid || ""]
         });
       }

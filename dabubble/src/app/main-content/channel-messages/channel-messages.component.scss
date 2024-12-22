@@ -15,7 +15,6 @@
 }
 
 .thread {
-    display: none;
     width: 35%;
 }
 
@@ -627,6 +626,38 @@
 
 .direct-message-container {
     width: 100%;
+}
+
+.answers-container {
+    cursor: pointer;
+    
+    .answers {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        .answer-count {
+            font-family: Nunito;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 24.55px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #535AF1;
+        }
+
+        .answer-time {
+            font-family: Nunito;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 19.1px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #686868;
+        }
+    }
 }
 
 @media (max-width: 1024px) {
