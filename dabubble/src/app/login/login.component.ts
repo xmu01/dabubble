@@ -28,7 +28,7 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
   animations: [
     trigger('bubbleAnimation', [
       transition(':enter', [ // Startet beim Einfügen ins DOM
-        animate('3s ease-in-out', keyframes([
+        animate('1.5s ease-in-out', keyframes([
           style({  transform: 'translate(0, 0) scale(1)', offset: 0 }),       // Startzustand
           style({ transform: 'translate(-40vw, -40vh) scale(0.2)', offset: 1 }), // Zwischenzustand
           
@@ -58,7 +58,7 @@ export class LoginComponent {
     // Entferne Splash-Screen nach 3 Sekunden
     setTimeout(() => {
       this.showSplashScreen = false;
-    }, 3000);
+    }, 1500);
   }
 
   constructor() {}
