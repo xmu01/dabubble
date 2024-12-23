@@ -46,12 +46,11 @@ export class ChannelMessagesComponent {
   editMessageId: string | null = null;
   temporaryMessage: string | null = null;
   showEditEmojis = false;
-  threadActive = false;
+  openThread = this.channelService.showThread;
 
-  loadThread(id:string |undefined) {
-    console.log('Hey warum geht das nicht?');
-    
-    this.threadActive = true;
+  loadThread(messageId: string) {      
+    this.channelService.changeThreadVisibility();
+    this.channelService.activeAnswer.set(messageId);
   }
 
   startEditingMessage(messageId: string, message: string): void {

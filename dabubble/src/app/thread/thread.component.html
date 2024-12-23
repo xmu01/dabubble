@@ -3,15 +3,15 @@
     <mat-card-header class="direct-message-header">
       <mat-card-title class="direct-message-title">
         <h2>Thread</h2>
-        <mat-icon fontIcon="tag"></mat-icon><span class="userName">{{ activeChannel()?.name }}</span>
+        <mat-icon fontIcon="tag"></mat-icon><span class="userName">{{ activeChannel?.name }}</span>
+        <mat-icon class="close-button" (click)="closeThread()">close</mat-icon>
       </mat-card-title>
-
     </mat-card-header>
 
 
     <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false">
       <div class="date-elements">
-        @for (group of groupedChannelMessages(); track group.date) {
+        @for (group of groupedChannelAnswers(); track group.date) {
         <div class="date-element">
           <span class="date">@if (group.date === (today() | date: 'yyyy-MM-dd')) {
             Heute
@@ -105,7 +105,7 @@
       <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu"
         #menuTrigger="matMenuTrigger"></button>
 
-      <textarea [(ngModel)]="newMessage" rows="2" placeholder="Nachricht an # {{ activeChannel()?.name }}"
+      <textarea [(ngModel)]="newMessage" rows="2" placeholder="Antworten ..."
         (input)="onInput($event)" #textarea (focus)="showEmojis = false">
       </textarea>
 
@@ -127,7 +127,7 @@
           <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
           <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>
         </div>
-        <div (click)="saveChannelMessage(activeChannel()!.id!)" class="send-button">
+        <div (click)="saveChannelAnswer()" class="send-button">
           <mat-icon>send</mat-icon>
         </div>
       </div>

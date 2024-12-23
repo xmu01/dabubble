@@ -1,20 +1,16 @@
-import { Component, computed, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { DialogAddMembersComponent } from '../main-content/channel-messages/dialog-add-members/dialog-add-members.component';
-import { DialogShowMembersComponent } from '../main-content/channel-messages/dialog-show-members/dialog-show-members.component';
-import { DialogShowDetailsComponent } from '../main-content/channel-messages/dialog-show-details/dialog-show-details.component';
-import { collection, doc, Firestore, getDoc, onSnapshot, Timestamp } from '@angular/fire/firestore';
-import { MatDialog } from '@angular/material/dialog';
-import { from, map, Observable, shareReplay } from 'rxjs';
-import { Users } from '../../shared/interfaces/users';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
-import { AuthService } from '../../shared/services/auth.service';
-import { ChannelService } from '../../shared/services/channel.service';
-import { UsersService } from '../../shared/services/users.service';
 import { MatIconModule } from '@angular/material/icon';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChannelService } from '../../shared/services/channel.service';
+import { AuthService } from '../../shared/services/auth.service';
+import { UsersService } from '../../shared/services/users.service';
+import { from, map, Observable, shareReplay } from 'rxjs';
+import { collection, doc, Firestore, getDoc, onSnapshot, Timestamp } from '@angular/fire/firestore';
+import { Users } from '../../shared/interfaces/users';
 
 @Component({
   selector: 'app-thread',
@@ -24,51 +20,63 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './thread.component.scss'
 })
 export class ThreadComponent {
- newMessage: string = '';
-  private firestore = inject(Firestore);
-  private firestoreService = inject(UsersService);
-  private channelService = inject(ChannelService);
-  private auth = inject(AuthService);
-
-  users = this.firestoreService.users;
+  newMessage: string = '';
+  firestore = inject(Firestore);
+  auth = inject(AuthService);
+  user = inject(UsersService);
+  channelService = inject(ChannelService);
+  users = this.user.users;
   loggedUser = this.auth.userSignal;
-  activeUser = this.firestoreService.activeUser;
-  activeChannel = this.channelService.activeChannel;
-  groupedMessages = this.firestoreService.groupedMessages;
-  groupedChannelMessages = this.channelService.groupedChannelMessages;
-  today = signal(new Date().toISOString().split('T')[0]);
-  @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
+  activeUser = this.user.activeUser;
+  activeChannel = this.channelService.activeChannel();
   showEmojis = false;
-  hoveredMessageId: string | null = null;
   contentElement = viewChild<ElementRef<HTMLDivElement>>('scrollContainer');
-  activeEmojiPickerMessageId: string | null = null;
+  groupedChannelAnswers = this.channelService.groupedChannelAnswers;
+  today = signal(new Date().toISOString().split('T')[0]);
+  hoveredMessageId: string | null = null;
   editMessageId: string | null = null;
-  temporaryMessage: string | null = null;
   showEditEmojis = false;
+  activeEmojiPickerMessageId: string | null = null;
+  temporaryMessage: string | null = null;
+  @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
+  threadActive = this.channelService.showThread();
 
-  startEditingMessage(messageId: string, message: string): void {
-    this.editMessageId = messageId;
-    this.temporaryMessage = message;
-  }
+  constructor() {
+    effect(() => {
+      const messageId = this.channelService.activeAnswer();
+      const channelId = this.channelService.activeChannel()?.id;
 
-  cancelEditing(): void {
-    const message = this.groupedMessages().find(group =>
-      group.messages.some(msg => msg.id === this.editMessageId)
-    )?.messages.find(msg => msg.id === this.editMessageId);
+      if (messageId) {
+        this.channelService.loadAnswersChannelChat(channelId, messageId);
+        this.newMessage = '';
+        this.showEmojis = false;
+        this.triggerScrollToBottom();
+      }
+      this.channelService.channelMessageChanged();
 
-    if (message) {
-      message.message = this.temporaryMessage!;
-    }
-
-    this.editMessageId = null;
-    this.temporaryMessage = null;
-  }
-
-  saveEditedMessage(id: string, message: string): void {
-    this.channelService.updateMessage(id, message).then(() => {
-      this.editMessageId = null;
-      this.temporaryMessage = null;
     });
+
+    effect(() => {
+      this.groupedChannelAnswers().forEach((group) => {
+        group.messages.forEach((message) => {
+          this.loadReactions(message.id!);
+        });
+      });
+    });
+  }
+
+  saveChannelAnswer(): void {
+    if (this.newMessage != '') {
+      this.channelService.saveChannelAnswer({
+        message: this.newMessage,
+        senderName: this.getLoggedUser()!.firstName + ' ' + this.getLoggedUser()!.lastName || '',
+        senderId: this.loggedUser()!.uid || '',
+        timestamp: Timestamp.now()
+      }).then(() => {
+        this.newMessage = '';
+        this.triggerScrollToBottom();
+      });
+    }
   }
 
   avatarsCache: Map<string, Observable<string | undefined>> = new Map();
@@ -88,46 +96,50 @@ export class ThreadComponent {
     return this.avatarsCache.get(senderId)!;
   }
 
-  memberAvatars = computed(() => {
-    const members = this.activeChannel()?.members;
-    if (!members) return []; // Kein aktiver Kanal oder keine Mitglieder
-
-    // Avatare der Mitglieder filtern und zurückgeben
-    return members
-      .map(memberId => this.users().find(user => user.userId === memberId)?.avatar)
-      .filter((avatar): avatar is string => !!avatar); // Typ-Filter für `string[]`
-  });
-
-  setHoveredMessageId(messageId: string | undefined): void {
-    if (messageId) {
-      this.hoveredMessageId = messageId;
-    } else {
-      this.hoveredMessageId = null;
-    }
+  closeThread() { 
+    this.channelService.changeThreadVisibility();
   }
 
-  clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
-    const target = event.relatedTarget as HTMLElement | null;
+  addReactionToPrivateMessage(messageId: string, userName: string, event: any | string): void {
+    let reaction: string;
 
-    if (!target || (!target.closest('.message-container') && !target.closest('.reaction-bar'))) {
-      this.hoveredMessageId = null;
+    if (typeof event === 'string') {
+      reaction = event;
+    } else if (event && event.emoji && event.emoji.native) {
+      reaction = event.emoji.native;
+    } else {
+      console.warn('Invalid reaction event:', event);
+      return;
     }
+
+    this.channelService.toggleAnswerReaction(messageId, userName, reaction);
+
+    this.activeEmojiPickerMessageId = null;
+  }
+
+  getLoggedUser() {
+    const userId = this.loggedUser()!.uid;
+    if (!userId) {
+      return null;
+    }
+
+    return this.users().find(user => user.userId === userId) || null;
   }
 
   addEditEmoji(event: any): void {
-    const emoji = event.emoji.native;
+    // const emoji = event.emoji.native;
 
-    const group = this.groupedMessages().find(group =>
-      group.messages.some(msg => msg.id === this.editMessageId)
-    );
+    // const group = this.groupedMessages().find(group =>
+    //   group.messages.some(msg => msg.id === this.editMessageId)
+    // );
 
-    if (group) {
-      const message = group.messages.find(msg => msg.id === this.editMessageId);
+    // if (group) {
+    //   const message = group.messages.find(msg => msg.id === this.editMessageId);
 
-      if (message) {
-        message.message += emoji;
-      }
-    }
+    //   if (message) {
+    //     message.message += emoji;
+    //   }
+    // }
   }
 
   addEmoji(event: any): void {
@@ -140,12 +152,6 @@ export class ThreadComponent {
 
   toggleEditEmojis(): void {
     this.showEditEmojis = !this.showEditEmojis;
-  }
-
-
-  toggleEmojiPicker(messageId: string): void {
-    this.activeEmojiPickerMessageId =
-      this.activeEmojiPickerMessageId === messageId ? null : messageId;
   }
 
   onInput(event: Event): void {
@@ -167,109 +173,65 @@ export class ThreadComponent {
     this.newMessage += ` ${selectedItem}`;
   }
 
-  constructor(public dialog: MatDialog) {
-
-    effect(() => {
-      const channelId = this.channelService.activeChannel()?.id;
-
-      if (channelId) {
-        this.channelService.loadMessageChannelChat(channelId);
-        this.newMessage = '';
-        this.showEmojis = false;
-        this.triggerScrollToBottom();
-      }
-      this.channelService.channelMessageChanged();
-
-    });
-
-    effect(() => {
-      this.groupedChannelMessages().forEach((group) => {
-        group.messages.forEach((message) => {
-          this.loadReactions(message.id!);
-        });
-      });
-    });
+  toggleEmojiPicker(messageId: string): void {
+    this.activeEmojiPickerMessageId =
+      this.activeEmojiPickerMessageId === messageId ? null : messageId;
   }
 
-  getLoggedUser() {
-    const userId = this.loggedUser()!.uid;
-    if (!userId) {
-      return null;
-    }
-
-    return this.users().find(user => user.userId === userId) || null;
-  }
-
-  saveChannelMessage(id: string): void {
-    if (this.newMessage != '') {
-      this.channelService.saveChannelMessage({
-        message: this.newMessage,
-        senderName: this.getLoggedUser()!.firstName + ' ' + this.getLoggedUser()!.lastName || '',
-        senderId: this.loggedUser()!.uid || '',
-        timestamp: Timestamp.now()
-      }, id).then(() => {
-        this.newMessage = '';
-        this.triggerScrollToBottom();
-      });
-    }
-  }
-
-  addReactionToPrivateMessage(messageId: string, userName: string, event: any | string): void {
-    let reaction: string;
-
-    if (typeof event === 'string') {
-      reaction = event;
-    } else if (event && event.emoji && event.emoji.native) {
-      reaction = event.emoji.native;
+  setHoveredMessageId(messageId: string | undefined): void {
+    if (messageId) {
+      this.hoveredMessageId = messageId;
     } else {
-      console.warn('Invalid reaction event:', event);
-      return;
+      this.hoveredMessageId = null;
     }
-
-    this.channelService.toggleReaction(messageId, userName, reaction);
-
-    this.activeEmojiPickerMessageId = null;
   }
 
-  /**
-   * Lädt die Reaktionen einer Nachricht und gruppiert sie.
-   */
-  loadReactions(messageId: string): void {
-    const reactionsCollection = collection(this.firestore, `channels/${this.activeChannel()?.id}/messages/${messageId}/reactions`);
+  clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
+    const target = event.relatedTarget as HTMLElement | null;
 
-    onSnapshot(reactionsCollection, (querySnapshot) => {
-      const reactionsMap = new Map<string, { count: number; userNames: string[] }>();
+    if (!target || (!target.closest('.message-container') && !target.closest('.reaction-bar'))) {
+      this.hoveredMessageId = null;
+    }
+  }
 
-      querySnapshot.forEach((doc) => {
-        const { reaction, userName } = doc.data();
+  private triggerScrollToBottom() {
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 0);
+  }
 
-        if (reactionsMap.has(reaction)) {
-          const entry = reactionsMap.get(reaction)!;
-          entry.count++;
-          entry.userNames.push(userName); // Benutzernamen zur Liste hinzufügen
-        } else {
-          reactionsMap.set(reaction, { count: 1, userNames: [userName] }); // Neue Reaktion mit Benutzernamen
-        }
+  private scrollToBottom() {
+    const contentEl = this.contentElement();
+    if (contentEl) {
+      contentEl.nativeElement.scrollTo({
+        top: contentEl.nativeElement.scrollHeight,
+        behavior: 'smooth',
       });
+    }
+  }
 
-      const groupedReactions = Array.from(reactionsMap.entries()).map(([reaction, { count, userNames }]) => ({
-        reaction,
-        count,
-        userNames,
-      }));
+  startEditingMessage(messageId: string, message: string): void {
+    this.editMessageId = messageId;
+    this.temporaryMessage = message;
+  }
 
-      // Nachricht um die gruppierten Reaktionen erweitern
-      const group = this.groupedChannelMessages().find((g) =>
-        g.messages.some((msg) => msg.id === messageId)
-      );
+  cancelEditing(): void {
+    // const message = this.groupedMessages().find(group =>
+    //   group.messages.some(msg => msg.id === this.editMessageId)
+    // )?.messages.find(msg => msg.id === this.editMessageId);
 
-      if (group) {
-        const message = group.messages.find((msg) => msg.id === messageId);
+    // if (message) {
+    //   message.message = this.temporaryMessage!;
+    // }
 
-        if (message) {
-          message.reactionsGrouped = groupedReactions;
-        }
-      }
+    // this.editMessageId = null;
+    // this.temporaryMessage = null;
+  }
+
+  saveEditedMessage(id: string, message: string): void {
+    this.channelService.updateMessage(id, message).then(() => {
+      this.editMessageId = null;
+      this.temporaryMessage = null;
     });
   }
 
@@ -311,54 +273,42 @@ export class ThreadComponent {
     this.tooltipVisible = false;
   }
 
-  private triggerScrollToBottom() {
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 0);
-  }
-
-  private scrollToBottom() {
-    const contentEl = this.contentElement();
-    if (contentEl) {
-      contentEl.nativeElement.scrollTo({
-        top: contentEl.nativeElement.scrollHeight,
-        behavior: 'smooth',
+   loadReactions(messageId: string): void {
+      const reactionsCollection = collection(this.firestore, `channels/${this.activeChannel!.id}/messages/${this.channelService.activeAnswer()}/answers/${messageId}/reactions`);
+  
+      onSnapshot(reactionsCollection, (querySnapshot) => {
+        const reactionsMap = new Map<string, { count: number; userNames: string[] }>();
+  
+        querySnapshot.forEach((doc) => {
+          const { reaction, userName } = doc.data();
+  
+          if (reactionsMap.has(reaction)) {
+            const entry = reactionsMap.get(reaction)!;
+            entry.count++;
+            entry.userNames.push(userName); // Benutzernamen zur Liste hinzufügen
+          } else {
+            reactionsMap.set(reaction, { count: 1, userNames: [userName] }); // Neue Reaktion mit Benutzernamen
+          }
+        });
+  
+        const groupedReactions = Array.from(reactionsMap.entries()).map(([reaction, { count, userNames }]) => ({
+          reaction,
+          count,
+          userNames,
+        }));
+  
+        // Nachricht um die gruppierten Reaktionen erweitern
+        const group = this.groupedChannelAnswers().find((g) =>
+          g.messages.some((msg) => msg.id === messageId)
+        );
+  
+        if (group) {
+          const message = group.messages.find((msg) => msg.id === messageId);
+  
+          if (message) {
+            message.reactionsGrouped = groupedReactions;
+          }
+        }
       });
     }
-  }
-
-  name: string = '';
-  description: string = '';
-
-  openDetailsDialog(): void {
-    const dialogRef = this.dialog.open(DialogShowDetailsComponent, {
-      data: { name: this.name, description: this.description },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('Dialog geschlossen mit Daten:', result);
-        this.channelService.removeMembers(this.auth.getLoggedInUser()!.uid);
-      }
-    });
-  }
-
-  openMembersDialog() {
-    this.dialog.open(DialogShowMembersComponent, {
-      position: {
-        top: '240px',
-        right: '150px',
-      },
-    });
-  }
-
-  openAddMemberDialog() {
-    this.dialog.open(DialogAddMembersComponent, {
-      position: {
-        top: '240px',
-        right: '100px',
-      },
-    });
-  }
-  
 }

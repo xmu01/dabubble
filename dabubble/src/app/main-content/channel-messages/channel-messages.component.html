@@ -110,7 +110,7 @@
                 }
               </div>
               @if(message.lastAnswerTime) {
-              <div class="answers-container" (click)="loadThread(message.id)">
+              <div class="answers-container" (click)="loadThread(message.id!)">
                 <div class="answers">
                   <span class="answer-count">{{message.answersCount}} Antworten</span>
                   <span class="answer-time">Letzte Antwort um {{ message.lastAnswerTime | date: 'HH:mm' }}</span>
@@ -159,7 +159,7 @@
     </div>
 
   </mat-card>
-  @if(threadActive) {
+  @if(openThread()) {
   <app-thread class="thread"></app-thread>
   }
 </div>
