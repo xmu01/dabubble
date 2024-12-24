@@ -30,7 +30,7 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
       transition(':enter', [ // Startet beim Einfügen ins DOM
         animate('1.5s ease-in-out', keyframes([
           style({  transform: 'translate(0, 0) scale(1)', offset: 0 }),       // Startzustand
-          style({ transform: 'translate(-40vw, -40vh) scale(0.7)', offset: 1 }), // Zwischenzustand
+          style({ transform: 'translate(-40vw, -40vh) scale(0.6)', offset: 1 }), // Zwischenzustand
           
         ]))
       ])
