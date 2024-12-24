@@ -1,6 +1,6 @@
 <!-- Splash-Screen -->
 <div class="splash-screen" *ngIf="showSplashScreen" [@backgroundFade]>
-    <div class="splash-content">
+    <div class="splash-content" [@bubbleAnimation] >
       <img src="./../../assets/img/logo-without-text.png" alt="Logo" class="splash-logo" [@bubbleAnimation] (@bubbleAnimation.done)="onAnimationDone()">
       <span class="splash-text">DABubble</span>
     </div>

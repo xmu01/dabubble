@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
-import { trigger, transition, style, animate, keyframes } from '@angular/animations';
+import { trigger, transition, style, animate, keyframes, group } from '@angular/animations';
 
 
 @Component({
@@ -26,27 +26,23 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
   styleUrls: ['./login.component.scss'],
 
   animations: [
-    trigger('bubbleAnimation', [
-      transition(':enter', [ // Startet beim Einfügen ins DOM
-        animate('1.5s ease-in-out', keyframes([
-          style({  transform: 'translate(0, 0) scale(1)', offset: 0 }),       // Startzustand
-          style({ transform: 'translate(-40vw, -40vh) scale(0.6)', offset: 1 }), // Endzustand
-          
-        ]))
-      ])
-    ]),
-
-    trigger('backgroundFade', [
-      transition(':leave', [ // Startet beim Entfernen des Splash-Screens
-        animate('1.5s ease-in-out', keyframes([
-          style({ opacity: 1, offset: 0 }),    // Start: Voll sichtbar
-          style({ opacity: 0.5, offset: 0.5 }), // Halbtransparent auf halbem Weg
-          style({ opacity: 0, offset: 1 })     // Ende: Komplett unsichtbar
-        ]))
-      ])
-    ]),
-
-  ]
+  // Animation für das Logo und den Text
+  trigger('bubbleAnimation', [
+    transition(':enter', [
+      animate('1.5s ease-in-out', keyframes([
+        style({ transform: 'translate(0, 0) scale(1)', offset: 0 }),
+        style({ transform: 'translate(-20vw, -20vh) scale(1.2)', offset: 0.5 }),
+        style({ transform: 'translate(-40vw, -40vh) scale(1)', offset: 1 })
+      ]))
+    ])
+  ]),
+  // Animation für den violetten Hintergrund
+  trigger('backgroundFade', [
+    transition(':leave', [
+      animate('1.5s ease-out', style({ opacity: 0 }))
+    ])
+  ])
+]
 
 
 })
