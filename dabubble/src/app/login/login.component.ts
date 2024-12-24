@@ -30,11 +30,22 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
       transition(':enter', [ // Startet beim Einfügen ins DOM
         animate('1.5s ease-in-out', keyframes([
           style({  transform: 'translate(0, 0) scale(1)', offset: 0 }),       // Startzustand
-          style({ transform: 'translate(-40vw, -40vh) scale(0.6)', offset: 1 }), // Zwischenzustand
+          style({ transform: 'translate(-40vw, -40vh) scale(0.6)', offset: 1 }), // Endzustand
           
         ]))
       ])
-    ])
+    ]),
+
+    trigger('backgroundFade', [
+      transition(':leave', [ // Startet beim Entfernen des Splash-Screens
+        animate('1.5s ease-in-out', keyframes([
+          style({ opacity: 1, offset: 0 }),    // Start: Voll sichtbar
+          style({ opacity: 0.5, offset: 0.5 }), // Halbtransparent auf halbem Weg
+          style({ opacity: 0, offset: 1 })     // Ende: Komplett unsichtbar
+        ]))
+      ])
+    ]),
+
   ]
 
 
