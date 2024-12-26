@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, HostListener, inject, signal, ViewChild, viewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -35,7 +35,6 @@ export class ThreadComponent {
   today = signal(new Date().toISOString().split('T')[0]);
   hoveredMessageId: string | null = null;
   editMessageId: string | null = null;
-  showEditEmojis = false;
   activeEmojiPickerMessageId: string | null = null;
   temporaryMessage: string | null = null;
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
@@ -96,7 +95,7 @@ export class ThreadComponent {
     return this.avatarsCache.get(senderId)!;
   }
 
-  closeThread() { 
+  closeThread() {
     this.channelService.changeThreadVisibility();
   }
 
@@ -126,32 +125,12 @@ export class ThreadComponent {
     return this.users().find(user => user.userId === userId) || null;
   }
 
-  addEditEmoji(event: any): void {
-    // const emoji = event.emoji.native;
-
-    // const group = this.groupedMessages().find(group =>
-    //   group.messages.some(msg => msg.id === this.editMessageId)
-    // );
-
-    // if (group) {
-    //   const message = group.messages.find(msg => msg.id === this.editMessageId);
-
-    //   if (message) {
-    //     message.message += emoji;
-    //   }
-    // }
-  }
-
   addEmoji(event: any): void {
     this.newMessage += event.emoji.native;
   }
 
   toggleEmojis(): void {
     this.showEmojis = !this.showEmojis;
-  }
-
-  toggleEditEmojis(): void {
-    this.showEditEmojis = !this.showEditEmojis;
   }
 
   onInput(event: Event): void {
@@ -210,31 +189,6 @@ export class ThreadComponent {
     }
   }
 
-  startEditingMessage(messageId: string, message: string): void {
-    this.editMessageId = messageId;
-    this.temporaryMessage = message;
-  }
-
-  cancelEditing(): void {
-    // const message = this.groupedMessages().find(group =>
-    //   group.messages.some(msg => msg.id === this.editMessageId)
-    // )?.messages.find(msg => msg.id === this.editMessageId);
-
-    // if (message) {
-    //   message.message = this.temporaryMessage!;
-    // }
-
-    // this.editMessageId = null;
-    // this.temporaryMessage = null;
-  }
-
-  saveEditedMessage(id: string, message: string): void {
-    this.channelService.updateMessage(id, message).then(() => {
-      this.editMessageId = null;
-      this.temporaryMessage = null;
-    });
-  }
-
   setTooltip(names: string[]): string {
     const loggedUserFullName = `${this.getLoggedUser()?.firstName} ${this.getLoggedUser()?.lastName}`;
 
@@ -273,42 +227,42 @@ export class ThreadComponent {
     this.tooltipVisible = false;
   }
 
-   loadReactions(messageId: string): void {
-      const reactionsCollection = collection(this.firestore, `channels/${this.activeChannel!.id}/messages/${this.channelService.activeAnswer()}/answers/${messageId}/reactions`);
-  
-      onSnapshot(reactionsCollection, (querySnapshot) => {
-        const reactionsMap = new Map<string, { count: number; userNames: string[] }>();
-  
-        querySnapshot.forEach((doc) => {
-          const { reaction, userName } = doc.data();
-  
-          if (reactionsMap.has(reaction)) {
-            const entry = reactionsMap.get(reaction)!;
-            entry.count++;
-            entry.userNames.push(userName); // Benutzernamen zur Liste hinzufügen
-          } else {
-            reactionsMap.set(reaction, { count: 1, userNames: [userName] }); // Neue Reaktion mit Benutzernamen
-          }
-        });
-  
-        const groupedReactions = Array.from(reactionsMap.entries()).map(([reaction, { count, userNames }]) => ({
-          reaction,
-          count,
-          userNames,
-        }));
-  
-        // Nachricht um die gruppierten Reaktionen erweitern
-        const group = this.groupedChannelAnswers().find((g) =>
-          g.messages.some((msg) => msg.id === messageId)
-        );
-  
-        if (group) {
-          const message = group.messages.find((msg) => msg.id === messageId);
-  
-          if (message) {
-            message.reactionsGrouped = groupedReactions;
-          }
+  loadReactions(messageId: string): void {
+    const reactionsCollection = collection(this.firestore, `channels/${this.activeChannel!.id}/messages/${this.channelService.activeAnswer()}/answers/${messageId}/reactions`);
+
+    onSnapshot(reactionsCollection, (querySnapshot) => {
+      const reactionsMap = new Map<string, { count: number; userNames: string[] }>();
+
+      querySnapshot.forEach((doc) => {
+        const { reaction, userName } = doc.data();
+
+        if (reactionsMap.has(reaction)) {
+          const entry = reactionsMap.get(reaction)!;
+          entry.count++;
+          entry.userNames.push(userName); // Benutzernamen zur Liste hinzufügen
+        } else {
+          reactionsMap.set(reaction, { count: 1, userNames: [userName] }); // Neue Reaktion mit Benutzernamen
         }
       });
-    }
+
+      const groupedReactions = Array.from(reactionsMap.entries()).map(([reaction, { count, userNames }]) => ({
+        reaction,
+        count,
+        userNames,
+      }));
+
+      // Nachricht um die gruppierten Reaktionen erweitern
+      const group = this.groupedChannelAnswers().find((g) =>
+        g.messages.some((msg) => msg.id === messageId)
+      );
+
+      if (group) {
+        const message = group.messages.find((msg) => msg.id === messageId);
+
+        if (message) {
+          message.reactionsGrouped = groupedReactions;
+        }
+      }
+    });
+  }
 }

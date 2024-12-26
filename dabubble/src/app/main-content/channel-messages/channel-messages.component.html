@@ -46,7 +46,7 @@
                 (click)="addReactionToPrivateMessage(message.id, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, '🙏🏻')">🙏🏻</span>
               <mat-icon class="reaction-bar-symbol" (click)="toggleEmojiPicker(message.id)"
                 fontSet="material-icons-outlined">add_reaction</mat-icon>
-              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined">comment</mat-icon>
+              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined" (click)="loadThread(message.id!)">comment</mat-icon>
               @if(message.senderId == loggedUser()?.uid){
               <mat-icon (click)="startEditingMessage(message.id, message.message!)" class="reaction-bar-symbol"
                 fontSet="material-icons-outlined">more_vert</mat-icon>

@@ -47,28 +47,6 @@
                       : './../../../assets/img/profile-pictures/' + getLoggedUser()?.avatar" alt="Message User">
 
             <div [ngClass]="message.senderId != loggedUser()?.uid ? 'message-left' : 'message-right'">
-              @if(editMessageId === message.id) {
-              <div class="edit">
-
-                <textarea [(ngModel)]="message.message" class="edit-input" rows="2"></textarea>
-                <div class="edit-controls">
-                  <mat-icon (click)="toggleEditEmojis()">sentiment_satisfied</mat-icon>
-
-                  <div class="control-buttons">
-                    <button class="cancel" (click)="cancelEditing()">Abbrechen</button>
-                    <button class="save" (click)="saveEditedMessage(message.id, message.message!)">Speichern</button>
-                  </div>
-                  @if(showEditEmojis) {
-                  <emoji-mart #emojEditiPicker [set]="'google'" class="emojis" (emojiClick)="addEditEmoji($event)"
-                    [showPreview]="false"
-                    [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-                    showSkinTones="true" [enableSearch]="false"
-                    [exclude]="['recent']"
-                    [style]="'position: fixed'"></emoji-mart>
-                  }
-                </div>
-              </div>
-              } @else {
               <div [ngClass]="message.senderId == activeUser()?.userId ? 'name-left' : 'name-right'">
                 <p>{{ message.senderName }}</p>
                 <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
@@ -76,7 +54,6 @@
               <p [ngClass]="message.senderId == getLoggedUser()?.userId ? 'text-right' : 'text-left'">
                 {{ message.message }}
               </p>
-              }
               <div class="reaction-container">
                 @for(reaction of message.reactionsGrouped || []; track reaction.reaction) {
                 <div class="givenReactions"

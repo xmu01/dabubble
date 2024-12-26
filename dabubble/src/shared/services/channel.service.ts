@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, Firestore, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, Firestore, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { Channels } from '../interfaces/channels';
 import { ChannelMessage } from '../interfaces/channelMessage';
 
@@ -89,19 +89,36 @@ export class ChannelService {
   }
 
   loadAnswersChannelChat(channelId: string | undefined, messageId: string | undefined) {
-    const q = query(
-      collection(this.firestore, `channels/${channelId}/messages/${messageId}/answers/`),
-      orderBy('timestamp', 'asc')
-    );
-
-    onSnapshot(q, (querySnapshot) => {
-      const messages = querySnapshot.docs.map((doc) => this.setChannelMessageObject(doc.data(), doc.id));
-
-      const grouped = this.groupChannelMessagesByDate(messages);
-      this.groupedChannelAnswers.set(grouped);
-
+    if (!channelId || !messageId) return;
+  
+    // Abfrage der ursprünglichen Nachricht
+    const messageRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
+    getDoc(messageRef).then((messageDoc) => {
+      if (messageDoc.exists()) {
+        const originalMessage = this.setChannelMessageObject(messageDoc.data(), messageDoc.id);
+  
+        // Abfrage der Antworten
+        const q = query(
+          collection(this.firestore, `channels/${channelId}/messages/${messageId}/answers/`),
+          orderBy('timestamp', 'asc')
+        );
+  
+        onSnapshot(q, (querySnapshot) => {
+          const answers = querySnapshot.docs.map((doc) => this.setChannelMessageObject(doc.data(), doc.id));
+  
+          // Kombinieren der ursprünglichen Nachricht mit den Antworten
+          const allMessages = [originalMessage, ...answers];
+          const grouped = this.groupChannelMessagesByDate(allMessages);
+  
+          // Setzen der gruppierten Nachrichten
+          this.groupedChannelAnswers.set(grouped);
+        });
+      } else {
+        console.error('Original message does not exist');
+      }
     });
   }
+  
 
   private groupChannelMessagesByDate(messages: ChannelMessage[]): { date: string; messages: ChannelMessage[] }[] {
     const grouped = messages.reduce((acc, message) => {
