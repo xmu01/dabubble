@@ -46,7 +46,8 @@
                 (click)="addReactionToPrivateMessage(message.id, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, '🙏🏻')">🙏🏻</span>
               <mat-icon class="reaction-bar-symbol" (click)="toggleEmojiPicker(message.id)"
                 fontSet="material-icons-outlined">add_reaction</mat-icon>
-              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined" (click)="loadThread(message.id!)">comment</mat-icon>
+              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined"
+                (click)="loadThread(message.id!)">comment</mat-icon>
               @if(message.senderId == loggedUser()?.uid){
               <mat-icon (click)="startEditingMessage(message.id, message.message!)" class="reaction-bar-symbol"
                 fontSet="material-icons-outlined">more_vert</mat-icon>
@@ -110,13 +111,18 @@
                 }
               </div>
               @if(message.lastAnswerTime) {
-              <div class="answers-container" (click)="loadThread(message.id!)">
-                <div class="answers">
-                  <span class="answer-count">{{message.answersCount}} Antworten</span>
-                  <span class="answer-time">Letzte Antwort um {{ message.lastAnswerTime | date: 'HH:mm' }}</span>
+                <div class="answers-container" (click)="loadThread(message.id!)">
+                  <div class="answers">
+                    <span class="answer-count">{{ message.answersCount }} Antworten</span>
+                    @if(formatDate(message.lastAnswerTime) === today()) {
+                      <span class="answer-time">Letzte Antwort um {{ message.lastAnswerTime | date: 'HH:mm' }}</span>
+                    } @else {
+                      <span class="answer-time">Letzte Antwort am {{ message.lastAnswerTime | date: 'dd.MM.yyyy' }}</span>
+                    }
+                  </div>
                 </div>
-              </div>
               }
+              
             </div>
           </div>
           }

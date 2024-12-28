@@ -185,6 +185,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    cursor: pointer;
 }
 
 .members-images {
@@ -343,6 +344,7 @@
                 display: flex;
                 justify-content: space-around;
                 align-items: center;
+
 
                 .reaction-bar-symbol {
                     display: flex;

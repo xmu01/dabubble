@@ -101,13 +101,9 @@
     width: 100%;
     flex: 1;
     justify-content: center;
-    // padding: 25px 45px 25px 45px;
     padding: 25px 0px 25px 0px;
     background-color: #fff;
     overflow-y: scroll;
-    // scrollbar-width: thin;
-    // /* macht die Scrollbar schmaler */
-    // scrollbar-color: #9747FF #fff;
 
     ::ng-deep .mat-expansion-panel-content {
         overflow-y: scroll !important;
@@ -328,7 +324,7 @@
             .reaction-bar {
                 position: absolute;
                 top: -30px;
-                width: 66px;
+                width: 88px;
                 height: 46px;
                 padding: 3px 15px 3px 20px;
                 gap: 5px;
@@ -583,22 +579,23 @@
         mat-icon {
             color: #686868;
             cursor: pointer;
+            padding-right: 8px;
         }
 
         .control-buttons {
             display: flex;
-            gap: 32px;
+            gap: 8px;
         }
 
         button {
-            width: 141px;
-            height: 49px;
-            padding: 12px 25px 12px 25px;
+            width: 96px;
+            height: 38px;
+            padding: 6px;
             gap: 10px;
             border-radius: 50px;
             border: 1px solid #797EF3;
             font-family: Nunito;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             line-height: 24.55px;
             text-align: center;

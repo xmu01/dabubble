@@ -18,13 +18,13 @@ export class ChannelService {
   showThread = signal<boolean>(false);
 
   changeThreadVisibility() {
-    this.showThread.update(value => !value);
+      this.showThread.update(value => !value);
   }
 
   constructor() { }
 
   loadChannels() {
-    const channelsQuery = query(collection(this.firestore, 'channels'));
+    const channelsQuery = query(collection(this.firestore, 'channels'), orderBy('created_at', 'asc'));
     onSnapshot(channelsQuery, (querySnapshot) => {
       const channel = querySnapshot.docs.map((doc) => this.setChannelObject(doc.data(), doc.id));
       this.channels.set(channel);
@@ -44,6 +44,12 @@ export class ChannelService {
 
   async updateMessage(id: string, message: string) {
     await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}/messages`, id), {
+      message: message
+    });
+  }
+
+  async updateAnswer(id: string, message: string) {
+    await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}/messages/${this.activeAnswer()}/answers`, id), {
       message: message
     });
   }
@@ -90,26 +96,26 @@ export class ChannelService {
 
   loadAnswersChannelChat(channelId: string | undefined, messageId: string | undefined) {
     if (!channelId || !messageId) return;
-  
+
     // Abfrage der ursprünglichen Nachricht
     const messageRef = doc(this.firestore, `channels/${channelId}/messages/${messageId}`);
     getDoc(messageRef).then((messageDoc) => {
       if (messageDoc.exists()) {
         const originalMessage = this.setChannelMessageObject(messageDoc.data(), messageDoc.id);
-  
+
         // Abfrage der Antworten
         const q = query(
           collection(this.firestore, `channels/${channelId}/messages/${messageId}/answers/`),
           orderBy('timestamp', 'asc')
         );
-  
+
         onSnapshot(q, (querySnapshot) => {
           const answers = querySnapshot.docs.map((doc) => this.setChannelMessageObject(doc.data(), doc.id));
-  
+
           // Kombinieren der ursprünglichen Nachricht mit den Antworten
           const allMessages = [originalMessage, ...answers];
           const grouped = this.groupChannelMessagesByDate(allMessages);
-  
+
           // Setzen der gruppierten Nachrichten
           this.groupedChannelAnswers.set(grouped);
         });
@@ -118,7 +124,7 @@ export class ChannelService {
       }
     });
   }
-  
+
 
   private groupChannelMessagesByDate(messages: ChannelMessage[]): { date: string; messages: ChannelMessage[] }[] {
     const grouped = messages.reduce((acc, message) => {

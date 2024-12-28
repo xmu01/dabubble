@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Firestore, Timestamp, addDoc, arrayUnion, collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
 
@@ -11,9 +11,17 @@ export class UsersService {
 
   users = signal<Users[]>([]);
   activeUser = signal<Users | null>(null);
+  activeAnswer = signal<string>('');
   groupedMessages = signal<{ date: string; messages: Messages[] }[]>([]);
   messageChanged = computed(() => this.groupedMessages().length);
+  groupedMessageAnswers = signal<{ date: string; messages: Messages[] }[]>([]);
+  messageAnswersChanged = computed(() => this.groupedMessageAnswers().length);
+  showThread = signal<boolean>(false);
 
+  changeThreadVisibility() {
+      this.showThread.update(value => !value);
+  }
+  
   constructor() { }
 
   /**
@@ -56,6 +64,37 @@ export class UsersService {
       this.groupedMessages.set(grouped);
     });
   }
+
+  loadMessageAnswers(messageId: string | undefined) {
+      if (!messageId) return;
+  
+      // Abfrage der ursprünglichen Nachricht
+      const messageRef = doc(this.firestore, `messages/${messageId}`);
+      getDoc(messageRef).then((messageDoc) => {
+        if (messageDoc.exists()) {
+          const originalMessage = this.setMessageObject(messageDoc.data(), messageDoc.id);
+  
+          // Abfrage der Antworten
+          const q = query(
+            collection(this.firestore, `messages/${messageId}/answers/`),
+            orderBy('timestamp', 'asc')
+          );
+  
+          onSnapshot(q, (querySnapshot) => {
+            const answers = querySnapshot.docs.map((doc) => this.setMessageObject(doc.data(), doc.id));
+  
+            // Kombinieren der ursprünglichen Nachricht mit den Antworten
+            const allMessages = [originalMessage, ...answers];
+            const grouped = this.groupMessagesByDate(allMessages);
+  
+            // Setzen der gruppierten Nachrichten
+            this.groupedMessageAnswers.set(grouped);
+          });
+        } else {
+          console.error('Original message does not exist');
+        }
+      });
+    }
 
   /**
    * Groups messages by their date.
@@ -141,6 +180,12 @@ export class UsersService {
 
   async updateMessage(id: string, message: string) {
     await updateDoc(doc(this.firestore, "messages", id), {
+      message: message
+    });
+  }
+
+  async updateAnswer(id: string, message: string) {
+    await updateDoc(doc(this.firestore, `messages/${this.activeAnswer()}/answers`, id), {
       message: message
     });
   }

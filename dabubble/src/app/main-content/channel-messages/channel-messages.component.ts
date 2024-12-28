@@ -48,9 +48,16 @@ export class ChannelMessagesComponent {
   showEditEmojis = false;
   openThread = this.channelService.showThread;
 
-  loadThread(messageId: string) {      
-    this.channelService.changeThreadVisibility();
+  loadThread(messageId: string) {
+    if (!this.channelService.showThread()) {
+      this.channelService.changeThreadVisibility();
+    }
     this.channelService.activeAnswer.set(messageId);
+  }
+
+  formatDate(date: string | Date): string {
+    const d = new Date(date);
+    return d.toISOString().split('T')[0]; // Gibt das Datum im Format YYYY-MM-DD zurück
   }
 
   startEditingMessage(messageId: string, message: string): void {
@@ -59,7 +66,7 @@ export class ChannelMessagesComponent {
   }
 
   cancelEditing(): void {
-    const message = this.groupedMessages().find(group =>
+    const message = this.groupedChannelMessages().find(group =>
       group.messages.some(msg => msg.id === this.editMessageId)
     )?.messages.find(msg => msg.id === this.editMessageId);
 
@@ -283,29 +290,29 @@ export class ChannelMessagesComponent {
 
   loadAnswersCountAndLastTime(messageId: string): void {
     const answersCollection = collection(this.firestore, `channels/${this.activeChannel()?.id}/messages/${messageId}/answers`);
-  
+
     onSnapshot(answersCollection, (querySnapshot) => {
       let answersCount = 0;
       let lastAnswerTime: Date | null = null;
-  
+
       querySnapshot.forEach((doc) => {
-        const { timestamp } = doc.data();       
-  
+        const { timestamp } = doc.data();
+
         answersCount++;
         const answerTime = timestamp?.toDate(); // Firebase-Timestamp in Date umwandeln
         if (answerTime && (!lastAnswerTime || answerTime > lastAnswerTime)) {
           lastAnswerTime = answerTime; // Neueste Antwortzeit aktualisieren
         }
       });
-  
+
       // Nachricht mit den Antworten-Infos erweitern
       const group = this.groupedChannelMessages().find((g) =>
         g.messages.some((msg) => msg.id === messageId)
       );
-  
+
       if (group) {
         const message = group.messages.find((msg) => msg.id === messageId);
-  
+
         if (message) {
           message.answersCount = answersCount;
           message.lastAnswerTime = lastAnswerTime;
@@ -313,7 +320,7 @@ export class ChannelMessagesComponent {
       }
     });
   }
-  
+
 
   setTooltip(names: string[]): string {
     const loggedUserFullName = `${this.getLoggedUser()?.firstName} ${this.getLoggedUser()?.lastName}`;
@@ -402,5 +409,5 @@ export class ChannelMessagesComponent {
       },
     });
   }
-  
+
 }

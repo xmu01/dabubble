@@ -9,11 +9,12 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { collection, Firestore, onSnapshot } from '@angular/fire/firestore';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ThreadComponent } from '../../thread/thread.component';
 
 @Component({
   selector: 'app-direct-messages',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, FormsModule, CommonModule, PickerComponent, MatMenuModule, MatTooltipModule],
+  imports: [MatCardModule, MatIconModule, FormsModule, CommonModule, PickerComponent, MatMenuModule, MatTooltipModule, ThreadComponent],
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss'
 })
@@ -36,6 +37,19 @@ export class DirectMessagesComponent {
   showEmojis = false;
   showEditEmojis = false;
   temporaryMessage: string | null = null;
+  openThread = this.firestoreService.showThread;
+
+  loadThread(messageId: string) {
+    if (!this.firestoreService.showThread()) {
+      this.firestoreService.changeThreadVisibility();
+    }
+    this.firestoreService.activeAnswer.set(messageId);
+  }
+
+  formatDate(date: string | Date): string {
+    const d = new Date(date);
+    return d.toISOString().split('T')[0]; // Gibt das Datum im Format YYYY-MM-DD zurück
+  }
 
   constructor() {
     effect(() => {

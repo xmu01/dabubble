@@ -3,9 +3,10 @@ import { ChannelService } from '../../../../shared/services/channel.service';
 import { UsersService } from '../../../../shared/services/users.service';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { DialogAddMembersComponent } from '../dialog-add-members/dialog-add-members.component';
 
 @Component({
   selector: 'app-dialog-show-members',
@@ -22,7 +23,7 @@ export class DialogShowMembersComponent {
   loggedUser = this.authService.getLoggedInUser()?.uid;
 
     constructor(
-      public dialogRef: MatDialogRef<DialogShowMembersComponent>,
+      public dialogRef: MatDialogRef<DialogShowMembersComponent>, public addDialogRef: MatDialog
     ) {}
   
     onNoClick(): void {
@@ -42,4 +43,14 @@ export class DialogShowMembersComponent {
         return 0;
       });
   });
+
+  openDialogAddMember() {
+    this.dialogRef.close();
+    this.addDialogRef.open(DialogAddMembersComponent, {
+      position: {
+        top: '240px',
+        right: '100px',
+      },
+    });
+  }
 }

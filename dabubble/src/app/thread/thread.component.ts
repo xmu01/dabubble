@@ -30,7 +30,7 @@ export class ThreadComponent {
   activeUser = this.user.activeUser;
   activeChannel = this.channelService.activeChannel();
   showEmojis = false;
-  contentElement = viewChild<ElementRef<HTMLDivElement>>('scrollContainer');
+  contentElement = viewChild<ElementRef<HTMLDivElement>>('scrollThread');
   groupedChannelAnswers = this.channelService.groupedChannelAnswers;
   today = signal(new Date().toISOString().split('T')[0]);
   hoveredMessageId: string | null = null;
@@ -39,6 +39,7 @@ export class ThreadComponent {
   temporaryMessage: string | null = null;
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   threadActive = this.channelService.showThread();
+  showEditEmojis = false;
 
   constructor() {
     effect(() => {
@@ -51,7 +52,7 @@ export class ThreadComponent {
         this.showEmojis = false;
         this.triggerScrollToBottom();
       }
-      this.channelService.channelMessageChanged();
+      this.channelService.channelAnswersChanged();
 
     });
 
@@ -59,9 +60,55 @@ export class ThreadComponent {
       this.groupedChannelAnswers().forEach((group) => {
         group.messages.forEach((message) => {
           this.loadReactions(message.id!);
+          this.triggerScrollToBottom();
         });
       });
     });
+  }
+
+  startEditingMessage(messageId: string, message: string): void {
+    this.editMessageId = messageId;
+    this.temporaryMessage = message;
+  }
+
+  cancelEditing(): void {
+    const message = this.groupedChannelAnswers().find(group =>
+      group.messages.some(msg => msg.id === this.editMessageId)
+    )?.messages.find(msg => msg.id === this.editMessageId);
+
+    if (message) {
+      message.message = this.temporaryMessage!;
+    }
+
+    this.editMessageId = null;
+    this.temporaryMessage = null;
+  }
+
+  saveEditedMessage(id: string, message: string): void {
+    this.channelService.updateAnswer(id, message).then(() => {
+      this.editMessageId = null;
+      this.temporaryMessage = null;
+    });
+  }
+
+  addEditEmoji(event: any): void {
+    const emoji = event.emoji.native;
+
+    const group = this.groupedChannelAnswers().find(group =>
+      group.messages.some(msg => msg.id === this.editMessageId)
+    );
+
+    if (group) {
+      const message = group.messages.find(msg => msg.id === this.editMessageId);
+
+      if (message) {
+        message.message += emoji;
+      }
+    }
+  }
+
+  toggleEditEmojis(): void {
+    this.showEditEmojis = !this.showEditEmojis;
   }
 
   saveChannelAnswer(): void {
