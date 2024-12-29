@@ -1,11 +1,11 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, ViewChild, viewChild, } from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDialogModule} from '@angular/material/dialog';
-import {MatMenuModule} from '@angular/material/menu';
+import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { AuthService } from '../../shared/services/auth.service';
 import { UsersService } from '../../shared/services/users.service';
@@ -27,6 +27,28 @@ export class HeaderComponent {
   // Use the signal directly without wrapping it in additional logic
   user = this.authService.userSignal;
   users = this.firestoreService.users;
+
+  newMessage: string = '';
+  @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
+
+  onInput(event: Event): void {
+    const input = event.target as HTMLTextAreaElement;
+    const value = input.value;
+
+    if (value.includes('@')) {
+      this.menuTrigger.openMenu();
+    } else {
+      this.menuTrigger.closeMenu();
+    }
+  }
+
+  toggleMenu() {
+    this.menuTrigger.toggleMenu();
+  }
+
+  addToMessage(selectedItem: string): void {
+    this.newMessage += ` ${selectedItem}`;
+  }
 
 
   async signOut() {
