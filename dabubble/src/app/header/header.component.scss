@@ -175,3 +175,13 @@ header {
         }
     }
 }
+
+
+/* Damit der unnötige Button verschwindet, wenn man im Input-Field User @
+Übrigens. Statt Display: none; stattdessen das Untere, damit die richtige Position des Menüs erhalten bleibt
+*/
+.add-person-placeholder {
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
