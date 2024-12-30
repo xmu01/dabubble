@@ -9,6 +9,7 @@ import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { AuthService } from '../../shared/services/auth.service';
 import { UsersService } from '../../shared/services/users.service';
+import { ChannelService } from '../../shared/services/channel.service';
 
 @Component({
   selector: 'app-header',
@@ -23,13 +24,17 @@ import { UsersService } from '../../shared/services/users.service';
 export class HeaderComponent {
   private authService = inject(AuthService);
   private firestoreService = inject(UsersService);
+  private firestoreServiceChannel = inject(ChannelService);
 
   // Use the signal directly without wrapping it in additional logic
   user = this.authService.userSignal;
   users = this.firestoreService.users;
+  channels = this.firestoreServiceChannel.channels; // Add this signal
 
   newMessage: string = '';
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
+
+  @ViewChild('menuTriggerChannel') menuTriggerChannel!: MatMenuTrigger;
 
   onInput(event: Event): void {
     const input = event.target as HTMLTextAreaElement;
@@ -39,6 +44,12 @@ export class HeaderComponent {
       this.menuTrigger.openMenu();
     } else {
       this.menuTrigger.closeMenu();
+    }
+
+    if (value.includes('#')) {
+      this.menuTriggerChannel.openMenu();
+    } else {
+      this.menuTriggerChannel.closeMenu();
     }
   }
 

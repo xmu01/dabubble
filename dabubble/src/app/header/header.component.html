@@ -14,9 +14,22 @@
             </button>
             }
         </mat-menu>
+
+
+        <mat-menu #belowMenu="matMenu" yPosition="above">
+            @for (channel of channels(); track channels) {
+            <button mat-menu-item (click)="addToMessage(channel.name)">
+                {{ channel.name }}
+            </button>
+            }
+        </mat-menu>
     
         <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu"
         #menuTrigger="matMenuTrigger"></button>
+
+        <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="belowMenu"
+        #menuTriggerChannel="matMenuTrigger"></button>
+
 
     </div>
 
