@@ -9,12 +9,12 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { collection, Firestore, onSnapshot } from '@angular/fire/firestore';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ThreadComponent } from '../../thread/thread.component';
+import { DirectThreadComponent } from './direct-thread/direct-thread.component';
 
 @Component({
   selector: 'app-direct-messages',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, FormsModule, CommonModule, PickerComponent, MatMenuModule, MatTooltipModule, ThreadComponent],
+  imports: [MatCardModule, MatIconModule, FormsModule, CommonModule, PickerComponent, MatMenuModule, MatTooltipModule, DirectThreadComponent],
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss'
 })

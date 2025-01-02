@@ -1,0 +1,138 @@
+<div class="container">
+  <mat-card appearance="outlined" class="messages">
+    <mat-card-header class="direct-message-header">
+      <mat-card-title class="direct-message-title">
+        <h2>Thread</h2>
+        <mat-icon fontIcon="tag"></mat-icon><span class="userName">{{ activeChannel?.name }}</span>
+        <mat-icon class="close-button" (click)="closeThread()">close</mat-icon>
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="direct-message-content" #scrollThread (click)="showEmojis = false">
+      <div class="date-elements">
+        @for (group of groupedChannelAnswers(); track group.date) {
+        <div class="date-element">
+          <span class="date">@if (group.date === (today() | date: 'yyyy-MM-dd')) {
+            Heute
+            } @else {
+            {{ group.date | date: 'dd.MM.yyyy' }}
+            }</span>
+        </div>
+        <div class="messages">
+          @for (message of group.messages; track message.id) {
+          <div class="message-container" [ngClass]="message.senderId != loggedUser()?.uid ? 'left' : 'right'"
+            (mouseover)="setHoveredMessageId(message.id)" (mouseout)="clearHoveredMessageId(message.id, $event)">
+            <div class="reaction-bar"
+              [ngClass]="(message.senderId != loggedUser()?.uid || activeUser()?.userId === loggedUser()?.uid) ? 'rbr' : 'rbl'"
+              *ngIf="hoveredMessageId === message.id && editMessageId == null && this.channelService.activeAnswer() != message.id"
+              (mouseover)="setHoveredMessageId(message.id)" (mouseout)="clearHoveredMessageId(message.id, $event)">
+              <mat-icon class="reaction-bar-symbol" (click)="toggleEmojiPicker(message.id)"
+                fontSet="material-icons-outlined">add_reaction</mat-icon>
+                @if(message.senderId == loggedUser()?.uid){
+                  <mat-icon (click)="startEditingMessage(message.id, message.message!)" class="reaction-bar-symbol"
+                    fontSet="material-icons-outlined">more_vert</mat-icon>
+                  }
+            </div>
+            <emoji-mart #emojiPickerReaction [set]="'google'" class="emojis message-emoji-picker"
+              [ngClass]="message.senderId == activeUser()?.userId ? 'right-emoji-picker' : 'left-emoji-picker'"
+              (emojiClick)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)"
+              [showPreview]="false"
+              [enableSearch]="false"
+              [exclude]="['recent']"
+              [style]="'position: fixed'"
+              [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden' }"
+              *ngIf="activeEmojiPickerMessageId === message.id"
+              ></emoji-mart>
+
+            <img [src]="message.senderId != loggedUser()?.uid 
+                      ? './../../../assets/img/profile-pictures/' + (getUserAvatar(message.senderId!) | async)
+                      : './../../../assets/img/profile-pictures/' + getLoggedUser()?.avatar" alt="Message User">
+
+            <div [ngClass]="message.senderId != loggedUser()?.uid ? 'message-left' : 'message-right'">
+              @if(editMessageId === message.id) {
+                <div class="edit">
+  
+                  <textarea [(ngModel)]="message.message" class="edit-input" rows="2"></textarea>
+                  <div class="edit-controls">
+                    <mat-icon (click)="toggleEditEmojis()">sentiment_satisfied</mat-icon>
+  
+                    <div class="control-buttons">
+                      <button class="cancel" (click)="cancelEditing()">Abbrechen</button>
+                      <button class="save" (click)="saveEditedMessage(message.id, message.message!)">Speichern</button>
+                    </div>
+                    @if(showEditEmojis) {
+                    <emoji-mart #emojEditiPicker [set]="'google'" class="emojis" (emojiClick)="addEditEmoji($event)"
+                      [showPreview]="false"
+                      [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
+                      showSkinTones="true" [enableSearch]="false" [exclude]="['recent']"
+                      [style]="'position: fixed'"></emoji-mart>
+                    }
+                  </div>
+                </div>
+                } @else {
+                <div [ngClass]="message.senderId == activeUser()?.userId ? 'name-left' : 'name-right'">
+                  <p>{{ message.senderName }}</p>
+                  <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
+                </div>
+                <p [ngClass]="message.senderId == getLoggedUser()?.userId ? 'text-right' : 'text-left'">
+                  {{ message.message }}
+                </p>
+                }
+              <div class="reaction-container">
+                @for(reaction of message.reactionsGrouped || []; track reaction.reaction) {
+                <div class="givenReactions"
+                  (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, reaction.reaction)"
+                  (mouseover)="showTooltip($event)" (mouseleave)="hideTooltip($event)">
+                  <span class="reaction-symbol">{{ reaction.reaction }}</span>
+                  <span>{{ reaction.count }}</span>
+
+                  <div class="custom-tooltip" *ngIf="tooltipVisible">
+                    <p class="tooltip-reaction">{{ reaction.reaction }}</p>
+                    <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+
+        </div>
+        }
+
+      </div>
+    </mat-card-content>
+    <div class="direct-message-input">
+      <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu"
+        #menuTrigger="matMenuTrigger"></button>
+
+      <textarea [(ngModel)]="newMessage" rows="2" placeholder="Antworten ..."
+        (input)="onInput($event)" #textarea (focus)="showEmojis = false">
+      </textarea>
+
+      <mat-menu #aboveMenu="matMenu" yPosition="above">
+        @for (user of users(); track user) {
+        <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName)">
+          {{ user.firstName }} {{ user.lastName }}
+        </button>
+        }
+      </mat-menu>
+
+      <div class="message-icon-bar">
+        <div class="send-message-icons">
+          @if(showEmojis) {
+          <emoji-mart #emojiPicker [set]="'google'" class="emojis" (emojiClick)="addEmoji($event)" [showPreview]="false"
+            [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
+            showSkinTones="true"></emoji-mart>
+          }
+          <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
+          <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>
+        </div>
+        <div (click)="saveChannelAnswer()" class="send-button">
+          <mat-icon>send</mat-icon>
+        </div>
+      </div>
+    </div>
+
+  </mat-card>
+</div>
