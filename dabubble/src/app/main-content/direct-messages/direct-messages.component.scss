@@ -15,7 +15,8 @@
 }
 
 .thread {
-    width: 35%;
+    width: 100%;
+    max-width: 485px;
 }
 
 .direct-message-header {
@@ -260,7 +261,8 @@
 
 .answers-container {
     cursor: pointer;
-    
+    padding-top: 3px;
+
     .answers {
         display: flex;
         gap: 10px;

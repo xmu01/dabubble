@@ -1,10 +1,219 @@
-p {
-    width: 514px;
-    height: 294px;
+ul {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+
+    li {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        gap: 15px;
+        border-radius: 30px;
+        cursor: pointer;
+        padding-left: 8px;
+
+        &:hover {
+            background: #ECEEFE;
+        }
+
+        .user-picture {
+            position: relative;
+        }
+
+        .user-picture-dot-online {
+            border-radius: 100%;
+            background-color: #92C83E;
+            position: absolute;
+            bottom: 5px;
+            right: 0px;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #fff;
+        }
+
+        .user-picture-dot-offline {
+            border-radius: 100%;
+            background-color: #686868;
+            position: absolute;
+            bottom: 5px;
+            right: 0px;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #fff;
+        }
+
+        img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-top: 4px;
+        }
+
+        span {
+            font-family: Nunito;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 24.55px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #000000;
+        }
+    }
+}
+
+h2 {
+    font-family: Nunito;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32.74px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin: 0;
 }
 
 ::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
     border-radius: 30px 0 30px 30px;
     padding: 40px;
     gap: 20px;
+}
+
+::ng-deep .cdk-overlay-pane.mat-mdc-dialog-panel {
+    width: 415px;
+    height: 411px;
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__title {
+    font-family: Nunito;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32.74px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    padding: 0;
+}
+
+::ng-deep .mat-mdc-dialog-container .mat-mdc-dialog-content {
+    padding-left: 0;
+}
+
+::ng-deep .mat-mdc-dialog-container-with-actions .mat-mdc-dialog-content {
+    padding: 0;
+}
+
+::ng-deep .mat-mdc-button:hover .mat-mdc-button-persistent-ripple::before {
+    opacity: 0 !important;
+}
+
+::ng-deep .mat-mdc-button:active .mat-mdc-button-persistent-ripple::before {
+    opacity: 0 !important;
+    background-color: transparent !important;
+}
+
+::ng-deep .mat-mdc-button.cdk-program-focused .mat-mdc-button-persistent-ripple::before,
+.mat-mdc-button.cdk-keyboard-focused .mat-mdc-button-persistent-ripple::before,
+.mat-mdc-button.mat-mdc-button-disabled-interactive:focus .mat-mdc-button-persistent-ripple::before {
+    opacity: 0 !important;
+    background-color: transparent !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
+    opacity: 0 !important;
+}
+
+h3 {
+    font-family: Nunito;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24.55px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: #000000;
+    margin: 0;
+}
+
+
+.close-button {
+    position: absolute;
+    top: 50px;
+    right: 40px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-radius: 20px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #ECEEFE;
+    }
+}
+
+.no-scrollbar {
+    overflow: auto;
+    /* Scrollen erlauben */
+    resize: none;
+    /* Manuelles Anpassen deaktivieren */
+}
+
+/* Scrollbar in Webkit-Browsern (Chrome, Safari, Edge) ausblenden */
+.no-scrollbar::-webkit-scrollbar {
+    width: 0;
+    /* Unsichtbar machen */
+    height: 0;
+}
+
+/* Für Firefox */
+.no-scrollbar {
+    scrollbar-width: none;
+    /* Scrollbar ausblenden */
+}
+
+/* Für Internet Explorer und Edge */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    /* Scrollbar ausblenden */
+}
+
+.add-member {
+    display: flex;
+    gap: 12px;
+    margin-left: 6px;
+    border-radius: 30px;
+    cursor: pointer;
+
+    &:hover {
+        background: #ECEEFE;
+
+        mat-icon {
+            transform: scale(1.02);
+            color: #535AF1;
+        }
+
+        span {
+            transform: scale(1.02);
+            color: #535AF1;
+        }
+    }
+
+    mat-icon {
+        width: 40px;
+        height: 40px;
+        padding: 6px;
+        gap: 10px;
+        border-radius: 20px;
+        background: #ECEEFE;
+    }
+
+    span {
+        font-family: Nunito;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24.55px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+    }
 }

@@ -84,7 +84,7 @@ export class DirectThreadComponent {
   }
 
   saveEditedMessage(id: string, message: string): void {
-    this.channelService.updateAnswer(id, message).then(() => {
+    this.user.updateAnswer(id, message).then(() => {
       this.editMessageId = null;
       this.temporaryMessage = null;
     });
