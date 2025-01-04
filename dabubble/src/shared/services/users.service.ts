@@ -152,6 +152,23 @@ export class UsersService {
       });
   }
 
+    saveMessageAnswer(message: Messages) {
+      const userDocRef = collection(this.firestore, `messages/${this.activeAnswer()}/answers`);
+  
+      const newMessage = {
+        ...message,
+        timestamp: message.timestamp || new Date()
+      };
+  
+      return addDoc(userDocRef, newMessage)
+        .then(() => {
+          console.log('Message saved successfully');
+        })
+        .catch((error) => {
+          console.error('Error saving message:', error);
+        });
+    }
+
   private setMessageObject(obj: any, id: string): Messages {
     return {
       id: id,
@@ -209,6 +226,35 @@ export class UsersService {
       } else {
         // Reaktion hinzufügen
         const reactionsRef = collection(this.firestore, `messages/${messageId}/reactions`);
+        addDoc(reactionsRef, { userName, reaction }).then(() => {
+        }).catch((error) => {
+          console.error("Fehler beim Hinzufügen der Reaktion: ", error);
+        });
+      }
+    }).catch((error) => {
+      console.error("Fehler beim Abrufen der Reaktion: ", error);
+    });
+  }
+
+  toggleAnswerReaction(messageId: string, userName: string, reaction: string) {
+    const q = query(
+      collection(this.firestore, `messages/${this.activeAnswer()}/answers/${messageId}/reactions`),
+      where("userName", "==", userName),
+      where("reaction", "==", reaction)
+    );
+
+    getDocs(q).then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        // Reaktion existiert bereits: Entfernen
+        querySnapshot.forEach((doc) => {
+          deleteDoc(doc.ref).then(() => {
+          }).catch((error) => {
+            console.error("Fehler beim Entfernen der Reaktion: ", error);
+          });
+        });
+      } else {
+        // Reaktion hinzufügen
+        const reactionsRef = collection(this.firestore, `messages/${this.activeAnswer()}/answers/${messageId}/reactions`);
         addDoc(reactionsRef, { userName, reaction }).then(() => {
         }).catch((error) => {
           console.error("Fehler beim Hinzufügen der Reaktion: ", error);

@@ -10,7 +10,7 @@
 
     <mat-card-content class="direct-message-content" #scrollThread (click)="showEmojis = false">
       <div class="date-elements">
-        @for (group of groupedChannelAnswers(); track group.date) {
+        @for (group of groupedMessageAnswers(); track group.date) {
         <div class="date-element">
           <span class="date">@if (group.date === (today() | date: 'yyyy-MM-dd')) {
             Heute
@@ -24,7 +24,7 @@
             (mouseover)="setHoveredMessageId(message.id)" (mouseout)="clearHoveredMessageId(message.id, $event)">
             <div class="reaction-bar"
               [ngClass]="(message.senderId != loggedUser()?.uid || activeUser()?.userId === loggedUser()?.uid) ? 'rbr' : 'rbl'"
-              *ngIf="hoveredMessageId === message.id && editMessageId == null && this.channelService.activeAnswer() != message.id"
+              *ngIf="hoveredMessageId === message.id && editMessageId == null && this.user.activeAnswer() != message.id"
               (mouseover)="setHoveredMessageId(message.id)" (mouseout)="clearHoveredMessageId(message.id, $event)">
               <mat-icon class="reaction-bar-symbol" (click)="toggleEmojiPicker(message.id)"
                 fontSet="material-icons-outlined">add_reaction</mat-icon>
@@ -128,7 +128,7 @@
           <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
           <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>
         </div>
-        <div (click)="saveChannelAnswer()" class="send-button">
+        <div (click)="saveMessageAnswer()" class="send-button">
           <mat-icon>send</mat-icon>
         </div>
       </div>

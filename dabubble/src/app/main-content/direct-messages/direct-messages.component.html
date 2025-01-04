@@ -104,7 +104,18 @@
                                   </div>
                                 }
                               </div>
-                              
+                              @if(message.lastAnswerTime) {
+                                <div class="answers-container" (click)="loadThread(message.id!)">
+                                  <div class="answers">
+                                    <span class="answer-count">{{ message.answersCount }} Antworten</span>
+                                    @if(formatDate(message.lastAnswerTime) === today()) {
+                                      <span class="answer-time">Letzte Antwort um {{ message.lastAnswerTime | date: 'HH:mm' }}</span>
+                                    } @else {
+                                      <span class="answer-time">Letzte Antwort am {{ message.lastAnswerTime | date: 'dd.MM.yyyy' }}</span>
+                                    }
+                                  </div>
+                                </div>
+                              }
                         </div>
                     </div>
                     }

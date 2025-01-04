@@ -31,33 +31,32 @@ export class DirectThreadComponent {
   activeChannel = this.channelService.activeChannel();
   showEmojis = false;
   contentElement = viewChild<ElementRef<HTMLDivElement>>('scrollThread');
-  groupedChannelAnswers = this.channelService.groupedChannelAnswers;
+  groupedMessageAnswers = this.user.groupedMessageAnswers;
   today = signal(new Date().toISOString().split('T')[0]);
   hoveredMessageId: string | null = null;
   editMessageId: string | null = null;
   activeEmojiPickerMessageId: string | null = null;
   temporaryMessage: string | null = null;
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
-  threadActive = this.channelService.showThread();
+  threadActive = this.user.showThread();
   showEditEmojis = false;
 
   constructor() {
     effect(() => {
-      const messageId = this.channelService.activeAnswer();
-      const channelId = this.channelService.activeChannel()?.id;
+      const messageId = this.user.activeAnswer();
 
       if (messageId) {
-        this.channelService.loadAnswersChannelChat(channelId, messageId);
+        this.user.loadMessageAnswers(messageId);
         this.newMessage = '';
         this.showEmojis = false;
         this.triggerScrollToBottom();
       }
-      this.channelService.channelAnswersChanged();
+      this.user.messageAnswersChanged();
 
     });
 
     effect(() => {
-      this.groupedChannelAnswers().forEach((group) => {
+      this.groupedMessageAnswers().forEach((group) => {
         group.messages.forEach((message) => {
           this.loadReactions(message.id!);
           this.triggerScrollToBottom();
@@ -72,7 +71,7 @@ export class DirectThreadComponent {
   }
 
   cancelEditing(): void {
-    const message = this.groupedChannelAnswers().find(group =>
+    const message = this.groupedMessageAnswers().find(group =>
       group.messages.some(msg => msg.id === this.editMessageId)
     )?.messages.find(msg => msg.id === this.editMessageId);
 
@@ -94,7 +93,7 @@ export class DirectThreadComponent {
   addEditEmoji(event: any): void {
     const emoji = event.emoji.native;
 
-    const group = this.groupedChannelAnswers().find(group =>
+    const group = this.groupedMessageAnswers().find(group =>
       group.messages.some(msg => msg.id === this.editMessageId)
     );
 
@@ -111,9 +110,9 @@ export class DirectThreadComponent {
     this.showEditEmojis = !this.showEditEmojis;
   }
 
-  saveChannelAnswer(): void {
+  saveMessageAnswer(): void {
     if (this.newMessage != '') {
-      this.channelService.saveChannelAnswer({
+      this.user.saveMessageAnswer({
         message: this.newMessage,
         senderName: this.getLoggedUser()!.firstName + ' ' + this.getLoggedUser()!.lastName || '',
         senderId: this.loggedUser()!.uid || '',
@@ -143,7 +142,7 @@ export class DirectThreadComponent {
   }
 
   closeThread() {
-    this.channelService.changeThreadVisibility();
+    this.user.changeThreadVisibility();
   }
 
   addReactionToPrivateMessage(messageId: string, userName: string, event: any | string): void {
@@ -158,7 +157,7 @@ export class DirectThreadComponent {
       return;
     }
 
-    this.channelService.toggleAnswerReaction(messageId, userName, reaction);
+    this.user.toggleAnswerReaction(messageId, userName, reaction);
 
     this.activeEmojiPickerMessageId = null;
   }
@@ -275,7 +274,7 @@ export class DirectThreadComponent {
   }
 
   loadReactions(messageId: string): void {
-    const reactionsCollection = collection(this.firestore, `channels/${this.activeChannel!.id}/messages/${this.channelService.activeAnswer()}/answers/${messageId}/reactions`);
+    const reactionsCollection = collection(this.firestore, `messages/${this.user.activeAnswer()}/answers/${messageId}/reactions`);
 
     onSnapshot(reactionsCollection, (querySnapshot) => {
       const reactionsMap = new Map<string, { count: number; userNames: string[] }>();
@@ -299,7 +298,7 @@ export class DirectThreadComponent {
       }));
 
       // Nachricht um die gruppierten Reaktionen erweitern
-      const group = this.groupedChannelAnswers().find((g) =>
+      const group = this.groupedMessageAnswers().find((g) =>
         g.messages.some((msg) => msg.id === messageId)
       );
 

@@ -69,12 +69,44 @@ export class DirectMessagesComponent {
       this.groupedMessages().forEach((group) => {
         group.messages.forEach((message) => {
           this.loadReactions(message.id!);
+          this.loadAnswersCountAndLastTime(message.id!);
         });
       });
     });
   }
 
+  loadAnswersCountAndLastTime(messageId: string): void {   
+    const answersCollection = collection(this.firestore, `messages/${messageId}/answers`);
 
+    onSnapshot(answersCollection, (querySnapshot) => {
+      let answersCount = 0;
+      let lastAnswerTime: Date | null = null;
+
+      querySnapshot.forEach((doc) => {       
+        const { timestamp } = doc.data();
+
+        answersCount++;
+        const answerTime = timestamp?.toDate(); // Firebase-Timestamp in Date umwandeln
+        if (answerTime && (!lastAnswerTime || answerTime > lastAnswerTime)) {
+          lastAnswerTime = answerTime; // Neueste Antwortzeit aktualisieren         
+        }
+      });
+
+      // Nachricht mit den Antworten-Infos erweitern
+      const group = this.groupedMessages().find((g) =>
+        g.messages.some((msg) => msg.id === messageId)
+      );      
+
+      if (group) {
+        const message = group.messages.find((msg) => msg.id === messageId);        
+
+        if (message) {
+          message.answersCount = answersCount;
+          message.lastAnswerTime = lastAnswerTime;         
+        }
+      }
+    });
+  }
 
   setHoveredMessageId(messageId: string | undefined): void {
     if (messageId) {
