@@ -13,13 +13,14 @@ import { Timestamp } from '@angular/fire/firestore';
 import { DirectMessagesComponent } from './direct-messages/direct-messages.component';
 import { ChannelMessagesComponent } from './channel-messages/channel-messages.component';
 import { ChannelService } from '../../shared/services/channel.service';
+import { NewMessageComponent } from './new-message/new-message.component';
 
 
 @Component({
   selector: 'app-main-content',
   standalone: true,
   imports: [MatCardModule, MatIconModule, MatButtonModule, MatInputModule, FormsModule, CommonModule,
-    MatFormFieldModule, MatInputModule, MatMenuModule, DirectMessagesComponent, ChannelMessagesComponent
+    MatFormFieldModule, MatInputModule, MatMenuModule, DirectMessagesComponent, ChannelMessagesComponent, NewMessageComponent
   ],
   templateUrl: './main-content.component.html',
   styleUrls: ['./main-content.component.scss'],

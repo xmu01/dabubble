@@ -1,1 +1,51 @@
-<p>new-message works!</p>
+<div class="container">
+    <mat-card appearance="outlined" class="messages">
+        <mat-card-header class="direct-message-header">
+            <mat-card-title class="direct-message-title">
+                <div class="user-image-container">
+                    <img class="user-image" src="./../../../assets/img/profile-pictures/{{ activeUser()?.avatar }}" alt="User Picture">
+                    <span
+                        [ngClass]="activeUser()?.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
+                </div>
+                <span class="userName">{{ activeUser()?.firstName }} {{ activeUser()?.lastName }}</span>
+            </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false"></mat-card-content>
+
+        <div class="direct-message-input">
+            <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu"
+                #menuTrigger="matMenuTrigger"></button>
+
+            <textarea [(ngModel)]="newMessage" rows="2"
+                placeholder="Nachricht an {{ activeUser()?.firstName }} {{ activeUser()?.lastName }}"
+                (input)="onInput($event)" #textarea (focus)="showEmojis = false">
+        </textarea>
+
+            <mat-menu #aboveMenu="matMenu" yPosition="above">
+                @for (user of users(); track user) {
+                <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName)">
+                    {{ user.firstName }} {{ user.lastName }}
+                </button>
+                }
+            </mat-menu>
+
+            <div class="message-icon-bar">
+                <div class="send-message-icons">
+                    @if(showEmojis) {
+                    <emoji-mart #emojiPicker [set]="'google'" class="emojis" (emojiClick)="addEmoji($event)"
+                        [showPreview]="false"
+                        [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
+                        showSkinTones="true"></emoji-mart>
+                    }
+                    <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
+                    <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>
+                </div>
+                <div (click)="saveMessage()" class="send-button">
+                    <mat-icon>send</mat-icon>
+                </div>
+            </div>
+        </div>
+
+    </mat-card>
+</div>

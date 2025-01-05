@@ -1,6 +1,9 @@
 @if(activeUser()){
 <app-direct-messages class="direct-message-container"></app-direct-messages>
 }
-@if(activeChannel()) {
+@else if(activeChannel()) {
 <app-channel-messages class="channel-message-container"></app-channel-messages>
+} 
+@else {
+    <app-new-message></app-new-message>
 }
