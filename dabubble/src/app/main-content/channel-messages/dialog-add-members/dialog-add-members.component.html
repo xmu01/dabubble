@@ -1,12 +1,48 @@
 <h2 mat-dialog-title>Leute hinzufügen</h2>
+<div class="channel">
+  <mat-icon fontSet="material-icons-outlined">tag</mat-icon><span>{{channel?.name}}</span>
+</div>
 <mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
 <mat-dialog-content class="no-scrollbar">
+  @if(!areAllUsersAdded()){
+  <mat-form-field class="select-field">
+    <mat-chip-grid #chipGrid>
+      @for (user of selectedUsers; track user) {
+      <mat-chip-row (removed)="remove(user)">
+        <img class="sm-profile-img"
+          [src]="user.avatar ? 'assets/img/profile-pictures/' + user.avatar : 'assets/img/profile-pictures/profile-default.png'"
+          alt="Profilbild">{{user.firstName}} {{user.lastName}}
+        <button matChipRemove [attr.aria-label]="'remove ' + user.firstName + ' ' + user.lastName">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+      }
+    </mat-chip-grid>
+    <input placeholder="Name eingeben" #userInput [formControl]="userCtrl" [matChipInputFor]="chipGrid"
+      [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)"
+      tabindex="-1" />
 
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)"
+      (openedChange)="onAutocompleteOpened()" [panelWidth]="'300px'">
+      @for (user of filteredUsers | async; track user) {
+      <mat-option class="user-name" [value]="user.firstName + ' ' + user.lastName">
+        <img class="profile-img"
+          [src]="user.avatar ? 'assets/img/profile-pictures/' + user.avatar : 'assets/img/profile-pictures/profile-default.png'"
+          alt="Profilbild">{{user.firstName}} {{user.lastName}}
+      </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+  }
+  @else {
+  Es sind bereits alle hinzugefügt
+  }
 
 </mat-dialog-content>
-<mat-dialog-actions class="add-member" (click)="openDialogAddMember()">
-    <mat-icon fontSet="material-icons-outlined">person_add</mat-icon>
-    <span>
-        Mitglieder hinzufügen
-    </span>
+@if(!areAllUsersAdded()){
+<mat-dialog-actions>
+  <button class="add-member" [disabled]="!selectedUsers.length" (click)="onAddMembers()">
+    Hinzufügen
+  </button>
 </mat-dialog-actions>
+}

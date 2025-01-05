@@ -67,12 +67,14 @@ export class ChannelService {
     }
   }
 
-  async addMembers(userId: string) {
+  async addMembers(userIds: string[]): Promise<void> {
+    if (!userIds.length) return;
+  
     await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}`), {
-      members: arrayUnion(userId)
+      members: arrayUnion(...userIds) // Füge mehrere Benutzer-IDs hinzu
     });
   }
-
+  
   async removeMembers(userId: string) {
     await updateDoc(doc(this.firestore, `channels/${this.activeChannel()?.id}`), {
       members: arrayRemove(userId)
