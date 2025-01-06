@@ -1,7 +1,8 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Firestore, Timestamp, addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, addDoc, arrayUnion, collection, deleteDoc, doc, docData, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
+import { catchError, map, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +47,17 @@ export class UsersService {
         this.activeUser.set(this.setUserObject(doc.data(), doc.id));
       }
     });
+  }
+
+  getUserNameById(userId: string): Observable<string | null> {
+    const userDocRef = doc(this.firestore, 'users', userId);
+    return docData(userDocRef).pipe(
+      map((data: any) => `${data.firstName || ''} ${data.lastName || ''}`.trim() || null),
+      catchError((error) => {
+        console.error('Fehler beim Abrufen des Namens:', error);
+        return of(null); // Gibt `null` zurück, falls ein Fehler auftritt
+      })
+    );
   }
 
   loadMessagePrivateChat(sender: string, receiver: string) {

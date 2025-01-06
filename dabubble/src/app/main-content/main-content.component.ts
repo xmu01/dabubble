@@ -14,6 +14,7 @@ import { DirectMessagesComponent } from './direct-messages/direct-messages.compo
 import { ChannelMessagesComponent } from './channel-messages/channel-messages.component';
 import { ChannelService } from '../../shared/services/channel.service';
 import { NewMessageComponent } from './new-message/new-message.component';
+import { AddMessageService } from '../../shared/services/add-message.service';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class MainContentComponent {
   private firestoreService = inject(UsersService);
   private channelService = inject(ChannelService);
   private auth = inject(AuthService);
+  private addMessageService = inject(AddMessageService);
 
   users = this.firestoreService.users;
   loggedUser = this.auth.userSignal;
@@ -38,6 +40,7 @@ export class MainContentComponent {
   activeChannel = this.channelService.activeChannel;
   groupedMessages = this.firestoreService.groupedMessages;
   groupedChannelMessages = this.channelService.groupedChannelMessages;
+  addMessage = this.addMessageService.addMessage;
   today = signal(new Date().toISOString().split('T')[0]);
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   showEmojis = false;

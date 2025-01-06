@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogNewChannelComponent } from './dialog-new-channel/dialog-new-channel.component';
 import { ChannelService } from '../../shared/services/channel.service';
 import { Timestamp } from '@angular/fire/firestore';
+import { AddMessageService } from '../../shared/services/add-message.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -33,6 +34,7 @@ export class SidenavComponent {
   private firestoreService = inject(UsersService);
   private channelService = inject(ChannelService);
   private auth = inject(AuthService);
+  private addMessageService = inject(AddMessageService);
 
   users = this.firestoreService.users;
   loggedUser = this.auth.userSignal;
@@ -51,6 +53,7 @@ export class SidenavComponent {
   }
 
   getId(userId: string, drawer: any) {
+    this.addMessageService.addMessage.set(false);
     this.channelService.activeChannel.set(null);
     this.firestoreService.loadUser(userId);
     if (this.mobileQuery.matches) {
@@ -59,6 +62,7 @@ export class SidenavComponent {
   }
 
   getChannel(channelId: string, drawer: any) {   
+    this.addMessageService.addMessage.set(false);
     this.firestoreService.activeUser.set(null);
     this.channelService.loadChannel(channelId);
     if (this.mobileQuery.matches) {
@@ -93,5 +97,8 @@ export class SidenavComponent {
     });
   }
 
+  setAddMessage() {
+    this.addMessageService.setAddMessage();
+  }
 }
 

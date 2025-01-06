@@ -2,16 +2,28 @@
     <mat-card appearance="outlined" class="messages">
         <mat-card-header class="direct-message-header">
             <mat-card-title class="direct-message-title">
-                <div class="user-image-container">
-                    <img class="user-image" src="./../../../assets/img/profile-pictures/{{ activeUser()?.avatar }}" alt="User Picture">
-                    <span
-                        [ngClass]="activeUser()?.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
-                </div>
-                <span class="userName">{{ activeUser()?.firstName }} {{ activeUser()?.lastName }}</span>
+                <span class="title">Neue Nachricht</span>
             </mat-card-title>
+            <form class="example-form">
+                <mat-form-field class="example-full-width">
+                  <input type="text"
+                         placeholder="An: #channel, oder @jemand oder E-Mail-Adresse"
+                         matInput
+                         [formControl]="myControl"
+                         [matAutocomplete]="auto">
+                  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                    @for (option of filteredOptions | async; track option.id) {
+                      <mat-option [value]="option.display">
+                        {{ option.display }}
+                      </mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>
+              
         </mat-card-header>
 
-        <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false"></mat-card-content>
+        <mat-card-content class="add-message-content" #scrollContainer (click)="showEmojis = false"></mat-card-content>
 
         <div class="direct-message-input">
             <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu"

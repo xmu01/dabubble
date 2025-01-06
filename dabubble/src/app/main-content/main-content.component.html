@@ -4,6 +4,6 @@
 @else if(activeChannel()) {
 <app-channel-messages class="channel-message-container"></app-channel-messages>
 } 
-@else {
-    <app-new-message></app-new-message>
+@else if(addMessage()) {
+    <app-new-message class="add-message-container"></app-new-message>
 }

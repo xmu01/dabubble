@@ -37,8 +37,6 @@ export class ChannelService {
       if (doc.exists()) {
         this.activeChannel.set(this.setChannelObject(doc.data(), doc.id));
       }
-      console.log(this.activeChannel()?.name);
-
     });
   }
 
