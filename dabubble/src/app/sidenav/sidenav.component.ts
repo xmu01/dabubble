@@ -7,7 +7,7 @@ import { MainContentComponent } from '../main-content/main-content.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../shared/services/users.service';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from '../../shared/services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogNewChannelComponent } from './dialog-new-channel/dialog-new-channel.component';
@@ -40,11 +40,14 @@ export class SidenavComponent {
   loggedUser = this.auth.userSignal;
   channels = this.channelService.channels;
 
-  mobileQuery: MediaQueryList;
+  isMobileView: boolean = false;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public dialog: MatDialog) {
-    this.mobileQuery = media.matchMedia('(max-width: 1024px)');
-    this.mobileQuery.addEventListener('change', () => changeDetectorRef.detectChanges());
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    public dialog: MatDialog,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
+    this.initializeBreakpointObserver();
   }
 
   ngOnInit() {
@@ -52,20 +55,29 @@ export class SidenavComponent {
     this.channelService.loadChannels();
   }
 
+  private initializeBreakpointObserver(): void {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
+      .subscribe((result) => {
+        this.isMobileView = result.matches;
+        this.changeDetectorRef.detectChanges(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
+      });
+  }
+
   getId(userId: string, drawer: any) {
     this.addMessageService.addMessage.set(false);
     this.channelService.activeChannel.set(null);
     this.firestoreService.loadUser(userId);
-    if (this.mobileQuery.matches) {
+    if (this.isMobileView) {
       drawer.toggle();
     }
   }
 
-  getChannel(channelId: string, drawer: any) {   
+  getChannel(channelId: string, drawer: any) {
     this.addMessageService.addMessage.set(false);
     this.firestoreService.activeUser.set(null);
     this.channelService.loadChannel(channelId);
-    if (this.mobileQuery.matches) {
+    if (this.isMobileView) {
       drawer.toggle();
     }
   }
@@ -77,21 +89,25 @@ export class SidenavComponent {
     const dialogRef = this.dialog.open(DialogNewChannelComponent, {
       data: { name: this.name, description: this.description },
     });
-  
-    dialogRef.afterClosed().subscribe(result => {
+
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Dialog geschlossen mit Daten:', result);
-        
+
         // Finde den aktuellen User anhand der UID
-        const currentUser = this.users().find(user => user.userId === this.loggedUser()?.uid);
-  
+        const currentUser = this.users().find(
+          (user) => user.userId === this.loggedUser()?.uid
+        );
+
         // Erstelle den neuen Channel mit Namen und Beschreibung
         this.channelService.saveNewChannel({
           name: result.name,
-          description: result.description || "",
-          created_by: currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : "Unbekannt",
+          description: result.description || '',
+          created_by: currentUser
+            ? `${currentUser.firstName} ${currentUser.lastName}`
+            : 'Unbekannt',
           created_at: Timestamp.fromDate(new Date()),
-          members: [this.loggedUser()?.uid || ""]
+          members: [this.loggedUser()?.uid || ''],
         });
       }
     });
@@ -101,4 +117,3 @@ export class SidenavComponent {
     this.addMessageService.setAddMessage();
   }
 }
-

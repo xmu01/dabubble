@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
 import { collection, doc, Firestore, getDoc, onSnapshot, Timestamp } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -16,6 +16,7 @@ import { DialogShowDetailsComponent } from './dialog-show-details/dialog-show-de
 import { MatDialog } from '@angular/material/dialog';
 import { DialogShowMembersComponent } from './dialog-show-members/dialog-show-members.component';
 import { DialogAddMembersComponent } from './dialog-add-members/dialog-add-members.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-channel-messages',
@@ -30,6 +31,8 @@ export class ChannelMessagesComponent {
   private firestoreService = inject(UsersService);
   private channelService = inject(ChannelService);
   private auth = inject(AuthService);
+  private breakpointObserver = inject(BreakpointObserver);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
   users = this.firestoreService.users;
   loggedUser = this.auth.userSignal;
@@ -47,6 +50,43 @@ export class ChannelMessagesComponent {
   temporaryMessage: string | null = null;
   showEditEmojis = false;
   openThread = this.channelService.showThread;
+  isMobileView: boolean = false;
+
+  constructor(public dialog: MatDialog) {
+
+    effect(() => {
+      const channelId = this.channelService.activeChannel()?.id;
+
+      if (channelId) {
+        this.channelService.loadMessageChannelChat(channelId);
+        this.newMessage = '';
+        this.showEmojis = false;
+        this.triggerScrollToBottom();
+      }
+      this.channelService.channelMessageChanged();
+
+    });
+
+    effect(() => {
+      this.groupedChannelMessages().forEach((group) => {
+        group.messages.forEach((message) => {
+          this.loadReactions(message.id!);
+          this.loadAnswersCountAndLastTime(message.id!);
+        });
+      });
+    });
+
+    this.initializeBreakpointObserver();
+  }
+
+    private initializeBreakpointObserver(): void {
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
+        .subscribe((result) => {
+          this.isMobileView = result.matches;
+          this.changeDetectorRef.detectChanges(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
+        });
+    }
 
   loadThread(messageId: string) {
     if (!this.channelService.showThread()) {
@@ -179,31 +219,6 @@ export class ChannelMessagesComponent {
 
   addToMessage(selectedItem: string): void {
     this.newMessage += ` ${selectedItem}`;
-  }
-
-  constructor(public dialog: MatDialog) {
-
-    effect(() => {
-      const channelId = this.channelService.activeChannel()?.id;
-
-      if (channelId) {
-        this.channelService.loadMessageChannelChat(channelId);
-        this.newMessage = '';
-        this.showEmojis = false;
-        this.triggerScrollToBottom();
-      }
-      this.channelService.channelMessageChanged();
-
-    });
-
-    effect(() => {
-      this.groupedChannelMessages().forEach((group) => {
-        group.messages.forEach((message) => {
-          this.loadReactions(message.id!);
-          this.loadAnswersCountAndLastTime(message.id!);
-        });
-      });
-    });
   }
 
   getLoggedUser() {

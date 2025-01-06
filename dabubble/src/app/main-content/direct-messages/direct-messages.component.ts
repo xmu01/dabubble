@@ -39,6 +39,8 @@ export class DirectMessagesComponent {
   temporaryMessage: string | null = null;
   openThread = this.firestoreService.showThread;
 
+  isMobile = true;
+
   loadThread(messageId: string) {
     if (!this.firestoreService.showThread()) {
       this.firestoreService.changeThreadVisibility();

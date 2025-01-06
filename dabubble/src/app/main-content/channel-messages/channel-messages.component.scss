@@ -107,45 +107,18 @@
     width: 100%;
     flex: 1;
     justify-content: center;
-    // padding: 25px 45px 25px 45px;
     padding: 25px 0px 25px 0px;
     background-color: #fff;
     overflow-y: scroll;
-    // scrollbar-width: thin;
-    // /* macht die Scrollbar schmaler */
-    // scrollbar-color: #9747FF #fff;
 
     ::ng-deep .mat-expansion-panel-content {
         overflow-y: scroll !important;
         height: 100%;
     }
 
-    /* Scrollbar-Leiste */
     &::-webkit-scrollbar {
         width: 0px;
-        /* Breite der Scrollleiste */
     }
-
-    // /* Hintergrund der Scrollbar-Leiste */
-    // &::-webkit-scrollbar-track {
-    //     background: #fff;
-    //     /* Hintergrundfarbe der Leiste */
-    // }
-
-    // /* Scrollbar-Griff */
-    // &::-webkit-scrollbar-thumb {
-    //     background-color: #9747FF;
-    //     /* Farbe des Griffs */
-    //     border-radius: 10px;
-    //     /* Rundung des Griffs */
-    //     height: 1px;
-    // }
-
-    // /* Scrollbar-Griff beim Hover */
-    // &::-webkit-scrollbar-thumb:hover {
-    //     background-color: #444DF2;
-    //     /* Farbe des Griffs beim Hover */
-    // }
 }
 
 .date-element {
@@ -444,8 +417,6 @@
                 text-underline-position: from-font;
                 text-decoration-skip-ink: none;
                 color: #535AF1;
-
-
             }
 
             .text-left {
@@ -479,6 +450,39 @@
                 text-decoration-skip-ink: none;
                 margin-left: 75px;
                 width: fit-content;
+            }
+
+            .answers-container {
+                cursor: pointer;
+                padding-top: 3px;
+
+                .answers {
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+
+                    .answer-count {
+                        font-family: Nunito;
+                        font-size: 18px;
+                        font-weight: 400;
+                        line-height: 24.55px;
+                        text-align: left;
+                        text-underline-position: from-font;
+                        text-decoration-skip-ink: none;
+                        color: #535AF1;
+                    }
+
+                    .answer-time {
+                        font-family: Nunito;
+                        font-size: 14px;
+                        font-weight: 400;
+                        line-height: 19.1px;
+                        text-align: left;
+                        text-underline-position: from-font;
+                        text-decoration-skip-ink: none;
+                        color: #686868;
+                    }
+                }
             }
         }
     }
@@ -631,69 +635,7 @@
     width: 100%;
 }
 
-.answers-container {
-    cursor: pointer;
-    padding-top: 3px;
 
-    .answers {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-
-        .answer-count {
-            font-family: Nunito;
-            font-size: 18px;
-            font-weight: 400;
-            line-height: 24.55px;
-            text-align: left;
-            text-underline-position: from-font;
-            text-decoration-skip-ink: none;
-            color: #535AF1;
-        }
-
-        .answer-time {
-            font-family: Nunito;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 19.1px;
-            text-align: left;
-            text-underline-position: from-font;
-            text-decoration-skip-ink: none;
-            color: #686868;
-        }
-    }
-}
-
-@media (max-width: 1024px) {
-    .container {
-        padding: 0;
-    }
-
-    .messages {
-        width: 100%;
-        border-radius: 0;
-    }
-
-    .reaction-container {
-        flex-wrap: wrap;
-    }
-
-    .direct-message-header {
-        height: 78px;
-        padding: 10px 16px 10px 16px;
-        align-items: flex-start;
-
-
-        .direct-message-title {
-            .user-image-container {
-                .user-image {
-                    width: 50px;
-                    height: 50px;
-                }
-            }
-        }
-    }
-}
 
 .givenReactions {
     position: relative;
@@ -745,4 +687,98 @@
 
 :ng-deep .emoji-mart-category-label {
     display: none;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 0;
+    }
+
+    .messages {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .reaction-container {
+        flex-wrap: wrap;
+    }
+
+    .direct-message-header {
+        height: 78px;
+        padding: 10px 16px 10px 16px;
+
+        .direct-message-title {
+            .user-image-container {
+                .user-image {
+                    width: 50px;
+                    height: 50px;
+                }
+            }
+        }
+    }
+
+    .date-elements {
+        .messages {
+            .message-container {
+                display: flex;
+                gap: 14px;
+                padding: 15px 35px;
+                position: relative;
+
+                &:hover {
+                    background-color: #ECEEFE;
+                    cursor: pointer;
+
+                    .text-left {
+                        background-color: #fff;
+                    }
+                }
+
+                .reaction-bar {
+                    top: -40px;
+                }
+
+                img {
+                    width: 50px;
+                    height: 50px;
+                }
+
+                .name-left {
+                    font-size: 17px;
+                }
+
+                .name-right {
+                    font-size: 17px;
+                }
+
+                .text-left {
+                    font-size: 17px;
+                    margin-right: 0;
+                }
+
+                .text-right {
+                    font-size: 17px;
+                    margin-left: 0;
+                }
+
+                .answers-container {
+                    .answers {
+                        flex-direction: column;
+                        align-items: flex-end;
+                        gap: 0;
+
+                        .answer-count {
+                            font-size: 16px;
+                            width: 100%;
+                        }
+
+                        .answer-time {
+                            font-size: 12px;
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

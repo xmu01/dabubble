@@ -6,6 +6,7 @@
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
       </mat-card-title>
       <div class="members-container">
+        @if(!isMobileView) {
         <div class="members-images" (click)="openMembersDialog()">
           @if (memberAvatars()!.length > 0) {
           @for (avatar of memberAvatars(); track avatar; let i = $index;) {
@@ -15,6 +16,7 @@
           }
           <span class="members-count" [innerHTML]="memberAvatars()!.length"></span>
         </div>
+        }
         <button mat-mini-fab class="button-add-person" (click)="openAddMemberDialog()">
           <mat-icon fontSet="material-icons-outlined">person_add</mat-icon>
         </button>
@@ -111,18 +113,18 @@
                 }
               </div>
               @if(message.lastAnswerTime) {
-                <div class="answers-container" (click)="loadThread(message.id!)">
-                  <div class="answers">
-                    <span class="answer-count">{{ message.answersCount }} Antworten</span>
-                    @if(formatDate(message.lastAnswerTime) === today()) {
-                      <span class="answer-time">Letzte Antwort um {{ message.lastAnswerTime | date: 'HH:mm' }}</span>
-                    } @else {
-                      <span class="answer-time">Letzte Antwort am {{ message.lastAnswerTime | date: 'dd.MM.yyyy' }}</span>
-                    }
-                  </div>
+              <div class="answers-container" (click)="loadThread(message.id!)">
+                <div class="answers">
+                  <span class="answer-count">{{ message.answersCount }} Antworten</span>
+                  @if(formatDate(message.lastAnswerTime) === today()) {
+                  <span class="answer-time">Letzte Antwort um {{ message.lastAnswerTime | date: 'HH:mm' }}</span>
+                  } @else {
+                  <span class="answer-time">Letzte Antwort am {{ message.lastAnswerTime | date: 'dd.MM.yyyy' }}</span>
+                  }
                 </div>
+              </div>
               }
-              
+
             </div>
           </div>
           }

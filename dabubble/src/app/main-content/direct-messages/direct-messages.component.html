@@ -89,7 +89,7 @@
                             </p>
                             }
                               <div class="reaction-container">
-                                @for(reaction of message.reactionsGrouped || []; track reaction.reaction) {
+                                @for(reaction of message.reactionsGrouped || []; track reaction.reaction; let i = $index) {
                                   <div class="givenReactions"
                                        (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, reaction.reaction)"
                                        (mouseover)="showTooltip($event)"
@@ -97,7 +97,7 @@
                                     <span class="reaction-symbol">{{ reaction.reaction }}</span>
                                     <span>{{ reaction.count }}</span> 
                               
-                                    <div class="custom-tooltip" *ngIf="tooltipVisible">
+                                    <div class="custom-tooltip" [ngClass]="{'mobile-odd-class': isMobile && i % 2 === 0, 'mobile-even-class': isMobile && i % 2 !== 0}" *ngIf="tooltipVisible">
                                       <p class="tooltip-reaction">{{ reaction.reaction }}</p>
                                       <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
                                     </div>

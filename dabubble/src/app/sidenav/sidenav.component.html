@@ -2,14 +2,16 @@
     <mat-drawer #drawer class="sidenav" mode="side" opened="true">
         <mat-card class="nav" appearance="raised">
             <mat-card-content class="card-content">
+                @if(!isMobileView) {
                 <mat-card-header class="sidenav-header">
                     <div class="header-container">
                         <div class="title"><img src="./../../assets/img/workspace_logo.png"
                                 alt=""><mat-card-title>Devspace</mat-card-title></div>
-                        <div class="edit" (click)="setAddMessage()"><img src="./../../assets/img/edit_square.png" alt=""></div>
+                        <div class="edit" (click)="setAddMessage()"><img src="./../../assets/img/edit_square.png"
+                                alt=""></div>
                     </div>
                 </mat-card-header>
-
+            }
                 <mat-accordion class="channels">
                     <mat-expansion-panel class="panel" (opened)="channelsOpenState = true"
                         (closed)="channelsOpenState = false" [expanded]="true">
@@ -20,9 +22,14 @@
                         </mat-expansion-panel-header>
                         <ul class="list">
                             @for(channel of channels(); track channel) {
-                            <li (click)="getChannel(channel.id!, drawer)"><mat-icon class="tag">tag</mat-icon>{{channel.name}}</li>
+                            <li (click)="getChannel(channel.id!, drawer)"><mat-icon
+                                    class="tag">tag</mat-icon>{{channel.name}}</li>
                             }
-                            <li class="add-channel" (click)="openDialog()"><mat-icon>add_circle_outline</mat-icon>Channel hinzufügen</li>
+                        </ul>
+                        <ul class="list">
+                            <li class="add-channel" (click)="openDialog()">
+                                <mat-icon>add_circle_outline</mat-icon>Channel hinzufügen
+                            </li>
                         </ul>
                     </mat-expansion-panel>
                 </mat-accordion>
@@ -37,15 +44,18 @@
                         </mat-expansion-panel-header>
                         <ul class="list">
                             @for(user of users(); track user) {
-                                <li (click)="getId(user.userId, drawer)">
-                                    <div class="user-picture"><span [ngClass]="user.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
-                                        @if(user.avatar) {
-                                            <img class="profile-pictures" src="./../../assets/img/profile-pictures/{{user.avatar}}" alt="">
-                                        } @else {
-                                            <img class="profile-pictures" src="./../../assets/img/profile-pictures/profile_default.png" alt="">
-                                        }
-                                    </div>{{user.firstName}} {{user.lastName}} @if(user.userId == loggedUser()?.uid){ (Du)}
-                                </li>  
+                            <li (click)="getId(user.userId, drawer)">
+                                <div class="user-picture"><span
+                                        [ngClass]="user.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
+                                    @if(user.avatar) {
+                                    <img class="profile-pictures"
+                                        src="./../../assets/img/profile-pictures/{{user.avatar}}" alt="">
+                                    } @else {
+                                    <img class="profile-pictures"
+                                        src="./../../assets/img/profile-pictures/profile_default.png" alt="">
+                                    }
+                                </div>{{user.firstName}} {{user.lastName}} @if(user.userId == loggedUser()?.uid){ (Du)}
+                            </li>
                             }
                         </ul>
                     </mat-expansion-panel>
@@ -55,11 +65,12 @@
     </mat-drawer>
     <mat-drawer-content>
         <app-main-content class="main-container"></app-main-content>
-        
+
     </mat-drawer-content>
 
 </mat-drawer-container>
 
+@if(!isMobileView) {
 <div class="sidenav-content">
     <button type="button" (click)="drawer.toggle()" (click)="changeMenuOpenState()">
         @if(menuOpenState) {
@@ -69,3 +80,4 @@
         }
     </button>
 </div>
+}

@@ -1,6 +1,6 @@
 .container {
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 115.33px);
     background: #ECEEFE;
 
     .sidenav {
@@ -156,12 +156,12 @@
 
 .channels {
     display: flex;
-    height: 30%;
+    height: 45%;
 }
 
 .directmessages {
     display: flex;
-    height: 55%;
+    height: 45%;
     padding-bottom: 30px;
 }
 
@@ -215,10 +215,8 @@
 
 ::ng-deep .mat-expansion-panel-content {
     overflow-y: scroll !important;
-    height: 70%;
+    height: 100%;
     scrollbar-width: none;
-    /* macht die Scrollbar schmaler */
-    scrollbar-color: #9747FF #fff;
 }
 
 /* Scrollbar-Leiste */
@@ -255,23 +253,15 @@
 
 @media (max-width: 1024px) {
     .container {
+        height: calc(100vh - 86.33px);
+
         .sidenav {
             width: 100%;
             padding: 0;
 
             .nav {
                 border-radius: 0;
-
-                .card-content {
-                    .sidenav-header {
-                        display: none;
-                    }
-                }
             }
         }
-    }
-
-    .sidenav-content {
-        display: none;
     }
 }
