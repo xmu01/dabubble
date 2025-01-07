@@ -80,21 +80,23 @@ export class ChannelMessagesComponent {
     this.initializeBreakpointObserver();
   }
 
-    private initializeBreakpointObserver(): void {
-      this.breakpointObserver
-        .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
-        .subscribe((result) => {
-          this.isMobileView = result.matches;
-          this.changeDetectorRef.detectChanges(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
-        });
-    }
+  private initializeBreakpointObserver(): void {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
+      .subscribe((result) => {
+        this.isMobileView = result.matches;
+        this.changeDetectorRef.markForCheck(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
+      });
+  }
 
   loadThread(messageId: string) {
     if (!this.channelService.showThread()) {
       this.channelService.changeThreadVisibility();
     }
     this.channelService.activeAnswer.set(messageId);
-    this.openThreadMobile.set(true);
+    if (this.isMobileView) {
+      this.openThreadMobile.set(true);
+    }
   }
 
   formatDate(date: string | Date): string {
@@ -410,21 +412,28 @@ export class ChannelMessagesComponent {
   }
 
   openMembersDialog() {
-    this.dialog.open(DialogShowMembersComponent, {
-      position: {
-        top: '240px',
-        right: '150px',
-      },
-    });
+    if (!this.isMobileView) {
+      this.dialog.open(DialogShowMembersComponent, {
+        position: {
+          top: '240px',
+          right: '150px',
+        },
+      });
+    } else {
+      this.dialog.open(DialogShowMembersComponent);
+    }
   }
 
   openAddMemberDialog() {
-    this.dialog.open(DialogAddMembersComponent, {
-      position: {
-        top: '240px',
-        right: '100px',
-      },
-    });
+    if (!this.isMobileView) {
+      this.dialog.open(DialogAddMembersComponent, {
+        position: {
+          top: '240px',
+          right: '100px',
+        },
+      });
+    } else {
+      this.dialog.open(DialogAddMembersComponent);
+    }
   }
-
 }

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, inject } from '@angular/core';
 import { ChannelService } from '../../../../shared/services/channel.service';
 import { UsersService } from '../../../../shared/services/users.service';
 import { AuthService } from '../../../../shared/services/auth.service';
@@ -7,6 +7,7 @@ import { MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogT
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogAddMembersComponent } from '../dialog-add-members/dialog-add-members.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-dialog-show-members',
@@ -19,13 +20,27 @@ export class DialogShowMembersComponent {
   channelService = inject(ChannelService);
   userService = inject(UsersService);
   authService = inject(AuthService);
+  private breakpointObserver = inject(BreakpointObserver);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
   channel = this.channelService.activeChannel();
   loggedUser = this.authService.getLoggedInUser()?.uid;
+  isMobileView: boolean = false;
 
     constructor(
       public dialogRef: MatDialogRef<DialogShowMembersComponent>, public addDialogRef: MatDialog
-    ) {}
+    ) {
+      this.initializeBreakpointObserver();
+    }
   
+    private initializeBreakpointObserver(): void {
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
+        .subscribe((result) => {
+          this.isMobileView = result.matches;
+          this.changeDetectorRef.markForCheck(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
+        });
+    }
     onNoClick(): void {
       this.dialogRef.close();
     }
@@ -45,6 +60,7 @@ export class DialogShowMembersComponent {
   });
 
   openDialogAddMember() {
+    if(!this.isMobileView) {
     this.dialogRef.close();
     this.addDialogRef.open(DialogAddMembersComponent, {
       position: {
@@ -52,5 +68,9 @@ export class DialogShowMembersComponent {
         right: '100px',
       },
     });
+  } else {
+    this.dialogRef.close();
+    this.addDialogRef.open(DialogAddMembersComponent);
+  }
   }
 }

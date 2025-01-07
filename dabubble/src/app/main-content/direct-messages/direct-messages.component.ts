@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { collection, Firestore, onSnapshot } from '@angular/fire/firestore';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DirectThreadComponent } from './direct-thread/direct-thread.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-direct-messages',
@@ -22,6 +23,8 @@ export class DirectMessagesComponent {
   private firestore = inject(Firestore);
   private firestoreService = inject(UsersService);
   private auth = inject(AuthService);
+ private breakpointObserver = inject(BreakpointObserver);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
   activeUser = this.firestoreService.activeUser;
   users = this.firestoreService.users;
@@ -39,14 +42,17 @@ export class DirectMessagesComponent {
   temporaryMessage: string | null = null;
   openThread = this.firestoreService.showThread;
   openThreadMobile = this.firestoreService.openThreadMobile;
-  
+  isMobileView: boolean = false;
+
 
   loadThread(messageId: string) {
     if (!this.firestoreService.showThread()) {
       this.firestoreService.changeThreadVisibility();
     }
     this.firestoreService.activeAnswer.set(messageId);
-    this.openThreadMobile.set(true);
+    if(this.isMobileView) {
+      this.openThreadMobile.set(true);
+    }
   }
 
   formatDate(date: string | Date): string {
@@ -76,7 +82,19 @@ export class DirectMessagesComponent {
         });
       });
     });
+
+    this.initializeBreakpointObserver();
+
   }
+
+    private initializeBreakpointObserver(): void {
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
+        .subscribe((result) => {
+          this.isMobileView = result.matches;
+          this.changeDetectorRef.markForCheck(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
+        });
+    }
 
   loadAnswersCountAndLastTime(messageId: string): void {   
     const answersCollection = collection(this.firestore, `messages/${messageId}/answers`);

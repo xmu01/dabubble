@@ -21,7 +21,6 @@ export class ChannelService {
 
   changeThreadVisibility() {
       this.showThread.update(value => !value);
-      this.openThreadMobile.update(value => !value);
   }
 
   constructor() { }

@@ -18,9 +18,15 @@
           <span class="members-count" [innerHTML]="memberAvatars()!.length"></span>
         </div>
         }
+        @if(!isMobileView) {
         <button mat-mini-fab class="button-add-person" (click)="openAddMemberDialog()">
           <mat-icon fontSet="material-icons-outlined">person_add</mat-icon>
         </button>
+      } @else {
+        <button mat-mini-fab class="button-add-person" (click)="openMembersDialog()">
+          <mat-icon fontSet="material-icons-outlined">person_add</mat-icon>
+        </button>
+      }
       </div>
     </mat-card-header>
 

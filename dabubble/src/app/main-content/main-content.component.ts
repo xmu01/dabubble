@@ -66,7 +66,7 @@ export class MainContentComponent {
       .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
       .subscribe((result) => {
         this.isMobileView = result.matches;
-        this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
       });
   }
 

@@ -22,7 +22,6 @@ export class UsersService {
 
   changeThreadVisibility() {
       this.showThread.update(value => !value);
-      this.openThreadMobile.update(value => !value);
   }
   
   constructor() { }

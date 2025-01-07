@@ -62,7 +62,7 @@ export class SidenavComponent {
       .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
       .subscribe((result) => {
         this.isMobileView = result.matches;
-        this.changeDetectorRef.detectChanges(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
+        this.changeDetectorRef.markForCheck(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
       });
   }
 

@@ -45,6 +45,8 @@ export class ThreadComponent {
   threadActive = this.channelService.showThread();
   showEditEmojis = false;
   isMobileView: boolean = false;
+  openThreadMobile = this.channelService.openThreadMobile;
+
 
   constructor() {
     effect(() => {
@@ -78,7 +80,7 @@ export class ThreadComponent {
       .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
       .subscribe((result) => {
         this.isMobileView = result.matches;
-        this.changeDetectorRef.detectChanges(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
+        this.changeDetectorRef.markForCheck(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
       });
   }
 
@@ -160,6 +162,7 @@ export class ThreadComponent {
 
   closeThread() {
     this.channelService.changeThreadVisibility();
+    this.openThreadMobile.set(false);
   }
 
   addReactionToPrivateMessage(messageId: string, userName: string, event: any | string): void {
