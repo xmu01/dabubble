@@ -38,12 +38,15 @@ export class DirectMessagesComponent {
   showEditEmojis = false;
   temporaryMessage: string | null = null;
   openThread = this.firestoreService.showThread;
+  openThreadMobile = this.firestoreService.openThreadMobile;
+  
 
   loadThread(messageId: string) {
     if (!this.firestoreService.showThread()) {
       this.firestoreService.changeThreadVisibility();
     }
     this.firestoreService.activeAnswer.set(messageId);
+    this.openThreadMobile.set(true);
   }
 
   formatDate(date: string | Date): string {

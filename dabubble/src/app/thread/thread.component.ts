@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, HostListener, inject, signal, ViewChild, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, HostListener, inject, signal, ViewChild, viewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +11,7 @@ import { UsersService } from '../../shared/services/users.service';
 import { from, map, Observable, shareReplay } from 'rxjs';
 import { collection, doc, Firestore, getDoc, onSnapshot, Timestamp } from '@angular/fire/firestore';
 import { Users } from '../../shared/interfaces/users';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-thread',
@@ -25,6 +26,9 @@ export class ThreadComponent {
   auth = inject(AuthService);
   user = inject(UsersService);
   channelService = inject(ChannelService);
+  private breakpointObserver = inject(BreakpointObserver);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+
   users = this.user.users;
   loggedUser = this.auth.userSignal;
   activeUser = this.user.activeUser;
@@ -40,6 +44,7 @@ export class ThreadComponent {
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   threadActive = this.channelService.showThread();
   showEditEmojis = false;
+  isMobileView: boolean = false;
 
   constructor() {
     effect(() => {
@@ -64,6 +69,17 @@ export class ThreadComponent {
         });
       });
     });
+
+    this.initializeBreakpointObserver();
+  }
+
+  private initializeBreakpointObserver(): void {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
+      .subscribe((result) => {
+        this.isMobileView = result.matches;
+        this.changeDetectorRef.detectChanges(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
+      });
   }
 
   startEditingMessage(messageId: string, message: string): void {

@@ -755,10 +755,12 @@
     .direct-message-header {
         height: 78px;
         padding: 10px 16px 10px 16px;
-        align-items: flex-start;
-
 
         .direct-message-title {
+            .close-button {
+                top: auto;
+            }
+            
             .user-image-container {
                 .user-image {
                     width: 50px;

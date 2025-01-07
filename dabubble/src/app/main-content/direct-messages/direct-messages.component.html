@@ -1,4 +1,5 @@
 <div class="container">
+    @if(!openThreadMobile()){
     <mat-card appearance="outlined" class="messages">
         <mat-card-header class="direct-message-header">
             <mat-card-title class="direct-message-title">
@@ -90,7 +91,8 @@
                             </p>
                             }
                             <div class="reaction-container">
-                                @for(reaction of message.reactionsGrouped || []; track reaction.reaction; let i = $index; let c = $count) {
+                                @for(reaction of message.reactionsGrouped || []; track reaction.reaction; let i =
+                                $index; let c = $count) {
                                 <div class="givenReactions"
                                     (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, reaction.reaction)"
                                     (mouseover)="showTooltip($event)" (mouseleave)="hideTooltip($event)">
@@ -105,14 +107,14 @@
                                         <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
                                     </div>
                                     } @else if(c == 1 && activeUser()?.userId == message.senderId) {
-                                        <div class="custom-tooltip"
+                                    <div class="custom-tooltip"
                                         [ngClass]="{'mobile-odd-class': i % 2 === 0, 'mobile-even-class': i % 2 !== 0}"
                                         *ngIf="tooltipVisible">
                                         <p class="tooltip-reaction">{{ reaction.reaction }}</p>
                                         <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
                                     </div>
                                     } @else if(c == 1 && loggedUser()?.uid == message.senderId) {
-                                        <div class="custom-tooltip"
+                                    <div class="custom-tooltip"
                                         [ngClass]="{'mobile-even-class': i % 2 === 0, 'mobile-odd-class': i % 2 !== 0}"
                                         *ngIf="tooltipVisible">
                                         <p class="tooltip-reaction">{{ reaction.reaction }}</p>
@@ -180,6 +182,7 @@
         </div>
 
     </mat-card>
+    }
     @if(openThread()) {
     <app-direct-thread class="thread"></app-direct-thread>
     }

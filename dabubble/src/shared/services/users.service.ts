@@ -18,9 +18,11 @@ export class UsersService {
   groupedMessageAnswers = signal<{ date: string; messages: Messages[] }[]>([]);
   messageAnswersChanged = computed(() => this.groupedMessageAnswers().length);
   showThread = signal<boolean>(false);
+  openThreadMobile = signal<boolean>(false);
 
   changeThreadVisibility() {
       this.showThread.update(value => !value);
+      this.openThreadMobile.update(value => !value);
   }
   
   constructor() { }

@@ -51,6 +51,7 @@ export class ChannelMessagesComponent {
   showEditEmojis = false;
   openThread = this.channelService.showThread;
   isMobileView: boolean = false;
+  openThreadMobile = this.channelService.openThreadMobile;
 
   constructor(public dialog: MatDialog) {
 
@@ -93,6 +94,7 @@ export class ChannelMessagesComponent {
       this.channelService.changeThreadVisibility();
     }
     this.channelService.activeAnswer.set(messageId);
+    this.openThreadMobile.set(true);
   }
 
   formatDate(date: string | Date): string {

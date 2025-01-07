@@ -16,9 +16,12 @@ export class ChannelService {
   groupedChannelAnswers = signal<{ date: string; messages: ChannelMessage[] }[]>([]);
   channelAnswersChanged = computed(() => this.groupedChannelMessages().length);
   showThread = signal<boolean>(false);
+  openThreadMobile = signal<boolean>(false);
+
 
   changeThreadVisibility() {
       this.showThread.update(value => !value);
+      this.openThreadMobile.update(value => !value);
   }
 
   constructor() { }
