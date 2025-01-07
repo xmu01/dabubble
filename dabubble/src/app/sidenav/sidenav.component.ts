@@ -39,7 +39,8 @@ export class SidenavComponent {
   users = this.firestoreService.users;
   loggedUser = this.auth.userSignal;
   channels = this.channelService.channels;
-
+  activeUser = this.firestoreService.activeUser;
+  activeChannel = this.channelService.activeChannel;
   isMobileView: boolean = false;
 
   constructor(
@@ -115,5 +116,12 @@ export class SidenavComponent {
 
   setAddMessage() {
     this.addMessageService.setAddMessage();
+  }
+
+  backToMenu(drawer: any) {
+    this.addMessageService.addMessage.set(false);
+    this.firestoreService.activeUser.set(null);
+    this.channelService.activeChannel.set(null);
+    drawer.toggle()
   }
 }

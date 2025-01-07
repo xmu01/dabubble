@@ -65,9 +65,7 @@
     </mat-drawer>
     <mat-drawer-content>
         <app-main-content class="main-container"></app-main-content>
-
     </mat-drawer-content>
-
 </mat-drawer-container>
 
 @if(!isMobileView) {
@@ -80,4 +78,6 @@
         }
     </button>
 </div>
+} @else if(isMobileView && (activeUser() != null || activeChannel() != null)) {
+    <mat-icon class="backToMenuButton" (click)="backToMenu(drawer)" fontIcon="chevron_left"></mat-icon>
 }

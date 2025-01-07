@@ -98,17 +98,41 @@
               </p>
               }
               <div class="reaction-container">
-                @for(reaction of message.reactionsGrouped || []; track reaction.reaction) {
+                @for(reaction of message.reactionsGrouped || []; track reaction.reaction; let i = $index; let c = $count) {
                 <div class="givenReactions"
                   (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, reaction.reaction)"
                   (mouseover)="showTooltip($event)" (mouseleave)="hideTooltip($event)">
                   <span class="reaction-symbol">{{ reaction.reaction }}</span>
                   <span>{{ reaction.count }}</span>
 
-                  <div class="custom-tooltip" *ngIf="tooltipVisible">
-                    <p class="tooltip-reaction">{{ reaction.reaction }}</p>
-                    <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
+                  @if(c > 1) {
+                    <div class="custom-tooltip"
+                        [ngClass]="{'mobile-odd-class': i % 2 === 0, 'mobile-even-class': i % 2 !== 0}"
+                        *ngIf="tooltipVisible">
+                        <p class="tooltip-reaction">{{ reaction.reaction }}</p>
+                        <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
+                    </div>
+                    } @else if(c == 1 && activeUser()?.userId == message.senderId) {
+                        <div class="custom-tooltip"
+                        [ngClass]="{'mobile-odd-class': i % 2 === 0, 'mobile-even-class': i % 2 !== 0}"
+                        *ngIf="tooltipVisible">
+                        <p class="tooltip-reaction">{{ reaction.reaction }}</p>
+                        <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
+                    </div>
+                    } @else if(c == 1 && loggedUser()?.uid == message.senderId) {
+                        <div class="custom-tooltip"
+                        [ngClass]="{'mobile-even-class': i % 2 === 0, 'mobile-odd-class': i % 2 !== 0}"
+                        *ngIf="tooltipVisible">
+                        <p class="tooltip-reaction">{{ reaction.reaction }}</p>
+                        <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
+                    </div>
+                    } @else {
+                      <div class="custom-tooltip"
+                      *ngIf="tooltipVisible">
+                      <p class="tooltip-reaction">{{ reaction.reaction }}</p>
+                      <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
                   </div>
+                    }
                 </div>
                 }
               </div>

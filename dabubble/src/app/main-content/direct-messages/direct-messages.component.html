@@ -3,7 +3,8 @@
         <mat-card-header class="direct-message-header">
             <mat-card-title class="direct-message-title">
                 <div class="user-image-container">
-                    <img class="user-image" src="./../../../assets/img/profile-pictures/{{ activeUser()?.avatar }}" alt="User Picture">
+                    <img class="user-image" src="./../../../assets/img/profile-pictures/{{ activeUser()?.avatar }}"
+                        alt="User Picture">
                     <span
                         [ngClass]="activeUser()?.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
                 </div>
@@ -23,17 +24,16 @@
                 </div>
                 <div class="messages">
                     @for (message of group.messages; track message.id) {
-                    <div class="message-container"
-                    [ngClass]="{
+                    <div class="message-container" [ngClass]="{
                         'left': message.senderId == activeUser()?.userId,
                         'right': message.senderId != activeUser()?.userId,
                         'bg-grey': editMessageId != null
-                    }"
-                        (mouseover)="setHoveredMessageId(message.id)"
+                    }" (mouseover)="setHoveredMessageId(message.id)"
                         (mouseout)="clearHoveredMessageId(message.id, $event)">
                         <div class="reaction-bar"
                             [ngClass]="(message.senderId != loggedUser()?.uid || activeUser()?.userId === loggedUser()?.uid) ? 'rbr' : 'rbl'"
-                            *ngIf="hoveredMessageId === message.id && editMessageId == null" (mouseover)="setHoveredMessageId(message.id)"
+                            *ngIf="hoveredMessageId === message.id && editMessageId == null"
+                            (mouseover)="setHoveredMessageId(message.id)"
                             (mouseout)="clearHoveredMessageId(message.id, $event)">
                             <span class="reaction-bar-symbol"
                                 (click)="addReactionToPrivateMessage(message.id, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, '✅')">✅</span>
@@ -41,23 +41,24 @@
                                 (click)="addReactionToPrivateMessage(message.id, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, '🙏🏻')">🙏🏻</span>
                             <mat-icon class="reaction-bar-symbol" (click)="toggleEmojiPicker(message.id)"
                                 fontSet="material-icons-outlined">add_reaction</mat-icon>
-                            <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined" (click)="loadThread(message.id!)">comment</mat-icon>
+                            <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined"
+                                (click)="loadThread(message.id!)">comment</mat-icon>
                             @if(message.senderId == loggedUser()?.uid){
-                            <mat-icon (click)="startEditingMessage(message.id, message.message!)" class="reaction-bar-symbol"
-                                fontSet="material-icons-outlined">more_vert</mat-icon>
+                            <mat-icon (click)="startEditingMessage(message.id, message.message!)"
+                                class="reaction-bar-symbol" fontSet="material-icons-outlined">more_vert</mat-icon>
                             }
                         </div>
 
                         <emoji-mart #emojiPickerReaction [set]="'google'" class="emojis message-emoji-picker"
                             [ngClass]="message.senderId == activeUser()?.userId ? 'right-emoji-picker' : 'left-emoji-picker'"
-                            (emojiClick)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)" [showPreview]="false"
+                            (emojiClick)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)"
+                            [showPreview]="false"
                             [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
                             showSkinTones="true" *ngIf="activeEmojiPickerMessageId === message.id"></emoji-mart>
 
-                            <img [src]="message.senderId == activeUser()?.userId 
+                        <img [src]="message.senderId == activeUser()?.userId 
                             ? './../../../assets/img/profile-pictures/' + activeUser()?.avatar 
-                            : './../../../assets/img/profile-pictures/' + getLoggedUser()?.avatar" 
-                            alt="Message User">
+                            : './../../../assets/img/profile-pictures/' + getLoggedUser()?.avatar" alt="Message User">
                         <div [ngClass]="message.senderId == activeUser()?.userId ? 'message-left' : 'message-right'">
                             @if(editMessageId === message.id) {
                             <div class="edit">
@@ -72,11 +73,11 @@
                                             (click)="saveEditedMessage(message.id, message.message!)">Speichern</button>
                                     </div>
                                     @if(showEditEmojis) {
-                                        <emoji-mart #emojEditiPicker [set]="'google'" class="emojis" (emojiClick)="addEditEmoji($event)"
-                                            [showPreview]="false"
-                                            [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-                                            showSkinTones="true"></emoji-mart>
-                                        }
+                                    <emoji-mart #emojEditiPicker [set]="'google'" class="emojis"
+                                        (emojiClick)="addEditEmoji($event)" [showPreview]="false"
+                                        [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
+                                        showSkinTones="true"></emoji-mart>
+                                    }
                                 </div>
                             </div>
                             } @else {
@@ -88,34 +89,53 @@
                                 {{ message.message }}
                             </p>
                             }
-                              <div class="reaction-container">
-                                @for(reaction of message.reactionsGrouped || []; track reaction.reaction; let i = $index) {
-                                  <div class="givenReactions"
-                                       (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, reaction.reaction)"
-                                       (mouseover)="showTooltip($event)"
-                                       (mouseleave)="hideTooltip($event)">
+                            <div class="reaction-container">
+                                @for(reaction of message.reactionsGrouped || []; track reaction.reaction; let i = $index; let c = $count) {
+                                <div class="givenReactions"
+                                    (click)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, reaction.reaction)"
+                                    (mouseover)="showTooltip($event)" (mouseleave)="hideTooltip($event)">
                                     <span class="reaction-symbol">{{ reaction.reaction }}</span>
-                                    <span>{{ reaction.count }}</span> 
-                              
-                                    <div class="custom-tooltip" [ngClass]="{'mobile-odd-class': isMobile && i % 2 === 0, 'mobile-even-class': isMobile && i % 2 !== 0}" *ngIf="tooltipVisible">
-                                      <p class="tooltip-reaction">{{ reaction.reaction }}</p>
-                                      <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
+                                    <span>{{ reaction.count }}</span>
+
+                                    @if(c > 1) {
+                                    <div class="custom-tooltip"
+                                        [ngClass]="{'mobile-odd-class': i % 2 === 0, 'mobile-even-class': i % 2 !== 0}"
+                                        *ngIf="tooltipVisible">
+                                        <p class="tooltip-reaction">{{ reaction.reaction }}</p>
+                                        <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
                                     </div>
-                                  </div>
+                                    } @else if(c == 1 && activeUser()?.userId == message.senderId) {
+                                        <div class="custom-tooltip"
+                                        [ngClass]="{'mobile-odd-class': i % 2 === 0, 'mobile-even-class': i % 2 !== 0}"
+                                        *ngIf="tooltipVisible">
+                                        <p class="tooltip-reaction">{{ reaction.reaction }}</p>
+                                        <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
+                                    </div>
+                                    } @else if(c == 1 && loggedUser()?.uid == message.senderId) {
+                                        <div class="custom-tooltip"
+                                        [ngClass]="{'mobile-even-class': i % 2 === 0, 'mobile-odd-class': i % 2 !== 0}"
+                                        *ngIf="tooltipVisible">
+                                        <p class="tooltip-reaction">{{ reaction.reaction }}</p>
+                                        <p class="tooltip-text" [innerHTML]="setTooltip(reaction.userNames)"></p>
+                                    </div>
+                                    }
+                                </div>
                                 }
-                              </div>
-                              @if(message.lastAnswerTime) {
-                                <div class="answers-container" (click)="loadThread(message.id!)">
-                                  <div class="answers">
+                            </div>
+                            @if(message.lastAnswerTime) {
+                            <div class="answers-container" (click)="loadThread(message.id!)">
+                                <div class="answers">
                                     <span class="answer-count">{{ message.answersCount }} Antworten</span>
                                     @if(formatDate(message.lastAnswerTime) === today()) {
-                                      <span class="answer-time">Letzte Antwort um {{ message.lastAnswerTime | date: 'HH:mm' }}</span>
+                                    <span class="answer-time">Letzte Antwort um {{ message.lastAnswerTime | date:
+                                        'HH:mm' }}</span>
                                     } @else {
-                                      <span class="answer-time">Letzte Antwort am {{ message.lastAnswerTime | date: 'dd.MM.yyyy' }}</span>
+                                    <span class="answer-time">Letzte Antwort am {{ message.lastAnswerTime | date:
+                                        'dd.MM.yyyy' }}</span>
                                     }
-                                  </div>
                                 </div>
-                              }
+                            </div>
+                            }
                         </div>
                     </div>
                     }
@@ -161,6 +181,6 @@
 
     </mat-card>
     @if(openThread()) {
-        <app-direct-thread class="thread"></app-direct-thread>
-        }
+    <app-direct-thread class="thread"></app-direct-thread>
+    }
 </div>

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, ViewChild, viewChild, } from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewChild, viewChild, } from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
@@ -10,6 +10,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { AuthService } from '../../shared/services/auth.service';
 import { UsersService } from '../../shared/services/users.service';
 import { ChannelService } from '../../shared/services/channel.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-header',
@@ -25,16 +26,33 @@ export class HeaderComponent {
   private authService = inject(AuthService);
   private firestoreService = inject(UsersService);
   private firestoreServiceChannel = inject(ChannelService);
+  private breakpointObserver = inject(BreakpointObserver);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
   // Use the signal directly without wrapping it in additional logic
   user = this.authService.userSignal;
   users = this.firestoreService.users;
   channels = this.firestoreServiceChannel.channels; // Add this signal
-
+  activeUser = this.firestoreService.activeUser;
+  activeChannel = this.firestoreServiceChannel.activeChannel;
   newMessage: string = '';
-  @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
+  isMobileView: boolean = false;
 
+  @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   @ViewChild('menuTriggerChannel') menuTriggerChannel!: MatMenuTrigger;
+
+  constructor() {
+    this.initializeBreakpointObserver();
+  }
+
+    private initializeBreakpointObserver(): void {
+      this.breakpointObserver
+        .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
+        .subscribe((result) => {
+          this.isMobileView = result.matches;
+          this.changeDetectorRef.detectChanges(); 
+        });
+    }
 
   onInput(event: Event): void {
     const input = event.target as HTMLTextAreaElement;
@@ -61,7 +79,6 @@ export class HeaderComponent {
     this.newMessage += ` ${selectedItem}`;
   }
 
-
   async signOut() {
     await this.firestoreService.updateUserStatus(this.getLoggedUser()!.userId, 'offline')
     await this.authService.signOut().catch((error) => {          
@@ -79,4 +96,5 @@ export class HeaderComponent {
     
     return this.users().find(u => u.userId === userId) || null;
   }
+
 }
