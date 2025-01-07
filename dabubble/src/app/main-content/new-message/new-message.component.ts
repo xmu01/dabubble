@@ -148,8 +148,8 @@ export class NewMessageComponent {
       ...this.channelService.channels().map(channel => ({
         id: channel.id ?? '',
         name: channel.name,
-        display: `# ${channel.name}`,
-        search: `# ${channel.name}`,
+        display: `#${channel.name}`,
+        search: `#${channel.name}`,
         type: 'channel'
       })),
     ];
