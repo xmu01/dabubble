@@ -1,9 +1,9 @@
 <header>
-    @if (isMobileView && activeUser() == null && activeChannel() == null) {
+    @if (isMobileView && activeUser() == null && activeChannel() == null  && !addMessage()) {
     <div class="logo-section-header">
         <img class="logo-header" src="./../../assets/img/header_icon.png" alt="">
     </div>
-    } @else if (isMobileView && (activeUser() != null || activeChannel() != null)) {
+    } @else if (isMobileView && (activeUser() != null || activeChannel() != null || addMessage())) {
     <div class="logo-section-header-devspace">
         <img class="logo-header-mobile-devspace" src="/assets/img/workspace_logo.png" alt="">
         <span class="devspace-title">Devspace</span>

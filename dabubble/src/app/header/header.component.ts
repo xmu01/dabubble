@@ -11,6 +11,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { UsersService } from '../../shared/services/users.service';
 import { ChannelService } from '../../shared/services/channel.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { AddMessageService } from '../../shared/services/add-message.service';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +27,7 @@ export class HeaderComponent {
   private authService = inject(AuthService);
   private firestoreService = inject(UsersService);
   private firestoreServiceChannel = inject(ChannelService);
+  private addMessageService = inject(AddMessageService);
   private breakpointObserver = inject(BreakpointObserver);
   private changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -37,6 +39,7 @@ export class HeaderComponent {
   activeChannel = this.firestoreServiceChannel.activeChannel;
   newMessage: string = '';
   isMobileView: boolean = false;
+  addMessage = this.addMessageService.addMessage;
 
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   @ViewChild('menuTriggerChannel') menuTriggerChannel!: MatMenuTrigger;

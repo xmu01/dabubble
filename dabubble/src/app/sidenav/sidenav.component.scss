@@ -272,4 +272,32 @@
         font-size: 30px;
         cursor: pointer;
     }
+
+    .edit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        position: absolute;
+        bottom: 30px;
+        right: 15px;
+        width: 60px;
+        height: 60px;
+        padding: 8px 10px 12px 10px;
+        border-radius: 100px;
+        background: #444DF2;
+        box-shadow: 0px 6px 10px 0px #00000033;
+        z-index: 999;
+        cursor: pointer;
+
+
+        .outline-icon {
+            color: transparent;
+            -webkit-text-stroke: 1px #fff;
+        }
+
+        mat-icon {
+            color: #fff;
+        }
+    }
 }

@@ -11,7 +11,9 @@
                                 alt=""></div>
                     </div>
                 </mat-card-header>
-            }
+                } @else {
+                    <div class="edit" (click)="setAddMessage(drawer)"><mat-icon class="outline-icon" fontIcon="edit_square"></mat-icon></div>
+                }
                 <mat-accordion class="channels">
                     <mat-expansion-panel class="panel" (opened)="channelsOpenState = true"
                         (closed)="channelsOpenState = false" [expanded]="true">
@@ -78,6 +80,6 @@
         }
     </button>
 </div>
-} @else if(isMobileView && (activeUser() != null || activeChannel() != null)) {
-    <mat-icon class="backToMenuButton" (click)="backToMenu(drawer)" fontIcon="chevron_left"></mat-icon>
+} @else if(isMobileView && (activeUser() != null || activeChannel() != null || addMessage())) {
+<mat-icon class="backToMenuButton" (click)="backToMenu(drawer)" fontIcon="chevron_left"></mat-icon>
 }
