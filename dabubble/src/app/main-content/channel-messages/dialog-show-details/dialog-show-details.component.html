@@ -37,6 +37,32 @@
     <h3>Erstellt von</h3>
     <p class="creator-name">{{ data.created_by }}</p>
   </div>
+
+  <div class="channel-members">
+    <h2 mat-dialog-title>Mitglieder</h2>
+    <ul>
+      @for(member of member(); track member) {
+      <li>
+        <div class="user-picture">
+          <img [src]="'/assets/img/profile-pictures/' + member?.avatar" alt="">
+          <span [ngClass]="member?.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
+        </div>
+        <span>
+          {{ member?.firstName }} {{ member?.lastName }}
+          @if (member?.userId === loggedUser) {
+          (Du)
+          }
+        </span>
+      </li>
+      }
+    </ul>
+    <div class="add-member" (click)="openBottomSheet()">
+      <mat-icon fontSet="material-icons-outlined">person_add</mat-icon>
+      <span>
+          Mitglieder hinzufügen
+      </span>
+    </div>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>

@@ -217,3 +217,13 @@ h3 {
         text-decoration-skip-ink: none;
     }
 }
+
+@media (max-width: 1024px) {
+    ::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+        padding: 20px;
+    }  
+
+    .close-button {
+        top: 32px;
+    }
+}
