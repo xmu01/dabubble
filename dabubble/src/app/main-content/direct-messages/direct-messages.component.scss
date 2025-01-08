@@ -31,6 +31,7 @@
     .direct-message-title {
         display: flex;
         align-items: center;
+        cursor: pointer;
 
         .user-image-container {
             position: relative;

@@ -2,7 +2,7 @@
     @if(!openThreadMobile()){
     <mat-card appearance="outlined" class="messages">
         <mat-card-header class="direct-message-header">
-            <mat-card-title class="direct-message-title">
+            <mat-card-title class="direct-message-title" (click)="openDialog()">
                 <div class="user-image-container">
                     <img class="user-image" src="./../../../assets/img/profile-pictures/{{ activeUser()?.avatar }}"
                         alt="User Picture">

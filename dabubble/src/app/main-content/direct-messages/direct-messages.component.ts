@@ -11,6 +11,8 @@ import { collection, Firestore, onSnapshot } from '@angular/fire/firestore';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DirectThreadComponent } from './direct-thread/direct-thread.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogProfileComponent } from '../../dialog-profile/dialog-profile.component';
 
 @Component({
   selector: 'app-direct-messages',
@@ -23,8 +25,9 @@ export class DirectMessagesComponent {
   private firestore = inject(Firestore);
   private firestoreService = inject(UsersService);
   private auth = inject(AuthService);
- private breakpointObserver = inject(BreakpointObserver);
+  private breakpointObserver = inject(BreakpointObserver);
   private changeDetectorRef = inject(ChangeDetectorRef);
+  public dialog = inject(MatDialog)
 
   activeUser = this.firestoreService.activeUser;
   users = this.firestoreService.users;
@@ -50,10 +53,17 @@ export class DirectMessagesComponent {
       this.firestoreService.changeThreadVisibility();
     }
     this.firestoreService.activeAnswer.set(messageId);
-    if(this.isMobileView) {
+    if (this.isMobileView) {
       this.openThreadMobile.set(true);
     }
   }
+
+  openDialog() {
+    this.dialog.open(DialogProfileComponent, {
+      data: this.activeUser(),
+    });
+  }
+
 
   formatDate(date: string | Date): string {
     const d = new Date(date);
@@ -87,23 +97,23 @@ export class DirectMessagesComponent {
 
   }
 
-    private initializeBreakpointObserver(): void {
-      this.breakpointObserver
-        .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
-        .subscribe((result) => {
-          this.isMobileView = result.matches;
-          this.changeDetectorRef.markForCheck(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
-        });
-    }
+  private initializeBreakpointObserver(): void {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
+      .subscribe((result) => {
+        this.isMobileView = result.matches;
+        this.changeDetectorRef.markForCheck(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
+      });
+  }
 
-  loadAnswersCountAndLastTime(messageId: string): void {   
+  loadAnswersCountAndLastTime(messageId: string): void {
     const answersCollection = collection(this.firestore, `messages/${messageId}/answers`);
 
     onSnapshot(answersCollection, (querySnapshot) => {
       let answersCount = 0;
       let lastAnswerTime: Date | null = null;
 
-      querySnapshot.forEach((doc) => {       
+      querySnapshot.forEach((doc) => {
         const { timestamp } = doc.data();
 
         answersCount++;
@@ -116,14 +126,14 @@ export class DirectMessagesComponent {
       // Nachricht mit den Antworten-Infos erweitern
       const group = this.groupedMessages().find((g) =>
         g.messages.some((msg) => msg.id === messageId)
-      );      
+      );
 
       if (group) {
-        const message = group.messages.find((msg) => msg.id === messageId);        
+        const message = group.messages.find((msg) => msg.id === messageId);
 
         if (message) {
           message.answersCount = answersCount;
-          message.lastAnswerTime = lastAnswerTime;         
+          message.lastAnswerTime = lastAnswerTime;
         }
       }
     });
@@ -152,22 +162,22 @@ export class DirectMessagesComponent {
   addEditEmoji(event: any): void {
     // Emoji hinzufügen
     const emoji = event.emoji.native;
-  
+
     // Nachricht anhand der `editMessageId` finden und aktualisieren
     const group = this.groupedMessages().find(group =>
       group.messages.some(msg => msg.id === this.editMessageId)
     );
-  
+
     if (group) {
       const message = group.messages.find(msg => msg.id === this.editMessageId);
-  
+
       if (message) {
         // Emoji direkt zur Nachricht hinzufügen
         message.message += emoji;
       }
     }
   }
-  
+
 
   toggleEmojis(): void {
     this.showEmojis = !this.showEmojis;
@@ -315,7 +325,7 @@ export class DirectMessagesComponent {
     }
 
     if (formattedNames.length === 1) {
-      if(isCurrentUser){
+      if (isCurrentUser) {
         return `${formattedNames[0]} hast reagiert`;
       }
       return `${formattedNames[0]} hat reagiert`;
@@ -373,7 +383,7 @@ export class DirectMessagesComponent {
 
     this.editMessageId = null;
     this.temporaryMessage = null;
-    if(this.showEditEmojis) {
+    if (this.showEditEmojis) {
       this.toggleEditEmojis();
     }
   }

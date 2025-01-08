@@ -46,8 +46,8 @@
     </div>
 
     <div class="profile-section-header">
-        <h2>{{ getLoggedUser()?.firstName }} {{ getLoggedUser()?.lastName }}</h2>
-        <div class="profile-picture-container">
+        <h2 (click)="openDialog()">{{ getLoggedUser()?.firstName }} {{ getLoggedUser()?.lastName }}</h2>
+        <div class="profile-picture-container" (click)="openDialog()">
             <span class="user-picture-dot-online"></span>
             <img class="pfp-header" src="./../../assets/img/profile-pictures/{{ getLoggedUser()?.avatar }}" alt="">
             <img (click)="openBottomSheet()" class="pfp-header-mobile"
@@ -58,7 +58,7 @@
         </button>
 
         <mat-menu #menu="matMenu" class="menu-mat-style">
-            <button mat-menu-item>Profil</button>
+            <button mat-menu-item (click)="openDialog()">Profil</button>
             <button mat-menu-item (click)="signOut()">Log out</button>
         </mat-menu>
 

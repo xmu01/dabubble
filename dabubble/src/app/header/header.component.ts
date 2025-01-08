@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../shared/services/auth.service';
@@ -14,6 +14,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AddMessageService } from '../../shared/services/add-message.service';
 import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
+import { DialogProfileComponent } from '../dialog-profile/dialog-profile.component';
 
 
 @Component({
@@ -34,22 +35,24 @@ export class HeaderComponent {
   private breakpointObserver = inject(BreakpointObserver);
   private changeDetectorRef = inject(ChangeDetectorRef);
   private _bottomSheet = inject(MatBottomSheet);
+  public dialog = inject(MatDialog)
 
   // Use the signal directly without wrapping it in additional logic
   user = this.authService.userSignal;
   users = this.firestoreService.users;
   channels = this.firestoreServiceChannel.channels; // Add this signal
+  loggedUser = this.authService.getLoggedInUser();
   activeUser = this.firestoreService.activeUser;
   activeChannel = this.firestoreServiceChannel.activeChannel;
   newMessage: string = '';
   isMobileView: boolean = false;
   addMessage = this.addMessageService.addMessage;
-
+  
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   @ViewChild('menuTriggerChannel') menuTriggerChannel!: MatMenuTrigger;
 
   constructor() {
-    this.initializeBreakpointObserver();
+    this.initializeBreakpointObserver();   
   }
 
   private initializeBreakpointObserver(): void {
@@ -59,6 +62,18 @@ export class HeaderComponent {
         this.isMobileView = result.matches;
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  openDialog() {   
+    if (!this.isMobileView) {
+      this.dialog.open(DialogProfileComponent, {
+        position: {
+          top: '100px',
+          right: '40px',
+        },
+        data: this.getLoggedUser(),
+      });
+    } 
   }
 
   openBottomSheet(): void {

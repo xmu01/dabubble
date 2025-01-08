@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Profil</h2><mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
+<mat-dialog-content>
+  <div class="image-container">
+    <img [src]="'/assets/img/profile-pictures/' + data.avatar" alt="">
+  </div>
+  <div class="user">
+    <h3 class="name">{{data.firstName}} {{data.lastName}}</h3>
+    <span class="status" [ngClass]="data.status === 'online' ? 'green' : 'grey'">
+      <div class="status-container">
+      <span class="dot" [ngClass]="data.status === 'online' ? 'bg-green' : 'bg-grey'"></span>{{data.status}}
+    </div>
+      @if(getLoggedUser()?.userId == data.userId) {
+        <span class="edit">Bearbeiten</span>
+      }
+    </span> 
+
+  </div>
+  <div class="contact">
+    <p class="title"><mat-icon class="outline-icon">mail</mat-icon>E-Mail-Adresse</p>
+    <a href="mailto:{{data.email}}" class="email">{{data.email}}</a>
+  </div>
+</mat-dialog-content>
+@if(getLoggedUser()?.userId != data.userId) {
+<mat-dialog-actions class="dialog-actions">
+  <button class="message"><mat-icon class="outline-icon">mode_comment</mat-icon> Nachricht</button>
+</mat-dialog-actions>
+}

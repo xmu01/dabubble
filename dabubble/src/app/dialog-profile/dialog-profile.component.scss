@@ -1,0 +1,192 @@
+::ng-deep .cdk-overlay-pane.mat-mdc-dialog-panel {
+    min-width: 350px;
+    border-radius: 30px;
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+    padding: 20px;
+}
+
+h2 {
+    font-family: Nunito;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32.74px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: #000;
+    margin-bottom: 0;
+}
+
+.close-button {
+    position: absolute;
+    top: 32px;
+    right: 40px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-radius: 20px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #ECEEFE;
+    }
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        width: 200px;
+        height: 200px;
+        gap: 20px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+}
+
+.user {
+    margin-top: 16px;
+
+    .name {
+        font-family: Nunito;
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 43.65px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        color: #000;
+        margin-bottom: 0;
+    }
+
+    .status {
+        font-family: Nunito;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 27.28px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+
+        .status-container {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+
+            .dot {
+                display: flex;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+            }
+
+            .bg-green {
+                background-color: #92C83E;
+            }
+
+            .bg-grey {
+                background-color: #686868;
+            }
+        }
+
+        .edit {
+            font-family: Nunito;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 24.55px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #535AF1;
+            cursor: pointer;
+        }
+    }
+
+    .green {
+        color: #92C83E;
+    }
+
+    .grey {
+        color: #686868;
+    }
+}
+
+.contact {
+    margin-top: 32px;
+
+    .title {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-family: Nunito;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 27.28px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        color: #000;
+    }
+
+    .email {
+        display: flex;
+        width: 100%;
+        font-family: Nunito;
+        font-size: clamp(12px, 2vw, 18px);
+        word-break: break-word;
+        font-weight: 400;
+        line-height: 24.55px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        color: #1381FF;
+        padding-left: 32px;
+        border: none;
+        text-decoration: none;
+        outline-offset: 0;
+        outline: none;
+    }
+}
+
+.outline-icon {
+    color: transparent;
+    -webkit-text-stroke: 2px #000;
+}
+
+.dialog-actions {
+    justify-content: center;
+    cursor: pointer;
+
+    .message {
+        width: 164px;
+        height: 49px;
+        padding: 12px 25px 12px 25px;
+        border-radius: 50px;
+        background: #444DF2;
+        color: #fff;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        border: none;
+        outline: none;
+        font-family: Nunito;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+
+        .outline-icon {
+            -webkit-text-stroke: 2px #fff;
+        }
+    }
+}
