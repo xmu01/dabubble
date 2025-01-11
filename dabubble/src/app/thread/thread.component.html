@@ -42,7 +42,9 @@
               [style]="'position: fixed'"
               [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden' }"
               *ngIf="activeEmojiPickerMessageId === message.id"
+              [perLine]="6"
               ></emoji-mart>
+              <mat-icon *ngIf="activeEmojiPickerMessageId === message.id" class="emoji-close" fontSet="material-icons-outlined" (click)="toggleEmojiPicker(message.id)">close</mat-icon>
 
             <img [src]="message.senderId != loggedUser()?.uid 
                       ? './../../../assets/img/profile-pictures/' + (getUserAvatar(message.senderId!) | async)
@@ -65,7 +67,7 @@
                       [showPreview]="false"
                       [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
                       showSkinTones="true" [enableSearch]="false" [exclude]="['recent']"
-                      [style]="'position: fixed'"></emoji-mart>
+                      [style]="'position: fixed'" [perLine]="6"></emoji-mart>
                     }
                   </div>
                 </div>
@@ -123,7 +125,7 @@
           @if(showEmojis) {
           <emoji-mart #emojiPicker [set]="'google'" class="emojis" (emojiClick)="addEmoji($event)" [showPreview]="false"
             [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-            showSkinTones="true"></emoji-mart>
+            showSkinTones="true" [perLine]="6"></emoji-mart>
           }
           <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
           <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>

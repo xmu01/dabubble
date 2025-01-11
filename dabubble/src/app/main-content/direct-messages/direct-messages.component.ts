@@ -46,6 +46,7 @@ export class DirectMessagesComponent {
   openThread = this.firestoreService.showThread;
   openThreadMobile = this.firestoreService.openThreadMobile;
   isMobileView: boolean = false;
+  menuOpen: boolean = false;
 
 
   loadThread(messageId: string) {
@@ -140,17 +141,15 @@ export class DirectMessagesComponent {
   }
 
   setHoveredMessageId(messageId: string | undefined): void {
-    if (messageId) {
+    if (messageId && !this.menuOpen) {
       this.hoveredMessageId = messageId;
-    } else {
-      this.hoveredMessageId = null;
-    }
+    } 
   }
-
+  
   clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
     const target = event.relatedTarget as HTMLElement | null;
-
-    if (!target || (!target.closest('.message-container') && !target.closest('.reaction-bar'))) {
+  
+    if (!this.menuOpen && (!target || !target.closest('.message-container'))) {
       this.hoveredMessageId = null;
     }
   }
@@ -177,7 +176,6 @@ export class DirectMessagesComponent {
       }
     }
   }
-
 
   toggleEmojis(): void {
     this.showEmojis = !this.showEmojis;
@@ -236,23 +234,6 @@ export class DirectMessagesComponent {
       });
     }
   }
-
-  // addReactionToPrivateMessage(id: string, event: any | string): void {
-  //   let reaction: string;
-
-  //   if (typeof event === 'string') {
-  //     reaction = event;
-  //   } else if (event && event.emoji && event.emoji.native) {
-  //     reaction = event.emoji.native;
-  //   } else {
-  //     console.warn('Invalid reaction event:', event);
-  //     return;
-  //   }
-
-  //   this.firestoreService.addReactionToPrivateMessage(id, reaction);
-
-  //   this.activeEmojiPickerMessageId = null;
-  // }
 
   addReactionToPrivateMessage(messageId: string, userName: string, event: any | string): void {
     let reaction: string;
@@ -366,10 +347,13 @@ export class DirectMessagesComponent {
     }
   }
 
-  // Edit functions 
   startEditingMessage(messageId: string, message: string): void {
     this.editMessageId = messageId;
     this.temporaryMessage = message;
+  }
+  
+  toggleEditMenu(): void {
+    this.menuOpen = !this.menuOpen;
   }
 
   cancelEditing(): void {

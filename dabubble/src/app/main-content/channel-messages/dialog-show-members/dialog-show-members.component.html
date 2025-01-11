@@ -4,7 +4,7 @@
 
     <ul>
         @for(member of member(); track member) {
-        <li>
+        <li (click)="openDialog(member!)">
             <div class="user-picture">
                 <img [src]="'/assets/img/profile-pictures/' + member?.avatar" alt="">
                 <span

@@ -63,6 +63,20 @@ h2 {
         margin-bottom: 0;
     }
 
+    .title {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-family: Nunito;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 27.28px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        color: #000;
+    }
+
     .status {
         font-family: Nunito;
         font-size: 20px;
@@ -184,9 +198,82 @@ h2 {
         text-align: left;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
+        cursor: pointer;
 
         .outline-icon {
             -webkit-text-stroke: 2px #fff;
         }
     }
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: #fff !important;
+    border-radius: 40px;
+    border: 1px solid #ADB0D9;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+    border: none;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
+    border: none;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--active) .mdc-line-ripple {
+    background-color: #fff !important;
+}
+
+::ng-deep .mdc-line-ripple--active {
+    background-color: #fff !important;
+}
+
+mat-form-field {
+    all: unset;
+    font-family: Nunito;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dialog-edit-actions {
+    justify-content: center;
+    cursor: pointer;
+    gap: 8px;
+
+    .btn-edit {
+        width: 121px;
+        height: 49px;
+        padding: 12px 25px 12px 25px;
+        border-radius: 50px;
+        background: #444DF2;
+        color: #fff;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        outline: none;
+        font-family: Nunito;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24.55px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        cursor: pointer;
+    }
+
+    .cancel {
+        background-color: #fff;
+        color: #444DF2;
+        border: 1px solid #444DF2;
+    }
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    height: 0;
 }

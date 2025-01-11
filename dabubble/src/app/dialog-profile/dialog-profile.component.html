@@ -3,25 +3,51 @@
   <div class="image-container">
     <img [src]="'/assets/img/profile-pictures/' + data.avatar" alt="">
   </div>
+  @if(!isEditing) {
   <div class="user">
     <h3 class="name">{{data.firstName}} {{data.lastName}}</h3>
     <span class="status" [ngClass]="data.status === 'online' ? 'green' : 'grey'">
       <div class="status-container">
-      <span class="dot" [ngClass]="data.status === 'online' ? 'bg-green' : 'bg-grey'"></span>{{data.status}}
-    </div>
+        <span class="dot" [ngClass]="data.status === 'online' ? 'bg-green' : 'bg-grey'"></span>{{data.status}}
+      </div>
       @if(getLoggedUser()?.userId == data.userId) {
-        <span class="edit">Bearbeiten</span>
+      <span class="edit" (click)="toggleEditMode()">Bearbeiten</span>
       }
-    </span> 
-
+    </span>
   </div>
   <div class="contact">
     <p class="title"><mat-icon class="outline-icon">mail</mat-icon>E-Mail-Adresse</p>
     <a href="mailto:{{data.email}}" class="email">{{data.email}}</a>
   </div>
+  } @else {
+  <div class="user">
+    <p class="title"><mat-icon class="outline-icon">account_circle</mat-icon>Vollständiger Name</p>
+    <div class="input-group">
+      <mat-form-field>
+        <input class="input" matInput [(ngModel)]="data.firstName">
+      </mat-form-field>
+      <mat-form-field>
+        <input class="input" matInput [(ngModel)]="data.lastName">
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="contact">
+    <p class="title"><mat-icon class="outline-icon">mail</mat-icon>E-Mail-Adresse</p>
+    <mat-form-field>
+      <input class="input" matInput [(ngModel)]="data.email">
+    </mat-form-field>
+  </div>
+  }
 </mat-dialog-content>
 @if(getLoggedUser()?.userId != data.userId) {
 <mat-dialog-actions class="dialog-actions">
-  <button class="message"><mat-icon class="outline-icon">mode_comment</mat-icon> Nachricht</button>
+  <button (click)="setActiveUser()" class="message"><mat-icon class="outline-icon">mode_comment</mat-icon> Nachricht</button>
+</mat-dialog-actions>
+}
+
+@if(isEditing) {
+<mat-dialog-actions class="dialog-edit-actions">
+  <button class="btn-edit cancel" (click)="toggleEditMode()">Abbrechen</button>
+  <button class="btn-edit save" (click)="saveEditChanges()">Speichern</button>
 </mat-dialog-actions>
 }

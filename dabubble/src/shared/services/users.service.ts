@@ -220,6 +220,14 @@ export class UsersService {
     });
   }
 
+  async updateUser(firstName: string, lastName: string, email: string, id:string) {
+      await updateDoc(doc(this.firestore, 'users', id), {
+        firstName: firstName,
+        lastName: lastName,
+        email: email
+      });
+  }
+
   toggleReaction(messageId: string, userName: string, reaction: string) {
     const q = query(
       collection(this.firestore, `messages/${messageId}/reactions`),

@@ -42,7 +42,7 @@
     <h2 mat-dialog-title>Mitglieder</h2>
     <ul>
       @for(member of member(); track member) {
-      <li>
+      <li (click)="openDialog(member!)">
         <div class="user-picture">
           <img [src]="'/assets/img/profile-pictures/' + member?.avatar" alt="">
           <span [ngClass]="member?.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>

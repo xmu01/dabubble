@@ -4,8 +4,8 @@
             <mat-card-title class="direct-message-title">
                 <span class="title">Neue Nachricht</span>
             </mat-card-title>
-            <form class="example-form">
-                <mat-form-field class="example-full-width">
+            <form class="form">
+                <mat-form-field class="full-width">
                   <input type="text"
                          placeholder="An: #channel, oder @jemand oder E-Mail-Adresse"
                          matInput
@@ -48,7 +48,7 @@
                     <emoji-mart #emojiPicker [set]="'google'" class="emojis" (emojiClick)="addEmoji($event)"
                         [showPreview]="false"
                         [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-                        showSkinTones="true"></emoji-mart>
+                        showSkinTones="true" [perLine]="6"></emoji-mart>
                     }
                     <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
                     <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>

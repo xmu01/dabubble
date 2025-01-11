@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { DialogAddMembersComponent } from '../dialog-add-members/dialog-add-members.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { DialogProfileComponent } from '../../../dialog-profile/dialog-profile.component';
+import { Users } from '../../../../shared/interfaces/users';
 
 @Component({
   selector: 'app-dialog-show-members',
@@ -22,28 +24,38 @@ export class DialogShowMembersComponent {
   authService = inject(AuthService);
   private breakpointObserver = inject(BreakpointObserver);
   private changeDetectorRef = inject(ChangeDetectorRef);
+  public dialog = inject(MatDialog)
 
   channel = this.channelService.activeChannel();
   loggedUser = this.authService.getLoggedInUser()?.uid;
   isMobileView: boolean = false;
 
-    constructor(
-      public dialogRef: MatDialogRef<DialogShowMembersComponent>, public addDialogRef: MatDialog
-    ) {
-      this.initializeBreakpointObserver();
-    }
-  
-    private initializeBreakpointObserver(): void {
-      this.breakpointObserver
-        .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
-        .subscribe((result) => {
-          this.isMobileView = result.matches;
-          this.changeDetectorRef.markForCheck(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
-        });
-    }
-    onNoClick(): void {
-      this.dialogRef.close();
-    }
+  constructor(
+    public dialogRef: MatDialogRef<DialogShowMembersComponent>, public addDialogRef: MatDialog
+  ) {
+    this.initializeBreakpointObserver();
+  }
+
+  private initializeBreakpointObserver(): void {
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait, Breakpoints.HandsetLandscape, '(max-width: 1024px)'])
+      .subscribe((result) => {
+        this.isMobileView = result.matches;
+        this.changeDetectorRef.markForCheck(); // Aktualisiert die Ansicht, wenn sich der Breakpoint ändert
+      });
+  }
+
+  openDialog(member: Users) {
+    this.dialog.open(DialogProfileComponent, {
+      data: member,
+      height: 'auto'
+    });
+    this.dialogRef.close();
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
   member = computed(() => {
     const members = this.channel!.members;
@@ -60,17 +72,17 @@ export class DialogShowMembersComponent {
   });
 
   openDialogAddMember() {
-    if(!this.isMobileView) {
-    this.dialogRef.close();
-    this.addDialogRef.open(DialogAddMembersComponent, {
-      position: {
-        top: '240px',
-        right: '100px',
-      },
-    });
-  } else {
-    this.dialogRef.close();
-    this.addDialogRef.open(DialogAddMembersComponent);
-  }
+    if (!this.isMobileView) {
+      this.dialogRef.close();
+      this.addDialogRef.open(DialogAddMembersComponent, {
+        position: {
+          top: '240px',
+          right: '100px',
+        },
+      });
+    } else {
+      this.dialogRef.close();
+      this.addDialogRef.open(DialogAddMembersComponent);
+    }
   }
 }

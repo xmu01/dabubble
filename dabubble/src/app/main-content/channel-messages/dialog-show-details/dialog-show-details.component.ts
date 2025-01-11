@@ -20,6 +20,8 @@ import { AuthService } from '../../../../shared/services/auth.service';
 import { UsersService } from '../../../../shared/services/users.service';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { ButtomSheetAddMembersComponent } from './buttom-sheet-add-members/buttom-sheet-add-members.component';
+import { Users } from '../../../../shared/interfaces/users';
+import { DialogProfileComponent } from '../../../dialog-profile/dialog-profile.component';
 
 @Component({
   selector: 'app-dialog-show-details',
@@ -43,7 +45,7 @@ export class DialogShowDetailsComponent {
   userService = inject(UsersService);
   authService = inject(AuthService);
   private _bottomSheet = inject(MatBottomSheet);
-
+  public dialog = inject(MatDialog);
 
   channel = this.channelService.activeChannel();
   loggedUser = this.authService.getLoggedInUser()?.uid;
@@ -59,6 +61,13 @@ export class DialogShowDetailsComponent {
       created_at: this.channel!.created_at,
       created_by: this.channel!.created_by || '',
     };
+  }
+
+  openDialog(member: Users) {
+    this.dialog.open(DialogProfileComponent, {
+      data: member,
+      height: 'auto'
+    });
   }
 
   openBottomSheet(): void {

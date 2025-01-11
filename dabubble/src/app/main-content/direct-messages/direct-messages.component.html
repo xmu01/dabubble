@@ -13,7 +13,7 @@
             </mat-card-title>
         </mat-card-header>
 
-        <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false">
+        <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false; ">
             <div class="date-elements">
                 @for (group of groupedMessages(); track group.date) {
                 <div class="date-element">
@@ -27,8 +27,7 @@
                     @for (message of group.messages; track message.id) {
                     <div class="message-container" [ngClass]="{
                         'left': message.senderId == activeUser()?.userId,
-                        'right': message.senderId != activeUser()?.userId,
-                        'bg-grey': editMessageId != null
+                        'right': message.senderId != activeUser()?.userId
                     }" (mouseover)="setHoveredMessageId(message.id)"
                         (mouseout)="clearHoveredMessageId(message.id, $event)">
                         <div class="reaction-bar"
@@ -45,18 +44,22 @@
                             <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined"
                                 (click)="loadThread(message.id!)">comment</mat-icon>
                             @if(message.senderId == loggedUser()?.uid){
-                            <mat-icon (click)="startEditingMessage(message.id, message.message!)"
-                                class="reaction-bar-symbol" fontSet="material-icons-outlined">more_vert</mat-icon>
+                            <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined"
+                                [matMenuTriggerFor]="editMessage" (click)="toggleEditMenu()">more_vert</mat-icon>
+                            <mat-menu class="edit-message-menu right" #editMessage="matMenu" (closed)="toggleEditMenu()">
+                                <button mat-menu-item (click)="startEditingMessage(message.id, message.message!)">
+                                    Nachricht bearbeiten
+                                </button>
+                            </mat-menu>
                             }
-                        </div>
-
+                        </div>                        
                         <emoji-mart #emojiPickerReaction [set]="'google'" class="emojis message-emoji-picker"
                             [ngClass]="message.senderId == activeUser()?.userId ? 'right-emoji-picker' : 'left-emoji-picker'"
                             (emojiClick)="addReactionToPrivateMessage(message.id!, getLoggedUser()?.firstName+' '+getLoggedUser()?.lastName, $event)"
                             [showPreview]="false"
                             [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-                            showSkinTones="true" *ngIf="activeEmojiPickerMessageId === message.id"></emoji-mart>
-
+                            showSkinTones="true" *ngIf="activeEmojiPickerMessageId === message.id" [perLine]="6" [enableSearch]="false" [exclude]="['recent']"></emoji-mart>
+                            <mat-icon *ngIf="activeEmojiPickerMessageId === message.id" class="emoji-close" fontSet="material-icons-outlined" (click)="toggleEmojiPicker(message.id)">close</mat-icon>
                         <img [src]="message.senderId == activeUser()?.userId 
                             ? './../../../assets/img/profile-pictures/' + activeUser()?.avatar 
                             : './../../../assets/img/profile-pictures/' + getLoggedUser()?.avatar" alt="Message User">
@@ -64,7 +67,7 @@
                             @if(editMessageId === message.id) {
                             <div class="edit">
 
-                                <textarea [(ngModel)]="message.message" class="edit-input" rows="2"></textarea>
+                                <textarea [(ngModel)]="message.message" class="edit-input" rows="2" (click)="showEditEmojis = false"></textarea>
                                 <div class="edit-controls">
                                     <mat-icon (click)="toggleEditEmojis()">sentiment_satisfied</mat-icon>
 
@@ -77,7 +80,7 @@
                                     <emoji-mart #emojEditiPicker [set]="'google'" class="emojis"
                                         (emojiClick)="addEditEmoji($event)" [showPreview]="false"
                                         [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-                                        showSkinTones="true"></emoji-mart>
+                                        showSkinTones="true" [perLine]="6"></emoji-mart>
                                     }
                                 </div>
                             </div>
@@ -170,7 +173,8 @@
                     <emoji-mart #emojiPicker [set]="'google'" class="emojis" (emojiClick)="addEmoji($event)"
                         [showPreview]="false"
                         [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-                        showSkinTones="true"></emoji-mart>
+                        showSkinTones="true"
+                        [perLine]="6"></emoji-mart>
                     }
                     <mat-icon (click)="toggleEmojis()">sentiment_satisfied</mat-icon>
                     <mat-icon (click)="toggleMenu()">alternate_email</mat-icon>

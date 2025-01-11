@@ -107,7 +107,7 @@
     width: 100%;
     flex: 1;
     justify-content: center;
-    padding: 25px 0px 25px 0px;
+    padding: 45px 0px 45px 0px;
     background-color: #fff;
     overflow-y: scroll;
 
@@ -424,7 +424,6 @@
                 gap: 8px;
                 border-radius: 0px 30px 30px 30px;
                 background: #ECEEFE;
-                font-family: Nunito, 'Noto Color Emoji';
                 font-size: 18px;
                 font-weight: 400;
                 line-height: 24.55px;
@@ -441,7 +440,6 @@
                 border-radius: 30px 0px 30px 30px;
                 background: #797EF3;
                 color: #fff;
-                font-family: Nunito, 'Noto Color Emoji';
                 font-size: 18px;
                 font-weight: 400;
                 line-height: 24.55px;
@@ -545,7 +543,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: Nunito, 'Noto Color Emoji';
 
             font-size: 20px;
         }
@@ -672,7 +669,6 @@
 
 .tooltip-reaction {
     font-size: 24px;
-    font-family: Nunito, 'Noto Color Emoji';
 }
 
 .tooltip-text {
@@ -687,6 +683,30 @@
 
 :ng-deep .emoji-mart-category-label {
     display: none;
+}
+
+::ng-deep .mat-mdc-menu-panel {
+    border-radius: 0px 30px 30px 30px;
+}
+
+.emoji-close {
+    position: absolute;
+    top: -140px;
+    z-index: 99999;
+    right: calc(50% - 150px);
+    background: #444DF2;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #fff;
+
+    &:hover {
+        background: #797EF3;
+    }
 }
 
 @media (max-width: 1024px) {

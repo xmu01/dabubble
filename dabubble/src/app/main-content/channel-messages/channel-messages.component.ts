@@ -52,6 +52,7 @@ export class ChannelMessagesComponent {
   openThread = this.channelService.showThread;
   isMobileView: boolean = false;
   openThreadMobile = this.channelService.openThreadMobile;
+  menuOpen: boolean = false;
 
   constructor(public dialog: MatDialog) {
 
@@ -108,6 +109,10 @@ export class ChannelMessagesComponent {
     this.editMessageId = messageId;
     this.temporaryMessage = message;
   }
+  
+  toggleEditMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
 
   cancelEditing(): void {
     const message = this.groupedChannelMessages().find(group =>
@@ -157,20 +162,19 @@ export class ChannelMessagesComponent {
   });
 
   setHoveredMessageId(messageId: string | undefined): void {
-    if (messageId) {
+    if (messageId && !this.menuOpen) {
       this.hoveredMessageId = messageId;
-    } else {
-      this.hoveredMessageId = null;
-    }
+    } 
   }
-
+  
   clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
     const target = event.relatedTarget as HTMLElement | null;
-
-    if (!target || (!target.closest('.message-container') && !target.closest('.reaction-bar'))) {
+  
+    if (!this.menuOpen && (!target || !target.closest('.message-container'))) {
       this.hoveredMessageId = null;
     }
   }
+  
 
   addEditEmoji(event: any): void {
     const emoji = event.emoji.native;
