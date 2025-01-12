@@ -1,68 +1,88 @@
 <div class="top-login">
     <img src="./../../assets/img/header_icon.png" alt="">
-    
-</div>    
+
+</div>
 
 <div class="login-card">
-    <mat-card >
+    <mat-card>
         <mat-card-content>
-            <form (submit)="continueSignUp()" class="inside-mat-card">
-                
+            <form [formGroup]="loginForm" (submit)="continueSignUp()" class="inside-mat-card">
+
                 <div class="h2-arrow">
                     <a class="arrow-back" href="login"><img src="./../../assets/img/arrow_back.png" alt=""></a>
                     <h2>Konto erstellen</h2>
                 </div>
 
-                <p class="recommend-login"> Mit deinem Namen und deiner E-Mail Adresse hast du dein neues DABubble-Konto.</p>
+                <p class="recommend-login"> Mit deinem Namen und deiner E-Mail Adresse hast du dein neues
+                    DABubble-Konto.</p>
 
                 <div class="input-fields">
-                    <!-- <mat-form-field>
-                        <mat-label>Enter your email</mat-label>
-                        <mat-icon matPrefix>mail</mat-icon>
-                        <input  matInput
-                               placeholder="pat@example.com"
-                               [formControl]="email"
-                               (blur)="updateErrorMessage()"
-                               required>
-                        @if (email.invalid) {
-                          <mat-error>{{errorMessage}}</mat-error>
+                    <mat-form-field>
+                        <mat-icon matPrefix fontSet="material-icons-outlined">person</mat-icon>
+                        <input matInput type="email" formControlName="name" placeholder="Vor- und Nachname">
+                        @if (nameControl?.touched && nameControl?.invalid) {
+                        <mat-error>
+                            @if (nameControl?.hasError('required')) {
+                            Email is required.
+                            }
+                        </mat-error>
                         }
-                      </mat-form-field> -->
-                    <div class="name-input">
-                        <i class="i-class-img"><img src="./../../assets/img/person-icon.png"></i>
-                    <input  class="name-login" type="text" name="email"  placeholder="Name und Nachname"> <br>
-                    </div>  
-                    <div class="first-input">
-                        <i class="i-class-img"><img src="./../../assets/img/mail-icon.png"></i>
-                    <input  class="email-login" type="email" name="email"  placeholder="beispielname@email.com"> <br>
-                    </div>
-                    <div class="second-input">
-                        <i class="i-class-img"><img src="./../../assets/img/lock-icon.png"></i>
-                        <input  class="password-login" type="password" name="password"  placeholder="Passwort"> <br>
-                    </div>
-
-                    <div class="check-input">
-                        <input type="checkbox">
-                        <p>Ich stimme der <a class="purple-datenschutz" href="privacy-policy">Datenschutzerklärung</a> zu.</p> 
-                    </div>
-
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-icon matPrefix fontSet="material-icons-outlined">mail</mat-icon>
+                        <input matInput type="email" formControlName="email" placeholder="beispielname@email.com">
+                        @if (emailControl?.touched && emailControl?.invalid) {
+                        <mat-error>
+                            @if (emailControl?.hasError('required')) {
+                            Email is required.
+                            }
+                            @if (emailControl?.hasError('email')) {
+                            Please enter a valid email address.
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput type="password" formControlName="password" matInput
+                            [type]="hide ? 'password' : 'text'" placeholder="Passwort">
+                        <button mat-icon-button matPrefix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                            [attr.aria-pressed]="hide">
+                            <mat-icon fontSet="material-icons-outlined">{{hide ? 'lock' : 'lock_open'}}</mat-icon>
+                        </button>
+                        @if (passwordControl?.touched && passwordControl?.invalid) {
+                        <mat-error>
+                            @if (passwordControl?.hasError('required')) {
+                            Password is required.
+                            }
+                            @if (passwordControl?.hasError('minlength')) {
+                            Password must be at least 6 characters.
+                            }
+                        </mat-error>
+                        }
+                    </mat-form-field>
+                        <div class="check-input">
+                            <mat-checkbox formControlName="policy">
+                              Ich stimme der <a class="purple-datenschutz" href="privacy-policy">Datenschutzerklärung</a> zu.
+                            </mat-checkbox>
+                            @if (loginForm.get('policy')?.touched && loginForm.get('policy')?.invalid) {
+                              <mat-error>
+                                Du musst der Datenschutzerklärung zustimmen.
+                              </mat-error>
+                            }
+                          </div>
                 </div>
-                    
-                
-
-                
-
-               
                 <div class="div-btn-weiter">
-                    <button class="login-btn" type="submit" >Weiter</button>
+                    <button class="login-btn" 
+                            type="submit" 
+                            [disabled]="!loginForm.valid">Weiter</button>
                 </div>
-                    
-                
-            </form>    
+
+            </form>
         </mat-card-content>
     </mat-card>
-</div> 
+</div>
 
 <div class="bottom-login">
-    <a href="legal-notice" class="imprint-tag">Impressum</a> &nbsp; <a href="privacy-policy" class="privacy-policy-tag">Datenschutz</a>
+    <a href="legal-notice" class="imprint-tag">Impressum</a> &nbsp; <a href="privacy-policy"
+        class="privacy-policy-tag">Datenschutz</a>
 </div>

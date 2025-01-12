@@ -1,55 +1,64 @@
 <!-- Splash-Screen -->
 <div class="splash-screen" *ngIf="showSplashScreen" [@backgroundFade]>
-    <div class="splash-content" [@bubbleAnimation] >
-      <img src="./../../assets/img/logo-without-text.png" alt="Logo" class="splash-logo" [@bubbleAnimation] (@bubbleAnimation.done)="onAnimationDone()">
-      <span class="splash-text">DABubble</span>
+    <div class="splash-content" [@bubbleAnimation]>
+        <img src="./../../assets/img/logo-without-text.png" alt="Logo" class="splash-logo" [@bubbleAnimation]
+            (@bubbleAnimation.done)="onAnimationDone()">
+        <span class="splash-text">DABubble</span>
     </div>
-  </div>
+</div>
 
 <div class="main-content" *ngIf="!showSplashScreen">
-
     <div class="top-login">
         <img src="./../../assets/img/header_icon.png" alt="">
         <div class="create-acc">
-            <p>Neu bei DABubble?</p> 
+            <p>Neu bei DABubble?</p>
             <a href="sign-up" class="create-acc-purple">Konto erstellen</a>
         </div>
-        
     </div>
-        
-
     <div class="login-card">
-        <mat-card >
+        <mat-card>
             <mat-card-content>
-                <form (submit)="signIn()" class="inside-mat-card">
+                <form [formGroup]="loginForm" (submit)="signIn()" class="inside-mat-card">
                     <h2>Anmeldung</h2>
 
-                    <p class="recommend-login"> Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
+                    <p class="recommend-login"> Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
+                        verwendest.</p>
 
                     <div class="input-fields">
-                        <!-- <mat-form-field>
-                            <mat-label>Enter your email</mat-label>
-                            <mat-icon matPrefix>mail</mat-icon>
-                            <input  matInput
-                                placeholder="pat@example.com"
-                                [formControl]="email"
-                                (blur)="updateErrorMessage()"
-                                required>
-                            @if (email.invalid) {
-                            <mat-error>{{errorMessage}}</mat-error>
+                        <mat-form-field>
+                            <mat-icon matPrefix fontSet="material-icons-outlined">mail</mat-icon>
+                            <input matInput type="email" formControlName="email" placeholder="beispielname@email.com">
+                            @if (emailControl?.touched && emailControl?.invalid) {
+                            <mat-error>
+                                @if (emailControl?.hasError('required')) {
+                                Email is required.
+                                }
+                                @if (emailControl?.hasError('email')) {
+                                Please enter a valid email address.
+                                }
+                            </mat-error>
                             }
-                        </mat-form-field> -->
-                        <div class="first-input">
-                            <i class="i-class-img"><img src="./../../assets/img/mail-icon.png"></i>
-                        <input [(ngModel)]="email2" class="email-login" type="email" name="email2"  placeholder="beispielname@email.com"> <br>
-                        </div>
-                        <div class="second-input">
-                            <i class="i-class-img"><img src="./../../assets/img/lock-icon.png"></i>
-                            <input [(ngModel)]="password" class="password-login" type="password" name="password"  placeholder="Passwort"> <br>
-                        </div>
-
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="password" formControlName="password" matInput
+                                [type]="hide ? 'password' : 'text'" placeholder="Passwort">
+                            <button mat-icon-button matPrefix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                                [attr.aria-pressed]="hide">
+                                <mat-icon fontSet="material-icons-outlined">{{hide ? 'lock' : 'lock_open'}}</mat-icon>
+                            </button>
+                            @if (passwordControl?.touched && passwordControl?.invalid) {
+                            <mat-error>
+                                @if (passwordControl?.hasError('required')) {
+                                Password is required.
+                                }
+                                @if (passwordControl?.hasError('minlength')) {
+                                Password must be at least 6 characters.
+                                }
+                            </mat-error>
+                            }
+                        </mat-form-field>
                     </div>
-                        
+
                     <a href="send-email" class="forgot-pw">Passwort vergessen?</a> <br><br>
 
                     <div class="oder-line">
@@ -63,18 +72,19 @@
                         <a class="google-div-text">Anmelden mit Google</a>
                     </div>
 
-                    <button class="login-btn" type="submit" >Anmelden</button>
+                    <button class="login-btn" type="submit" [disabled]="loginForm.invalid">Anmelden</button>
                     <button class="guest-btn">Gäste Login</button>
-                </form>    
+                </form>
             </mat-card-content>
         </mat-card>
-    </div> 
+    </div>
 
     <div class="bottom-login">
-        <a href="legal-notice" class="imprint-tag">Impressum</a> &nbsp; <a href="privacy-policy" class="privacy-policy-tag">Datenschutz</a>
+        <a href="legal-notice" class="imprint-tag">Impressum</a> &nbsp; <a href="privacy-policy"
+            class="privacy-policy-tag">Datenschutz</a>
         <br>
-        
-        
+
+
     </div>
 
     <div class="mobile-create-acc">
@@ -82,4 +92,4 @@
         <button class="mobile-create-acc-btn"><a href="sign-up">Konto erstellen</a></button>
         <br>
     </div>
-</div>    
+</div>

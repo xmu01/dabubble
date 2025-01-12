@@ -242,7 +242,7 @@ export class ThreadComponent {
   private triggerScrollToBottom() {
     setTimeout(() => {
       this.scrollToBottom();
-    }, 0);
+    }, 250);
   }
 
   private scrollToBottom() {

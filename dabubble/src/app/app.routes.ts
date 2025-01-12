@@ -11,8 +11,7 @@ import { authGuard } from '../shared/services/auth.guard';
 
 export const routes: Routes = [
 
-    // { path: '', component: LandingPageComponent, canActivate: [authGuard] },
-    { path: '', component: LandingPageComponent },
+    { path: '', component: LandingPageComponent, canActivate: [authGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'choose-avatar', component: ChooseAvatarComponent, canActivate: [authGuard] },
     { path: 'edit-profile', component: EditProfileComponent, canActivate: [authGuard] },

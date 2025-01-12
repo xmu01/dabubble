@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Firestore, Timestamp, addDoc, arrayUnion, collection, deleteDoc, doc, docData, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, addDoc, arrayUnion, collection, deleteDoc, doc, docData, getDoc, getDocs, onSnapshot, orderBy, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Users } from '../interfaces/users';
 import { Messages } from '../interfaces/messages';
 import { catchError, map, Observable, of } from 'rxjs';
@@ -29,11 +29,20 @@ export class UsersService {
   /**
    * Loads all users from Firestore and updates the users signal.
    */
-  loadUsers() {
+  loadUsers(loggedInUserId?: string) {
     const usersQuery = query(collection(this.firestore, 'users'));
+  
     onSnapshot(usersQuery, (querySnapshot) => {
       const users = querySnapshot.docs.map((doc) => this.setUserObject(doc.data(), doc.id));
-      this.users.set(users);
+  
+      // Den eingeloggten Benutzer an den Anfang der Liste setzen
+      const sortedUsers = users.sort((a, b) => {
+        if (a.userId === loggedInUserId) return -1; // Eingeloggter Benutzer kommt zuerst
+        if (b.userId === loggedInUserId) return 1;
+        return 0; // Reihenfolge für andere Benutzer bleibt gleich
+      });
+  
+      this.users.set(sortedUsers);
     });
   }
 
@@ -285,4 +294,21 @@ export class UsersService {
       console.error("Fehler beim Abrufen der Reaktion: ", error);
     });
   }
+
+  saveNewUser(user: Users) {
+    const userDocRef = doc(this.firestore, `users/${user.userId}`); // Benutzerdefinierte ID verwenden
+    
+    const newUser = {
+      ...user
+    };
+  
+    return setDoc(userDocRef, newUser) // `setDoc` statt `addDoc` verwenden
+      .then(() => {
+        console.log('User saved successfully with ID:', user.userId);
+      })
+      .catch((error) => {
+        console.error('Error creating a user: ', error);
+      });
+  }
+  
 }

@@ -9,7 +9,6 @@ import { UsersService } from './users.service';
 export class AuthService {
   private auth = inject(Auth);
   private router = inject(Router);
-  private userService = inject(UsersService);
   private googleProvider = new GoogleAuthProvider();
 
   // Signal to store the logged-in user
@@ -30,7 +29,6 @@ export class AuthService {
       .then((userCredential) => {
         this.loggedInUser.set(userCredential.user);
         this.router.navigate(['/']);
-        this.userService.updateUserStatus(userCredential.user.uid, 'online');
         return userCredential.user;
       })
       .catch((error) => {
@@ -43,8 +41,6 @@ export class AuthService {
     return signInWithPopup(this.auth, this.googleProvider)
       .then((result) => {
         this.loggedInUser.set(result.user);
-        this.router.navigate(['/']);
-        this.userService.updateUserStatus(result.user.uid, 'online');
         return result.user;
       })
       .catch((error) => {

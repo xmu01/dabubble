@@ -79,6 +79,7 @@ export class ChannelMessagesComponent {
     });
 
     this.initializeBreakpointObserver();
+
   }
 
   private initializeBreakpointObserver(): void {
@@ -386,7 +387,7 @@ export class ChannelMessagesComponent {
   private triggerScrollToBottom() {
     setTimeout(() => {
       this.scrollToBottom();
-    }, 0);
+    }, 250);
   }
 
   private scrollToBottom() {

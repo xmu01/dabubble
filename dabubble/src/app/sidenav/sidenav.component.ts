@@ -52,8 +52,8 @@ export class SidenavComponent {
     this.initializeBreakpointObserver();
   }
 
-  ngOnInit() {
-    this.firestoreService.loadUsers();
+  ngOnInit() {  
+    this.firestoreService.loadUsers(this.loggedUser()?.uid);
     this.channelService.loadChannels();
   }
 

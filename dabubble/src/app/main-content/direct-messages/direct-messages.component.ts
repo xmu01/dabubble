@@ -334,7 +334,7 @@ export class DirectMessagesComponent {
   private triggerScrollToBottom() {
     setTimeout(() => {
       this.scrollToBottom();
-    }, 0);
+    }, 250);
   }
 
   private scrollToBottom() {

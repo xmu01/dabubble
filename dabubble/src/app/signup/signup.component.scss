@@ -33,7 +33,6 @@
         border-bottom-left-radius: 20px !important;
         border-bottom-right-radius: 20px !important;
         border-top-right-radius: 20px !important;
-        height: 560px;
         width: 500px;
         margin-top: 50px;
     }
@@ -45,17 +44,19 @@
 
     .h2-arrow {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         margin-top: 20px;
+        position: relative;
     }
 
     .arrow-back {
-      
+      position: absolute;
+      left: 0;
+      top: 4px;
     }
 
     h2 {
         color: #535AF1;
-        margin-right: 180px;
         font-size: 29px;
     }
 
@@ -67,6 +68,7 @@
     .input-fields {
         display: flex;
         flex-direction: column;
+        gap: 8px;
 
         .name-input {
             position:relative;
@@ -173,10 +175,8 @@
         }
         
         .check-input {
-            display: flex;
-            justify-content:flex-start;
-            align-items:flex-start;
-
+            text-align: left;
+            
             input {
                 margin-top: 2px;
                 margin-right: 10px;
@@ -261,7 +261,7 @@
             padding-right: 16px;
             padding-left: 16px;
             margin-right: 20px;
-            margin-top: 50px; /*war vorher 30px*/
+            margin-top: 30px; /*war vorher 30px*/
             font-weight: 700;
             
         }
@@ -313,6 +313,20 @@ background-color: #ECEEFE !important;
 
 ::ng-deep .mdc-text-field--filled { 
 border-radius: 80px !important;
+}
+
+::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:focus:checked~.mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:focus:indeterminate~.mdc-checkbox__background {
+    background-color: #535AF1 !important;
+    border-color: #535AF1 !important;
+}
+
+::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled~.mdc-checkbox__background {
+    background-color: #535AF1 !important;
+    border-color: #535AF1 !important;
+}
+
+::ng-deep .mdc-checkbox .mdc-checkbox__native-control:focus:checked~.mdc-checkbox__ripple {
+    background-color: #535AF1 !important;
 }
 
 /* Ab dieser width, mobile Ansicht*/
