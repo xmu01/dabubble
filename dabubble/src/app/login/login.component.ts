@@ -64,17 +64,22 @@ export class LoginComponent {
   errorMessage = '';
   hide = true;
 
-  showSplashScreen: boolean = true; // Zeige Splash-Screen beim Start
+  showSplashScreen: boolean = true;
 
   onAnimationDone() {
-    this.showSplashScreen = false; // Entfernt den Splash-Screen nach der Animation
+    this.showSplashScreen = false; 
   }
 
   ngOnInit() {
-    // Entferne Splash-Screen nach 3 Sekunden
-    setTimeout(() => {
-      this.showSplashScreen = false;
-    }, 1500);
+    const isFirstVisit = sessionStorage.getItem('firstVisit') === null;
+
+    if (isFirstVisit) {
+      this.showSplashScreen = true;
+      sessionStorage.setItem('firstVisit', 'true'); 
+      setTimeout(() => {
+        this.showSplashScreen = false;
+      }, 1500); 
+    }
   }
 
   get emailControl() {

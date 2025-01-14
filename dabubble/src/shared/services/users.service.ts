@@ -297,9 +297,9 @@ export class UsersService {
 
   saveNewUser(user: Users) {
     const userDocRef = doc(this.firestore, `users/${user.userId}`); // Benutzerdefinierte ID verwenden
-    
+  
     const newUser = {
-      ...user
+      ...user,
     };
   
     return setDoc(userDocRef, newUser) // `setDoc` statt `addDoc` verwenden
@@ -308,6 +308,7 @@ export class UsersService {
       })
       .catch((error) => {
         console.error('Error creating a user: ', error);
+        throw error; // Fehler weiterwerfen, um sie im Aufrufer zu behandeln
       });
   }
   

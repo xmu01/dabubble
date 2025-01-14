@@ -1,5 +1,5 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signInWithPopup, signOut, User, GoogleAuthProvider } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signInWithPopup, signOut, User, GoogleAuthProvider, createUserWithEmailAndPassword, UserCredential } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { UsersService } from './users.service';
 
@@ -16,6 +16,21 @@ export class AuthService {
 
   // Public computed signal for other components/services to use
   public readonly userSignal = computed(() => this.loggedInUser());
+  public newUser = signal<User | null>(null);
+
+  private personalDataSignal = signal<any>(null); // Signal für die Daten
+
+  setPersonalData(data: any) {
+    this.personalDataSignal.set(data);
+  }
+
+  getPersonalData() {
+    return this.personalDataSignal();
+  }
+
+  watchPersonalData() {
+    return this.personalDataSignal; // Reaktive Daten
+  }
 
   constructor() {
     // Listen to auth state changes (optional if Firebase Auth State listener is used elsewhere)
@@ -46,6 +61,19 @@ export class AuthService {
       .catch((error) => {
         console.error('Google Sign-in failed:', error);
         throw error;
+      });
+  }
+  
+  createUserWithEmailAndPassword(email: string, password: string): Promise<UserCredential> {
+    return createUserWithEmailAndPassword(this.auth, email, password)
+      .then((userCredential) => {
+        // Benutzerinformationen speichern
+        this.newUser.set(userCredential.user);
+        return userCredential;
+      })
+      .catch((error) => {
+        console.error('Error creating user:', error);
+        throw error; // Fehler weiterwerfen, damit sie im Aufrufer behandelt werden können
       });
   }
 

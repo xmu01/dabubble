@@ -13,7 +13,7 @@ export const routes: Routes = [
 
     { path: '', component: LandingPageComponent, canActivate: [authGuard] },
     { path: 'login', component: LoginComponent },
-    { path: 'choose-avatar', component: ChooseAvatarComponent, canActivate: [authGuard] },
+    { path: 'choose-avatar', component: ChooseAvatarComponent,  },
     { path: 'edit-profile', component: EditProfileComponent, canActivate: [authGuard] },
     { path: 'send-email', component: SendEmailComponent },
     { path: 'reset-password', component: ResetPasswordComponent },

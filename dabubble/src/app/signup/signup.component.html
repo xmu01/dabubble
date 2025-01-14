@@ -6,10 +6,10 @@
 <div class="login-card">
     <mat-card>
         <mat-card-content>
-            <form [formGroup]="loginForm" (submit)="continueSignUp()" class="inside-mat-card">
+            <form [formGroup]="loginForm" (submit)="goToNextStep()" class="inside-mat-card">
 
                 <div class="h2-arrow">
-                    <a class="arrow-back" href="login"><img src="./../../assets/img/arrow_back.png" alt=""></a>
+                    <a class="arrow-back" [routerLink]="[ '/login']"><img src="./../../assets/img/arrow_back.png" alt=""></a>
                     <h2>Konto erstellen</h2>
                 </div>
 
@@ -23,28 +23,28 @@
                         @if (nameControl?.touched && nameControl?.invalid) {
                         <mat-error>
                             @if (nameControl?.hasError('required')) {
-                            Email is required.
+                            Ein Name ist erforderlich.
                             }
                         </mat-error>
                         }
                     </mat-form-field>
                     <mat-form-field>
                         <mat-icon matPrefix fontSet="material-icons-outlined">mail</mat-icon>
-                        <input matInput type="email" formControlName="email" placeholder="beispielname@email.com">
+                        <input matInput type="email" formControlName="email" placeholder="beispielname@email.com"> 
                         @if (emailControl?.touched && emailControl?.invalid) {
                         <mat-error>
                             @if (emailControl?.hasError('required')) {
-                            Email is required.
+                            Eine E-Mail-Adresse ist erforderlich.
                             }
                             @if (emailControl?.hasError('email')) {
-                            Please enter a valid email address.
+                            Bitte gebe eine gültige E-Mail-Adresse ein.
                             }
                         </mat-error>
                         }
                     </mat-form-field>
                     <mat-form-field>
                         <input matInput type="password" formControlName="password" matInput
-                            [type]="hide ? 'password' : 'text'" placeholder="Passwort">
+                            [type]="hide ? 'password' : 'text'" placeholder="Passwort" autocomplete="new-password">
                         <button mat-icon-button matPrefix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                             [attr.aria-pressed]="hide">
                             <mat-icon fontSet="material-icons-outlined">{{hide ? 'lock' : 'lock_open'}}</mat-icon>
@@ -52,10 +52,10 @@
                         @if (passwordControl?.touched && passwordControl?.invalid) {
                         <mat-error>
                             @if (passwordControl?.hasError('required')) {
-                            Password is required.
+                            Ein Passwort ist erforderlich.
                             }
                             @if (passwordControl?.hasError('minlength')) {
-                            Password must be at least 6 characters.
+                            Das Passwort muss mindestens 6 Zeichen haben.
                             }
                         </mat-error>
                         }
