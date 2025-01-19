@@ -16,7 +16,13 @@ export const routes: Routes = [
     { path: 'choose-avatar', component: ChooseAvatarComponent,  },
     { path: 'edit-profile', component: EditProfileComponent, canActivate: [authGuard] },
     { path: 'send-email', component: SendEmailComponent },
-    { path: 'reset-password', component: ResetPasswordComponent },
+    { 
+        path: 'reset-password', 
+        component: ResetPasswordComponent,
+        children: [
+            { path: 'acctmgmt/__/auth/action', component: ResetPasswordComponent } // Dynamischer Pfad
+        ]
+    },
     { path: 'legal-notice', component: LegalNoticeComponent },
     { path: 'sign-up', component: SignupComponent },
     { path: '**', redirectTo: '/login', pathMatch: 'full' },

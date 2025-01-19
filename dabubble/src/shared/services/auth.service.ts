@@ -1,5 +1,5 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signInWithPopup, signOut, User, GoogleAuthProvider, createUserWithEmailAndPassword, UserCredential } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signInWithPopup, signOut, User, GoogleAuthProvider, createUserWithEmailAndPassword, UserCredential, sendPasswordResetEmail, updatePassword, confirmPasswordReset } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { UsersService } from './users.service';
 
@@ -63,7 +63,7 @@ export class AuthService {
         throw error;
       });
   }
-  
+
   createUserWithEmailAndPassword(email: string, password: string): Promise<UserCredential> {
     return createUserWithEmailAndPassword(this.auth, email, password)
       .then((userCredential) => {
@@ -76,6 +76,51 @@ export class AuthService {
         throw error; // Fehler weiterwerfen, damit sie im Aufrufer behandelt werden können
       });
   }
+
+  setNewPassword(oobCodeValue: string, newPassword:string) {
+      confirmPasswordReset(this.auth, oobCodeValue, newPassword)
+        .then(() => {
+          alert('Passwort erfolgreich zurückgesetzt.');
+        })
+        .catch((error) => {
+          console.error('Fehler beim Zurücksetzen des Passworts:', error);
+          alert('Es gab einen Fehler. Bitte versuche es erneut.');
+        });
+  }
+
+  // sendEmailForPasswordReset(email: string) {
+  //   sendPasswordResetEmail(this.auth, email)
+  //     .then(() => {
+  //       // Password reset email sent!
+  //       // ..
+  //     })
+  //     .catch((error) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //       // ..
+  //     });
+  // }
+
+  async sendEmailForPasswordReset(email: string): Promise<{ success: boolean; message: string }> {
+    try {
+      await sendPasswordResetEmail(this.auth, email);
+      console.log('Erfolgreich versendet');
+      return { success: true, message: 'E-Mail zum Zurücksetzen des Passworts wurde gesendet.' };
+    } catch (error: any) {
+      const errorCode = error.code;
+      let message = 'Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.';
+  
+      if (errorCode === 'auth/user-not-found') {
+        message = 'Der Benutzer mit dieser E-Mail-Adresse wurde nicht gefunden.';
+      } else if (errorCode === 'auth/invalid-email') {
+        message = 'Die eingegebene E-Mail-Adresse ist ungültig.';
+      }
+  
+      return { success: false, message };
+    }
+  }
+  
+  
 
   signOut() {
     return signOut(this.auth)

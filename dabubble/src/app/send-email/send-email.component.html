@@ -1,56 +1,52 @@
 <div class="top-login">
-    <img src="./../../assets/img/header_icon.png" alt="">
-    
-</div>    
-
-<div class="login-card">
-    <mat-card >
-        <mat-card-content>
-            <form (submit)="continueSignUp2()" class="inside-mat-card">
-                <div class="h2-arrow">
-                    <a class="arrow-back" href="login"><img src="./../../assets/img/arrow_back.png" alt=""></a>
-                    <h2>Passwort zurücksetzen</h2>
-                </div>
-
-                <p class="recommend-login">Bitte geben Sie ihre E-Mail Adresse ein.</p>
-
-                <div class="input-fields">
-                    <!-- <mat-form-field>
-                        <mat-label>Enter your email</mat-label>
-                        <mat-icon matPrefix>mail</mat-icon>
-                        <input  matInput
-                               placeholder="pat@example.com"
-                               [formControl]="email"
-                               (blur)="updateErrorMessage()"
-                               required>
-                        @if (email.invalid) {
-                          <mat-error>{{errorMessage}}</mat-error>
-                        }
-                      </mat-form-field> -->
-                     
-                    <div class="first-input">
-                        <i class="i-class-img"><img src="./../../assets/img/mail-icon.png"></i>
-                    <input  class="email-login" type="email" name="email"  placeholder="beispielname@email.com"> <br>
-                    </div>
-                  
-
-                    <div class="check-input">
-                        <p>Wir senden Ihnen eine E-Mail, über die Sie ihr Passwort ändern können.</p> 
-                    </div>
-
-                </div>
-
-
-                <div class="div-btn-weiter">
-                    <button class="login-btn" type="submit" >E-Mail senden</button>
-                </div>
-                    
-                
-            </form>    
-        </mat-card-content>
+    <img src="./../../assets/img/header_icon.png" alt="Header Icon">  
+  </div>
+  
+  <div class="login-card">
+    <mat-card>
+      <mat-card-content>
+        <form (ngSubmit)="sendPassword()" class="inside-mat-card">
+          <div class="h2-arrow">
+            <a class="arrow-back" href="login">
+              <img src="./../../assets/img/arrow_back.png" alt="Back Arrow">
+            </a>
+            <h2>Passwort zurücksetzen</h2>
+          </div>
+          <p class="recommend-login">Bitte geben Sie Ihre E-Mail-Adresse ein.</p>
+          <div class="input-fields">
+            <mat-form-field>
+              <mat-icon fontSet="material-icons-outlined" matPrefix>mail</mat-icon>
+              <input 
+                matInput 
+                placeholder="beispielname@email.com" 
+                [formControl]="email" 
+                (blur)="checkErrorMessage()"
+                required>
+              @if(email.invalid && email.touched) {
+                <mat-error>{{ errorMessage }}</mat-error>
+              } 
+              @if(errorResponse !== '') {
+                <mat-hint class="error-response">{{ errorResponse }}</mat-hint>
+              }
+              @if(successMessage !== '') {
+                <mat-hint class="success-message">{{ successMessage }}</mat-hint>
+              }
+            </mat-form-field>
+            <div class="check-input">
+              <p>Wir senden Ihnen eine E-Mail, über die Sie Ihr Passwort ändern können.</p>
+            </div>
+          </div>
+          <div class="div-btn-weiter">
+            <button [disabled]="!email.valid" class="login-btn" type="submit">E-Mail senden</button>
+          </div>
+        </form>
+      </mat-card-content>
     </mat-card>
-</div> 
-
-<div class="bottom-login">
-    <a href="legal-notice" class="imprint-tag">Impressum</a> &nbsp; <a href="privacy-policy" class="privacy-policy-tag">Datenschutz</a>
-</div>
+  </div>
+  
+  <div class="bottom-login">
+    <a href="legal-notice" class="imprint-tag">Impressum</a>
+    &nbsp;
+    <a href="privacy-policy" class="privacy-policy-tag">Datenschutz</a>
+  </div>
+  

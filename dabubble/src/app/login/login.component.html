@@ -1,13 +1,29 @@
-<!-- Splash-Screen -->
 <div class="splash-screen" *ngIf="showSplashScreen" [@backgroundFade]>
-    <div class="splash-content" [@bubbleAnimation]>
-        <img src="./../../assets/img/logo-without-text.png" alt="Logo" class="splash-logo" [@bubbleAnimation]
-            (@bubbleAnimation.done)="onAnimationDone()">
-        <span class="splash-text">DABubble</span>
-    </div>
-</div>
 
-<div class="main-content" *ngIf="!showSplashScreen">
+  </div>
+  
+  <div class="splash-content" 
+  [@finalMoveAnimation]="moveToCorner ? 'moved' : 'initial'"
+  (@finalMoveAnimation.done)="onFinalMoveDone()">
+
+<img src="./../../assets/img/logo-without-text.png" 
+    alt="Logo" 
+    class="splash-logo" 
+    [@logoAnimation] 
+    [@logoResizeAnimation]="moveToCorner ? 'moved' : 'initial'"
+    (@logoAnimation.done)="onLogoAnimationDone()">
+
+<span class="splash-text" 
+     *ngIf="textVisible" 
+     [@textAnimation] 
+     [@textStyleAnimation]="moveToCorner ? 'moved' : 'initial'"
+     (@textAnimation.done)="onTextAnimationDone()">
+ DABubble
+</span>
+
+</div> 
+
+<div class="main-content">
     <div class="top-login">
         <img src="./../../assets/img/header_icon.png" alt="">
         <div class="create-acc">
@@ -15,7 +31,7 @@
             <a href="sign-up" class="create-acc-purple">Konto erstellen</a>
         </div>
     </div>
-    <div class="login-card">
+    <div class="login-card" *ngIf="!showSplashScreen">
         <mat-card>
             <mat-card-content>
                 <form [formGroup]="loginForm" (submit)="signIn()" class="inside-mat-card">
