@@ -30,13 +30,13 @@
                 #menuTrigger="matMenuTrigger"></button>
 
             <textarea [(ngModel)]="newMessage" rows="2"
-                placeholder="Nachricht an {{ activeUser()?.firstName }} {{ activeUser()?.lastName }}"
+                placeholder="Starte eine neue Nachricht"
                 (input)="onInput($event)" #textarea (focus)="showEmojis = false">
         </textarea>
 
             <mat-menu #aboveMenu="matMenu" yPosition="above">
                 @for (user of users(); track user) {
-                <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName)">
+                <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName, false)">
                     {{ user.firstName }} {{ user.lastName }}
                 </button>
                 }

@@ -191,21 +191,56 @@ export class DirectMessagesComponent {
 
   onInput(event: Event): void {
     const input = event.target as HTMLTextAreaElement;
+    const cursorPosition = input.selectionStart;
     const value = input.value;
-
-    if (value.includes('@')) {
+  
+    // Prüfe, ob das '@'-Zeichen direkt vor der aktuellen Cursorposition steht
+    if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {
+      this.check = false;
       this.menuTrigger.openMenu();
     } else {
       this.menuTrigger.closeMenu();
     }
   }
+  
 
   toggleMenu() {
     this.menuTrigger.toggleMenu();
+    this.check = !this.check;
+
   }
 
-  addToMessage(selectedItem: string): void {
-    this.newMessage += ` ${selectedItem}`;
+  // addToMessage(selectedItem: string): void {
+  //   this.newMessage += `@${selectedItem} `;
+  // }
+  @ViewChild('textarea') messageInput!: ElementRef<HTMLTextAreaElement>;
+  check = false;
+
+  addToMessage(selectedItem: string, viaButton: boolean = false): void {
+    const textarea = this.messageInput.nativeElement;
+    const cursorPosition = textarea.selectionStart;
+    
+    // Prüfen, ob das letzte Zeichen ein "@" ist
+    const isAtSymbolBefore = this.newMessage[cursorPosition - 1] === '@';
+
+    let mentionText = this.check ? `@${selectedItem} ` : selectedItem + ' ';
+
+    // Wenn ein "@" manuell eingegeben wurde, vermeide doppeltes Hinzufügen
+    if (!this.check && isAtSymbolBefore) {
+      mentionText = selectedItem + ' ';
+    }
+
+    // Füge den Text an der aktuellen Cursorposition ein
+    this.newMessage = 
+      this.newMessage.slice(0, cursorPosition) + 
+      mentionText + 
+      this.newMessage.slice(cursorPosition);
+    
+    // Fokus zurück ins Textarea setzen und Cursor hinter dem eingefügten Text positionieren
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = cursorPosition + mentionText.length;
+    }, 0);
   }
 
   getLoggedUser() {

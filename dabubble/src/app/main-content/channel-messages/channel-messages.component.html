@@ -183,7 +183,7 @@
 
       <mat-menu #aboveMenu="matMenu" yPosition="above">
         @for (user of users(); track user) {
-        <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName)">
+        <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName, false)">
           {{ user.firstName }} {{ user.lastName }}
         </button>
         }
