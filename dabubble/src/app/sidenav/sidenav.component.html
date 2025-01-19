@@ -14,6 +14,28 @@
                 } @else {
                     <div class="edit" (click)="setAddMessage(drawer)"><mat-icon class="outline-icon" fontIcon="edit_square"></mat-icon></div>
                 }
+                
+                @if(isMobileView) {
+                    <form class="form-sidenav">
+                        <mat-form-field class="full-width">
+                          <input class="input-search" type="text"
+                                 placeholder="Gehe zu..."
+                                 matInput
+                                 [formControl]="myControl"
+                                 [matAutocomplete]="auto">
+                                 <mat-icon matSuffix>search</mat-icon>
+        
+                          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                            @for (option of filteredOptions | async; track option.id) {
+                              <mat-option (click)="openChat(drawer)" [value]="option.display">
+                                {{ option.display }}
+                              </mat-option>
+                            }
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </form>
+                }
+
                 <mat-accordion class="channels">
                     <mat-expansion-panel class="panel" (opened)="channelsOpenState = true"
                         (closed)="channelsOpenState = false" [expanded]="true">

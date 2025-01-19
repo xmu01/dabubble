@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MainContentComponent } from '../main-content/main-content.component';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { UsersService } from '../../shared/services/users.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from '../../shared/services/auth.service';
@@ -14,11 +14,16 @@ import { DialogNewChannelComponent } from './dialog-new-channel/dialog-new-chann
 import { ChannelService } from '../../shared/services/channel.service';
 import { Timestamp } from '@angular/fire/firestore';
 import { AddMessageService } from '../../shared/services/add-message.service';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { map, Observable, startWith } from 'rxjs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatSidenavModule, MatButtonModule, MatExpansionModule, MainContentComponent, MatIconModule],
+  imports: [CommonModule, MatCardModule, MatSidenavModule, MatButtonModule, MatExpansionModule, MainContentComponent, MatIconModule, MatFormFieldModule, ReactiveFormsModule, MatAutocompleteModule, AsyncPipe, MatInputModule],
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
 })
@@ -26,6 +31,11 @@ export class SidenavComponent {
   channelsOpenState = true;
   messagesOpenState = true;
   menuOpenState = true;
+  myControl = new FormControl('');
+  filteredOptions?: Observable<{ id: string; name: string; display: string; search: string; type: string }[]>;
+  selectedChat: string = '';
+  selectedType: string = '';
+  selectedName: string = '';
 
   changeMenuOpenState(): void {
     this.menuOpenState = !this.menuOpenState;
@@ -50,12 +60,40 @@ export class SidenavComponent {
     private changeDetectorRef: ChangeDetectorRef
   ) {
     this.initializeBreakpointObserver();
+
+            this.filteredOptions = this.myControl.valueChanges.pipe(
+              startWith(''),
+              map(value => this._filter(value || '')),
+            );
+        
+            this.myControl.valueChanges.subscribe(value => {
+              const selectedItem = this._filter(value || '').find(
+                item => item.display === value
+              );
+              if (selectedItem) {
+                this.selectedChat = selectedItem.id;
+                this.selectedType = selectedItem.type;
+                if (this.selectedType == 'user') {
+                  this.selectedName = selectedItem.name
+                }
+              }
+            });
   }
 
-  ngOnInit() {  
+  ngOnInit() {
     this.firestoreService.loadUsers(this.loggedUser()?.uid);
     this.channelService.loadChannels();
   }
+
+  openChat(drawer: any): void {
+    if (this.selectedType == 'user') {
+      this.getId(this.selectedChat, drawer);
+        this.myControl.reset();
+    } else {
+        this.getChannel(this.selectedChat, drawer);
+        this.myControl.reset();
+    }
+}
 
   private initializeBreakpointObserver(): void {
     this.breakpointObserver
@@ -117,7 +155,7 @@ export class SidenavComponent {
 
   setAddMessage(drawer?: any) {
     this.addMessageService.setAddMessage();
-    if(this.isMobileView){
+    if (this.isMobileView) {
       drawer.toggle();
     }
   }
@@ -127,5 +165,30 @@ export class SidenavComponent {
     this.firestoreService.activeUser.set(null);
     this.channelService.activeChannel.set(null);
     drawer.toggle()
+  }
+
+  private _filter(value: string): { id: string; name: string; display: string; search: string; type: string }[] {
+    const filterValue = value.toLowerCase();
+
+    const searchableList: { id: string; name: string; display: string; search: string; type: string }[] = [
+      ...this.firestoreService.users().map(user => ({
+        id: user.userId ?? '',
+        name: `${user.firstName} ${user.lastName}`,
+        display: `@${user.firstName} ${user.lastName}`,
+        search: `@${user.firstName} ${user.lastName} ${user.email}`,
+        type: 'user'
+      })),
+      ...this.channelService.channels().map(channel => ({
+        id: channel.id ?? '',
+        name: channel.name,
+        display: `#${channel.name}`,
+        search: `#${channel.name}`,
+        type: 'channel'
+      })),
+    ];
+
+    return searchableList.filter(item =>
+      item.search.toLowerCase().includes(filterValue)
+    );
   }
 }
