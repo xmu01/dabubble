@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewChild, viewChild, } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -15,13 +15,16 @@ import { AddMessageService } from '../../shared/services/add-message.service';
 import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { BottomSheetComponent } from './bottom-sheet/bottom-sheet.component';
 import { DialogProfileComponent } from '../dialog-profile/dialog-profile.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { map, Observable, startWith } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [MatInputModule, MatIconModule, FormsModule, MatFormFieldModule,
-    MatExpansionModule, MatDialogModule, MatMenuModule, MatButtonModule, MatButtonModule, MatBottomSheetModule
+    MatExpansionModule, MatDialogModule, MatMenuModule, MatButtonModule, MatButtonModule, MatBottomSheetModule, MatAutocompleteModule, AsyncPipe, ReactiveFormsModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './header.component.html',
@@ -47,13 +50,47 @@ export class HeaderComponent {
   newMessage: string = '';
   isMobileView: boolean = false;
   addMessage = this.addMessageService.addMessage;
+  myControl = new FormControl('');
+  filteredOptions?: Observable<{ id: string; name: string; display: string; search: string; type: string }[]>;
+  selectedChat: string = '';
+  selectedType: string = '';
+  selectedName: string = '';
+  
   
   @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
   @ViewChild('menuTriggerChannel') menuTriggerChannel!: MatMenuTrigger;
 
   constructor() {
     this.initializeBreakpointObserver();   
+
+        this.filteredOptions = this.myControl.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value || '')),
+        );
+    
+        this.myControl.valueChanges.subscribe(value => {
+          const selectedItem = this._filter(value || '').find(
+            item => item.display === value
+          );
+          if (selectedItem) {
+            this.selectedChat = selectedItem.id;
+            this.selectedType = selectedItem.type;
+            if (this.selectedType == 'user') {
+              this.selectedName = selectedItem.name
+            }
+          }
+        });
   }
+
+    openChat(): void {
+        if (this.selectedType == 'user') {
+            this.firestoreService.loadUser(this.selectedChat);
+            this.myControl.reset();
+        } else {
+            this.firestoreServiceChannel.loadChannel(this.selectedChat);
+            this.myControl.reset();
+        }
+    }
 
   private initializeBreakpointObserver(): void {
     this.breakpointObserver
@@ -122,5 +159,31 @@ export class HeaderComponent {
 
     return this.users().find(u => u.userId === userId) || null;
   }
+
+  private _filter(value: string): { id: string; name: string; display: string; search: string; type: string }[] {
+    const filterValue = value.toLowerCase();
+
+    const searchableList: { id: string; name: string; display: string; search: string; type: string }[] = [
+      ...this.firestoreService.users().map(user => ({
+        id: user.userId ?? '',
+        name: `${user.firstName} ${user.lastName}`,
+        display: `@${user.firstName} ${user.lastName}`,
+        search: `@${user.firstName} ${user.lastName} ${user.email}`,
+        type: 'user'
+      })),
+      ...this.firestoreServiceChannel.channels().map(channel => ({
+        id: channel.id ?? '',
+        name: channel.name,
+        display: `#${channel.name}`,
+        search: `#${channel.name}`,
+        type: 'channel'
+      })),
+    ];
+
+    return searchableList.filter(item =>
+      item.search.toLowerCase().includes(filterValue)
+    );
+  }
+
 
 }

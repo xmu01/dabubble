@@ -16,32 +16,24 @@
 
 
     <div class="input-section-header">
-        <input [(ngModel)]="newMessage" (input)="onInput($event)" type="text" placeholder="Devspace durchsuchen">
-        <i class="i-class-img"><img src="./../../assets/img/input_search.png"></i>
+            <form class="form">
+                <mat-form-field class="full-width">
+                  <input class="input-search" type="text"
+                         placeholder="Devspace durchsuchen"
+                         matInput
+                         [formControl]="myControl"
+                         [matAutocomplete]="auto">
+                         <mat-icon matSuffix>search</mat-icon>
 
-        <mat-menu #aboveMenu="matMenu" yPosition="above">
-            @for (user of users(); track user) {
-            <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName)">
-                {{ user.firstName }} {{ user.lastName }}
-            </button>
-            }
-        </mat-menu>
-
-
-        <mat-menu #belowMenu="matMenu" yPosition="above">
-            @for (channel of channels(); track channels) {
-            <button mat-menu-item (click)="addToMessage(channel.name)">
-                {{ channel.name }}
-            </button>
-            }
-        </mat-menu>
-
-        <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu"
-            #menuTrigger="matMenuTrigger"></button>
-
-        <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="belowMenu"
-            #menuTriggerChannel="matMenuTrigger"></button>
-
+                  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                    @for (option of filteredOptions | async; track option.id) {
+                      <mat-option (click)="openChat()" [value]="option.display">
+                        {{ option.display }}
+                      </mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>
 
     </div>
 

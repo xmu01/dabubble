@@ -22,16 +22,9 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(50%, 50%);
+    transform: translate(-50%, -50%);
 }
 
-  .splash-content {
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
   .splash-logo {
     width: 150px;
     height: auto;
@@ -270,11 +263,17 @@
         margin-right: 20px;
         margin-top: 30px;
         font-weight: 700;
+
     }
 
     .login-btn:hover {
         cursor: pointer;
         background-color: #536bf1dc;
+    }
+
+    .login-btn:disabled {
+        cursor: not-allowed;
+        background-color: #9ca9f0dc;
     }
 
     .guest-btn {
@@ -355,8 +354,26 @@
     border-radius: 80px !important;
 }
 
+@media (max-width: 1000px) {
+    .splash-content {
+        left: 40%;
+    }
+
+    .splash-logo {
+        width: 100px;
+    }
+
+    .splash-text {
+        font-size: 3rem;
+    }
+}
+
 /* Ab dieser width, mobile Ansicht*/
 @media (max-width: 600px) {
+
+    .splash-content {
+        left: 30%;
+    }
 
     .top-login {
         padding: 18px;
@@ -401,6 +418,18 @@
 /* noch kleiner*/
 @media (max-width: 450px) {
 
+    .splash-content {
+        left: 40%;
+    }
+
+    .splash-logo {
+        width: 80px;
+    }
+
+    .splash-text {
+        font-size: 2rem;
+    }
+
     .login-card {
 
         ::ng-deep mat-card {
@@ -418,6 +447,18 @@
 
 @media (max-width: 380px) {
 
+    .splash-content {
+        left: 40%;
+    }
+
+    .splash-logo {
+        width: 80px;
+    }
+
+    .splash-text {
+        font-size: 2rem;
+    }
+
     .login-card {
 
         ::ng-deep mat-card {
@@ -433,6 +474,19 @@
 
 
     @media (max-width: 340px) {
+
+        .splash-content {
+            left: 45%;
+        }
+    
+        .splash-logo {
+            width: 70px;
+        }
+    
+        .splash-text {
+            font-size: 1.5rem;
+        }
+    
 
         .login-card {
 

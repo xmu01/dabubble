@@ -75,14 +75,14 @@ import { Router } from '@angular/router';
     ]),
     // Logo-Größenänderung
     trigger('logoResizeAnimation', [
-      state('initial', style({ width: '150px' })),
+      state('initial', style({ })),
       state('moved', style({ width: '70px' })),
       transition('initial => moved', animate('0.8s ease-in-out')),
     ]),
 
     // Text-Stil-Änderung
     trigger('textStyleAnimation', [
-      state('initial', style({ fontSize: '4rem', color: '#fff' })),
+      state('initial', style({ color: '#fff' })),
       state('moved', style({ fontSize: '1.5rem', color: '#000' })),
       transition('initial => moved', animate('0.8s ease-in-out')),
     ]),

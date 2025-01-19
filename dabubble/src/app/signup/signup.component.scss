@@ -270,6 +270,11 @@
             cursor: pointer;
             background-color: #536bf1dc;
         }
+
+        .login-btn:disabled {
+            cursor: not-allowed;
+            background-color: #9ca9f0dc;
+        }
     }
     
 
