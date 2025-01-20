@@ -1,7 +1,7 @@
 <header>
     @if (isMobileView && activeUser() == null && activeChannel() == null  && !addMessage()) {
     <div class="logo-section-header">
-        <img class="logo-header" src="./../../assets/img/header_icon.png" alt="">
+        <img class="logo-header" src="./assets/img/header_icon.png" alt="">
     </div>
     } @else if (isMobileView && (activeUser() != null || activeChannel() != null || addMessage())) {
     <div class="logo-section-header-devspace">
@@ -10,7 +10,7 @@
     </div>
     } @else {
     <div class="logo-section-header">
-        <img class="logo-header" src="./../../assets/img/header_icon.png" alt="">
+        <img class="logo-header" src="./assets/img/header_icon.png" alt="">
     </div>
     }
 
@@ -41,9 +41,9 @@
         <h2 (click)="openDialog()">{{ getLoggedUser()?.firstName }} {{ getLoggedUser()?.lastName }}</h2>
         <div class="profile-picture-container" (click)="openDialog()">
             <span class="user-picture-dot-online"></span>
-            <img class="pfp-header" src="./../../assets/img/profile-pictures/{{ getLoggedUser()?.avatar }}" alt="">
+            <img class="pfp-header" src="./assets/img/profile-pictures/{{ getLoggedUser()?.avatar }}" alt="">
             <img (click)="openBottomSheet()" class="pfp-header-mobile"
-                src="./../../assets/img/profile-pictures/{{ getLoggedUser()?.avatar }}" alt="">
+                src="./assets/img/profile-pictures/{{ getLoggedUser()?.avatar }}" alt="">
         </div>
         <button mat-button [matMenuTriggerFor]="menu">
             <mat-icon class="arrow-down" fontIcon="keyboard_arrow_down"></mat-icon>

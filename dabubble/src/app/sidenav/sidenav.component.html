@@ -5,9 +5,9 @@
                 @if(!isMobileView) {
                 <mat-card-header class="sidenav-header">
                     <div class="header-container">
-                        <div class="title"><img src="./../../assets/img/workspace_logo.png"
+                        <div class="title"><img src="./assets/img/workspace_logo.png"
                                 alt=""><mat-card-title>Devspace</mat-card-title></div>
-                        <div class="edit" (click)="setAddMessage()"><img src="./../../assets/img/edit_square.png"
+                        <div class="edit" (click)="setAddMessage()"><img src="./assets/img/edit_square.png"
                                 alt=""></div>
                     </div>
                 </mat-card-header>
@@ -72,11 +72,12 @@
                                 <div class="user-picture"><span
                                         [ngClass]="user.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
                                     @if(user.avatar) {
-                                    <img class="profile-pictures"
-                                        src="./../../assets/img/profile-pictures/{{user.avatar}}" alt="">
+                                        <img class="profile-pictures"
+                                        [src]="user.avatar ? './assets/img/profile-pictures/' + user.avatar : './assets/img/profile-pictures/profile_default.png'" 
+                                        alt="">                                   
                                     } @else {
                                     <img class="profile-pictures"
-                                        src="./../../assets/img/profile-pictures/profile_default.png" alt="">
+                                        src="./assets/img/profile-pictures/profile_default.png" alt="">
                                     }
                                 </div>{{user.firstName}} {{user.lastName}} @if(user.userId == loggedUser()?.uid){ (Du)}
                             </li>
@@ -96,9 +97,9 @@
 <div class="sidenav-content">
     <button type="button" (click)="drawer.toggle()" (click)="changeMenuOpenState()">
         @if(menuOpenState) {
-        Workspace-Menü schließen <img class="rotate" src="./../../assets/img/hide_navigation.png" alt="">
+        Workspace-Menü schließen <img class="rotate" src="./assets/img/hide_navigation.png" alt="">
         } @else {
-        Workspace-Menü öffnen <img src="./../../assets/img/hide_navigation.png" alt="">
+        Workspace-Menü öffnen <img src="./assets/img/hide_navigation.png" alt="">
         }
     </button>
 </div>

@@ -444,7 +444,6 @@ export class ChannelMessagesComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Dialog geschlossen mit Daten:', result);
         this.channelService.removeMembers(this.auth.getLoggedInUser()!.uid);
       }
     });

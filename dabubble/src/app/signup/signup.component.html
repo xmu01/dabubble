@@ -1,5 +1,5 @@
 <div class="top-login">
-    <img src="./../../assets/img/header_icon.png" alt="">
+    <img src="./assets/img/header_icon.png" alt="">
 
 </div>
 
@@ -9,7 +9,7 @@
             <form [formGroup]="loginForm" (submit)="goToNextStep()" class="inside-mat-card">
 
                 <div class="h2-arrow">
-                    <a class="arrow-back" [routerLink]="[ '/login']"><img src="./../../assets/img/arrow_back.png" alt=""></a>
+                    <a class="arrow-back" [routerLink]="[ '/login']"><img src="./assets/img/arrow_back.png" alt=""></a>
                     <h2>Konto erstellen</h2>
                 </div>
 
@@ -83,6 +83,6 @@
 </div>
 
 <div class="bottom-login">
-    <a href="legal-notice" class="imprint-tag">Impressum</a> &nbsp; <a href="privacy-policy"
+    <a routerLink="legal-notice" class="imprint-tag">Impressum</a> &nbsp; <a routerLink="privacy-policy"
         class="privacy-policy-tag">Datenschutz</a>
 </div>

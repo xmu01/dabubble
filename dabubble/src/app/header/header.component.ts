@@ -43,7 +43,7 @@ export class HeaderComponent {
   // Use the signal directly without wrapping it in additional logic
   user = this.authService.userSignal;
   users = this.firestoreService.users;
-  channels = this.firestoreServiceChannel.channels; // Add this signal
+  channels = this.firestoreServiceChannel.channels; 
   loggedUser = this.authService.getLoggedInUser();
   activeUser = this.firestoreService.activeUser;
   activeChannel = this.firestoreServiceChannel.activeChannel;
@@ -105,7 +105,7 @@ export class HeaderComponent {
     if (!this.isMobileView) {
       this.dialog.open(DialogProfileComponent, {
         position: {
-          top: '100px',
+          top: '120px',
           right: '40px',
         },
         data: this.getLoggedUser(),
@@ -144,6 +144,7 @@ export class HeaderComponent {
 
   async signOut() {
     await this.firestoreService.updateUserStatus(this.getLoggedUser()!.userId, 'offline')
+    sessionStorage.removeItem('user');
     await this.authService.signOut().catch((error) => {
       console.error('Error during sign-out:', error);
     });

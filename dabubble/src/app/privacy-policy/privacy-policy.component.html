@@ -1,106 +1,52 @@
-<!-- <section>
-    <h1>User Profiles</h1>
-    <ul>
-        @for(user of users; track user) {
-            <li  (click)="getId(user.userId)">
-            Name: {{user.firstName}} {{user.lastName}}<br> 
-            ID: {{user.userId}}<br> 
-            Email: {{user.email}}<br><br>
-        </li>
-        }
-        
-    </ul>
+<div class="top-login">
+  <img src="./assets/img/header_icon.png" alt="">
+</div>
 
-    <h1>User Profile</h1>
-    <ul>
-        @for(person of user; track person) {
-            <li>
-            Name: {{person.firstName}} {{person.lastName}}<br> 
-            ID: {{person.userId}}<br> 
-            Email: {{person.email}}<br><br>
-        </li>
-        }
-        
-    </ul>
-</section> -->
+<div class="login-card">
+  <mat-card class="inside-card">
+      <mat-card-content>
+          <div class="h2-arrow">
+              <a class="arrow-back" href="login"><img src="./assets/img/arrow_back.png" alt=""></a>
+          </div>
 
-<!-- <section>
-    <h1>User Profiles</h1>
-    <ul>
-      @for (user of (users$ | async); track user) {
-        <li (click)="getId(user.userId)">
-          <strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}<br>
-          <strong>ID:</strong> {{ user.userId }}<br>
-          <strong>Email:</strong> {{ user.email }}<br><br>
-        </li>
-      }
-    </ul>
-  
-    <h1>Active User Profile</h1>
-<ul>
-  @if ((user$ | async)) {
-    <li>
-      <strong>Name:</strong> {{ (user$ | async)?.firstName }} {{ (user$ | async)?.lastName }}<br>
-      <strong>ID:</strong> {{ (user$ | async)?.userId }}<br>
-      <strong>Email:</strong> {{ (user$ | async)?.email }}<br><br>
-    </li>
-  } @else {
-    <p>No user selected. Please click on a user profile to view details.</p>
-  }
-</ul>
-  </section> -->
+          <h2 class="legal-notice-headline">Daten&shy;schutz&shy;erklärung</h2>
 
-<!-- <section>
-  <h1>User Profiles</h1>
-  <ul>
-    @for (user of users(); track user) {
-    <li (click)="getId(user.userId)">
-      <strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}<br>
-      <strong>ID:</strong> {{ user.userId }}<br>
-      <strong>Email:</strong> {{ user.email }}<br><br>
-    </li>
-    }
-  </ul>
+          <p>Wir freuen uns sehr über Ihr Interesse an unserer Website. Der Schutz Ihrer persönlichen Daten ist für uns ein besonderes Anliegen. Nachfolgend informieren wir Sie umfassend über den Umgang mit Ihren Daten.</p>
 
-  <h1>Active User Profile</h1>
-  <ul>
-    @if (activeUser()) {
-    <li>
-      <strong>Name:</strong> {{ activeUser()?.firstName }} {{ activeUser()?.lastName }}<br>
-      <strong>ID:</strong> {{ activeUser()?.userId }}<br>
-      <strong>Email:</strong> {{ activeUser()?.email }}<br><br>
-    </li>
-    } @else {
-    <p>No user selected. Please click on a user profile to view details.</p>
-    }
-  </ul>
+          <h2>Verantwortliche Stelle</h2>
+          <p>Patrick Offermanns <br> Muhammed Ahmed Yazea</p>
+          <p>Ohechaussee 52b<br>22848 Norderstedt</p>
+          <p>Telefon: +49 (0) 152 33 64 66 14</p>
+          <p>E-Mail: patrick&#64;offermanns.dev</p>
+          <br>
+          <h3>Erhebung und Speicherung personenbe&shy;zogener Daten</h3>
+          <p>Wir erheben und speichern nur die Daten, die Sie uns freiwillig zur Verfügung stellen, z. B. durch das Ausfüllen des Kontaktformulars oder das Senden einer E-Mail. Zu den von uns erfassten Daten können Ihr Name, Ihre E-Mail-Adresse und Ihre Nachricht gehören.</p>
 
-  <h1>User Messages</h1>
-<ul>
-  @if (groupedMessages().length > 0) {
-    @for (group of groupedMessages(); track group.date) {
-      <li>
-        <h2>
-          @if (group.date === (today() | date: 'yyyy-MM-dd')) {
-            Heute
-          } @else {
-            {{ group.date | date: 'dd.MM.yyyy' }}
-          }
-        </h2>
-        <ul>
-          @for (message of group.messages; track message.id) {
-            <li>
-              <strong>Uhrzeit:</strong> {{ message.timestamp.toDate() | date: 'HH:mm' }}<br>
-              <strong>Nachricht:</strong> {{ message.message }}
-            </li>
-          }
-        </ul>
-      </li>
-      <br>
-    }
-  } @else {
-    <p>No messages available for the selected user.</p>
-  }
-</ul>
+          <h3>Zweck der Datenverarbeitung</h3>
+          <p>Die Erhebung der Daten erfolgt, um mit Ihnen in Kontakt zu treten und Ihre Anfragen zu bearbeiten. Die von Ihnen zur Verfügung gestellten Daten werden ausschließlich für diese Zwecke verwendet und nicht ohne Ihre Zustimmung an Dritte weitergegeben.</p>
 
-</section> -->
+          <h3>Rechtsgrundlage der Verarbeitung</h3>
+          <p>Die Datenverarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) oder Art. 6 Abs. 1 lit. b DSGVO (Erfüllung eines Vertrags oder vorvertraglicher Maßnahmen).</p>
+
+          <h3>Weitergabe von Daten an Dritte</h3>
+          <p>Wir geben Ihre persönlichen Daten nur dann an Dritte weiter, wenn Sie ausdrücklich zugestimmt haben oder wenn dies zur Erfüllung eines Vertrags erforderlich ist.</p>
+
+          <h3>Ihre Rechte</h3>
+          <ul>
+            <li>eine Bestätigung darüber zu verlangen, ob Ihre personenbezogenen Daten verarbeitet werden, sowie Auskunft über diese Daten zu erhalten (Art. 15 DSGVO);</li>
+            <li>die Berichtigung unrichtiger personenbezogener Daten oder die Vervollständigung Ihrer bei uns gespeicherten personenbezogenen Daten zu verlangen (Art. 16 DSGVO);</li>
+            <li>die Löschung Ihrer bei uns gespeicherten personenbezogenen Daten zu verlangen (Art. 17 DSGVO), sofern keine gesetzlichen Aufbewahrungsfristen entgegenstehen;</li>
+            <li>die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen (Art. 18 DSGVO);</li>
+            <li>Ihre personenbezogenen Daten in einem strukturierten, gängigen und maschinenlesbaren Format zu erhalten (Art. 20 DSGVO);</li>
+            <li>Ihre Einwilligung jederzeit zu widerrufen (Art. 7 Abs. 3 DSGVO);</li>
+            <li>sich bei einer Aufsichtsbehörde zu beschweren (Art. 77 DSGVO).</li>
+          </ul>
+
+          <h3>Kontakt&shy;möglichkeit</h3>
+          <p>Bei Fragen zur Erhebung, Verarbeitung oder Nutzung Ihrer personenbezogenen Daten, für Auskünfte, Berichtigung, Sperrung oder Löschung von Daten sowie Widerruf erteilter Einwilligungen oder Widerspruch gegen eine bestimmte Datenverwendung wenden Sie sich bitte direkt an uns.</p>
+
+          <h3>Änderung der Datenschutzerklärung</h3>
+          <p>Wir behalten uns das Recht vor, diese Datenschutzerklärung jederzeit anzupassen, um sie an aktuelle rechtliche Anforderungen oder Änderungen unserer Dienstleistungen anzupassen. Die jeweils aktuelle Version ist auf dieser Website verfügbar..</p>
+      </mat-card-content>
+  </mat-card>
+</div>

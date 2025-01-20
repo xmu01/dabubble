@@ -6,7 +6,7 @@
   [@finalMoveAnimation]="moveToCorner ? 'moved' : 'initial'"
   (@finalMoveAnimation.done)="onFinalMoveDone()">
 
-<img src="./../../assets/img/logo-without-text.png" 
+<img src="./assets/img/logo-without-text.png" 
     alt="Logo" 
     class="splash-logo" 
     [@logoAnimation] 
@@ -25,10 +25,10 @@
 
 <div class="main-content">
     <div class="top-login">
-        <img src="./../../assets/img/header_icon.png" alt="">
+        <img src="./assets/img/header_icon.png" alt="">
         <div class="create-acc">
             <p>Neu bei DABubble?</p>
-            <a href="sign-up" class="create-acc-purple">Konto erstellen</a>
+            <a [routerLink]="'/sign-up'" class="create-acc-purple">Konto erstellen</a>
         </div>
     </div>
     <div class="login-card" *ngIf="!showSplashScreen">
@@ -84,19 +84,19 @@
                     </div>
 
                     <div (click)="signInWithGoogle()" class="google-div">
-                        <img src="./../../assets/img/google-icon.png" alt="">
+                        <img src="./assets/img/google-icon.png" alt="">
                         <a class="google-div-text">Anmelden mit Google</a>
                     </div>
 
                     <button class="login-btn" type="submit" [disabled]="loginForm.invalid">Anmelden</button>
-                    <button class="guest-btn">Gäste Login</button>
+                    <button class="guest-btn" (click)="loginGuest()">Gäste Login</button>
                 </form>
             </mat-card-content>
         </mat-card>
     </div>
 
     <div class="bottom-login">
-        <a href="legal-notice" class="imprint-tag">Impressum</a> &nbsp; <a href="privacy-policy"
+        <a routerLink="/legal-notice" class="imprint-tag">Impressum</a> &nbsp; <a routerLink="/privacy-policy"
             class="privacy-policy-tag">Datenschutz</a>
         <br>
 
@@ -105,7 +105,7 @@
 
     <div class="mobile-create-acc">
         <p>Neu bei DABubble?</p><br>
-        <button class="mobile-create-acc-btn"><a href="sign-up">Konto erstellen</a></button>
+        <button class="mobile-create-acc-btn"><a [routerLink]="'/sign-up'">Konto erstellen</a></button>
         <br>
     </div>
 </div>

@@ -77,29 +77,17 @@ export class AuthService {
       });
   }
 
-  setNewPassword(oobCodeValue: string, newPassword:string) {
-      confirmPasswordReset(this.auth, oobCodeValue, newPassword)
-        .then(() => {
-          alert('Passwort erfolgreich zurückgesetzt.');
-        })
-        .catch((error) => {
-          console.error('Fehler beim Zurücksetzen des Passworts:', error);
-          alert('Es gab einen Fehler. Bitte versuche es erneut.');
-        });
+  setNewPassword(oobCodeValue: string, newPassword: string) {
+    confirmPasswordReset(this.auth, oobCodeValue, newPassword)
+      .then(() => {
+        alert('Passwort erfolgreich zurückgesetzt.');
+      })
+      .catch((error) => {
+        console.error('Fehler beim Zurücksetzen des Passworts:', error);
+        alert('Es gab einen Fehler. Bitte versuche es erneut.');
+      });
   }
 
-  // sendEmailForPasswordReset(email: string) {
-  //   sendPasswordResetEmail(this.auth, email)
-  //     .then(() => {
-  //       // Password reset email sent!
-  //       // ..
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // ..
-  //     });
-  // }
 
   async sendEmailForPasswordReset(email: string): Promise<{ success: boolean; message: string }> {
     try {
@@ -109,21 +97,21 @@ export class AuthService {
     } catch (error: any) {
       const errorCode = error.code;
       let message = 'Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.';
-  
+
       if (errorCode === 'auth/user-not-found') {
         message = 'Der Benutzer mit dieser E-Mail-Adresse wurde nicht gefunden.';
       } else if (errorCode === 'auth/invalid-email') {
         message = 'Die eingegebene E-Mail-Adresse ist ungültig.';
       }
-  
+
       return { success: false, message };
     }
   }
-  
-  
 
-  signOut() {
-    return signOut(this.auth)
+
+
+  async signOut() {
+    return await signOut(this.auth)
       .then(() => {
         this.loggedInUser.set(null);
         this.router.navigate(['/login']);
@@ -135,7 +123,11 @@ export class AuthService {
   }
 
   getLoggedInUser() {
-    return this.loggedInUser();
+    if (this.loggedInUser()) {
+      return this.loggedInUser();
+    } else {
+      return;
+    }
   }
 
 }

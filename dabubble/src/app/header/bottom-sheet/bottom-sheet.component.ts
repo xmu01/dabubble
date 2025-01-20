@@ -31,6 +31,7 @@ export class BottomSheetComponent {
 
   logout() {
     this.auth.signOut();
+    sessionStorage.removeItem('user');
     this._bottomSheetRef.dismiss();
   }
 

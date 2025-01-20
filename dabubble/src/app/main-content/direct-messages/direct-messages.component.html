@@ -4,7 +4,7 @@
         <mat-card-header class="direct-message-header">
             <mat-card-title class="direct-message-title" (click)="openDialog()">
                 <div class="user-image-container">
-                    <img class="user-image" src="./../../../assets/img/profile-pictures/{{ activeUser()?.avatar }}"
+                    <img class="user-image" src="./assets/img/profile-pictures/{{ activeUser()?.avatar }}"
                         alt="User Picture">
                     <span
                         [ngClass]="activeUser()?.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
@@ -64,8 +64,8 @@
                         <mat-icon *ngIf="activeEmojiPickerMessageId === message.id" class="emoji-close"
                             fontSet="material-icons-outlined" (click)="toggleEmojiPicker(message.id)">close</mat-icon>
                         <img [src]="message.senderId == activeUser()?.userId 
-                            ? './../../../assets/img/profile-pictures/' + activeUser()?.avatar 
-                            : './../../../assets/img/profile-pictures/' + getLoggedUser()?.avatar" alt="Message User">
+                            ? './assets/img/profile-pictures/' + activeUser()?.avatar 
+                            : './assets/img/profile-pictures/' + getLoggedUser()?.avatar" alt="Message User">
                         <div [ngClass]="message.senderId == activeUser()?.userId ? 'message-left' : 'message-right'">
                             @if(editMessageId === message.id) {
                             <div class="edit">
@@ -156,7 +156,7 @@
             @if(groupedMessages().length == 0) {
             <div class="chat-infos">
                 <div class="user-info">
-                    <img [src]="'/assets/img/profile-pictures/'+activeUser()?.avatar" alt="">
+                    <img [src]="'./assets/img/profile-pictures/'+activeUser()?.avatar" alt="">
                     <h2>{{activeUser()?.firstName}} {{activeUser()?.lastName}} @if(activeUser()?.userId === loggedUser()?.uid){ (Du) }</h2>
                 </div>
                 @if(activeUser()?.userId === loggedUser()?.uid){

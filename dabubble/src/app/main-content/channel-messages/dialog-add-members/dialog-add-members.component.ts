@@ -98,7 +98,6 @@ export class DialogAddMembersComponent {
     const userIds = this.selectedUsers.map((user) => user.userId); // Extrahiere die Benutzer-IDs
     if (userIds.length) {
       this.channelService.addMembers(userIds).then(() => {
-        console.log('Mitglieder erfolgreich hinzugefügt');
         this.dialogRef.close(); // Schließe den Dialog
       }).catch((error) => {
         console.error('Fehler beim Hinzufügen der Mitglieder:', error);

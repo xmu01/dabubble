@@ -4,7 +4,7 @@
       <mat-card-title class="direct-message-title">
         <h2>Thread</h2>
         <div class="user-image-container">
-          <img class="user-image" src="./../../../assets/img/profile-pictures/{{ activeUser()?.avatar }}"
+          <img class="user-image" src="./assets/img/profile-pictures/{{ activeUser()?.avatar }}"
             alt="User Picture">
           <span
             [ngClass]="activeUser()?.status == 'online' ? 'user-picture-dot-online' : 'user-picture-dot-offline'"></span>
@@ -50,8 +50,8 @@
               <mat-icon *ngIf="activeEmojiPickerMessageId === message.id" class="emoji-close" fontSet="material-icons-outlined" (click)="toggleEmojiPicker(message.id)">close</mat-icon>
 
             <img [src]="message.senderId != loggedUser()?.uid 
-                      ? './../../../assets/img/profile-pictures/' + (getUserAvatar(message.senderId!) | async)
-                      : './../../../assets/img/profile-pictures/' + getLoggedUser()?.avatar" alt="Message User">
+                      ? './assets/img/profile-pictures/' + (getUserAvatar(message.senderId!) | async)
+                      : './assets/img/profile-pictures/' + getLoggedUser()?.avatar" alt="Message User">
 
             <div [ngClass]="message.senderId != loggedUser()?.uid ? 'message-left' : 'message-right'">
               @if(editMessageId === message.id) {

@@ -9,7 +9,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { trigger, transition, style, animate, keyframes, group, query, sequence, state } from '@angular/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { UsersService } from '../../shared/services/users.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 
 @Component({
@@ -23,32 +23,14 @@ import { Router } from '@angular/router';
     ReactiveFormsModule,
     MatIconModule,
     FormsModule,
-    MatButtonModule
+    MatButtonModule,
+    RouterLink
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 
   animations: [
-    // Animation für das Logo und den Text
-    // trigger('bubbleAnimation', [
-    //   transition(':enter', [
-    //     animate('1.5s ease-in-out', keyframes([
-    //       style({ transform: 'translate(0, 0) scale(1)', offset: 0 }),
-    //       style({ transform: 'translate(-20vw, -20vh) scale(1.1)', offset: 0.5 }),
-    //       style({ transform: 'translate(-40vw, -40vh) scale(1)', offset: 1 })
-    //     ]))
-    //   ])
-    // ]),
-    // trigger('logoAnimation', [
-    //   transition(':enter', [
-    //     sequence([
-    //       // 1. Logo bewegt sich nach links
-    //         animate('0.5s ease-out', style({ transform: 'translateX(-100px)' })),
-    //         style({ transform: 'translateX(-30px)' })
-    //     ]),
-    //   ]),
-    // ]),
     trigger('logoAnimation', [
       transition(':enter', [
         animate('0.8s ease-out', keyframes([
@@ -127,18 +109,6 @@ export class LoginComponent {
       this.showSplashScreen = false; 
   }
 
-  ngOnInit() {
-    // const isFirstVisit = sessionStorage.getItem('firstVisit') === null;
-
-    // if (isFirstVisit) {
-    //   this.showSplashScreen = true;
-    //   sessionStorage.setItem('firstVisit', 'true'); 
-    //   setTimeout(() => {
-    //     this.showSplashScreen = false;
-    //   }, 1500); 
-    // }
-  }
-
   get emailControl() {
     return this.loginForm.get('email');
   }
@@ -158,9 +128,8 @@ export class LoginComponent {
       this.authService
         .signInWithEmailAndPassword(email, password)
         .then((user) => {
-          console.log('User signed in:', user.uid);
-          sessionStorage.setItem('user', JSON.stringify({ uid: user.uid }));
           this.userService.updateUserStatus(user.uid, 'online');
+          sessionStorage.setItem('user', JSON.stringify({ uid: user.uid }));
           this.router.navigate(['/']);
         })
         .catch((error) => {
@@ -171,6 +140,20 @@ export class LoginComponent {
       this.loginForm.markAllAsTouched();
     }
   }
+
+  loginGuest() {
+      this.authService
+        .signInWithEmailAndPassword('gast@dabubble.de', '123456789')
+        .then((user) => {
+          this.userService.updateUserStatus(user.uid, 'online');
+          sessionStorage.setItem('user', JSON.stringify({ uid: user.uid }));
+          this.router.navigate(['/']);
+        })
+        .catch((error) => {
+          this.errorMessage = 'Login failed. Please try again.';
+          console.error('Error during login:', error);
+        });
+    }
 
 
   signInWithGoogle() {
@@ -190,9 +173,8 @@ export class LoginComponent {
             status: '',
           })
         }
-        console.log('User signed in with Google:', user.uid);
-        sessionStorage.setItem('user', JSON.stringify({ uid: user.uid }));
         this.userService.updateUserStatus(user.uid, 'online');
+        sessionStorage.setItem('user', JSON.stringify({ uid: user.uid }));
         this.router.navigate(['/']);
       })
       .catch((error) => {
@@ -205,8 +187,6 @@ export class LoginComponent {
     this.authService
       .signOut()
       .then(() => {
-        console.log('User signed out successfully');
-        sessionStorage.removeItem('user');
       })
       .catch((error) => {
         console.error('Error during sign-out:', error);

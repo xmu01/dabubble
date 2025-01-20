@@ -1,5 +1,5 @@
 <div class="top-login">
-    <img src="./../../assets/img/header_icon.png" alt="">
+    <img src="./assets/img/header_icon.png" alt="">
 
 </div>
 
@@ -9,7 +9,7 @@
             <form class="inside-mat-card" (submit)="completeSignUp()">
 
                 <div class="h2-arrow">
-                    <a class="arrow-back" (click)="back()"><img src="./../../assets/img/arrow_back.png" alt=""></a>
+                    <a class="arrow-back" (click)="back()"><img src="./assets/img/arrow_back.png" alt=""></a>
                     <h2>Wähle deinen Avatar</h2>
                 </div>
 
@@ -23,7 +23,7 @@
                         <p>Aus der Liste wählen</p>
                         <div class="profile-reviews">
                             @for(profile of profiles; track profile){
-                            <img (click)="changeAvatar(profile)" class="profile-img" [src]="'assets/img/profile-pictures/' + profile"
+                            <img (click)="changeAvatar(profile)" class="profile-img" [src]="'./assets/img/profile-pictures/' + profile"
                                 alt="Profile Picture">
                             }
                         </div>

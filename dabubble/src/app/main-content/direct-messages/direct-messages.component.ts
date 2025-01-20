@@ -75,7 +75,7 @@ export class DirectMessagesComponent {
     effect(() => {
       const activeId = this.firestoreService.activeUser()?.userId;
 
-      if (activeId) {
+      if (activeId && this.loggedUser()) {
         this.firestoreService.loadMessagePrivateChat(activeId, this.loggedUser()!.uid);
         this.newMessage = '';
         this.showEmojis = false;

@@ -132,7 +132,6 @@ export class SidenavComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('Dialog geschlossen mit Daten:', result);
 
         // Finde den aktuellen User anhand der UID
         const currentUser = this.users().find(
