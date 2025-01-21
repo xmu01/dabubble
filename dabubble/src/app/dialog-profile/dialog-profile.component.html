@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Profil</h2><mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
+<!-- <h2 mat-dialog-title>Profil</h2><mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
 <mat-dialog-content>
   <div class="image-container">
     <img [src]="'./assets/img/profile-pictures/' + data.avatar" alt="">
@@ -49,5 +49,81 @@
 <mat-dialog-actions class="dialog-edit-actions">
   <button class="btn-edit cancel" (click)="toggleEditMode()">Abbrechen</button>
   <button class="btn-edit save" (click)="saveEditChanges()">Speichern</button>
+</mat-dialog-actions>
+} -->
+
+<h2 mat-dialog-title>Profil</h2>
+<mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
+
+<mat-dialog-content>
+  <form [formGroup]="profileForm">
+    <div class="image-container">
+      <img [src]="'./assets/img/profile-pictures/' + data.avatar" alt="">
+    </div>
+
+    @if(!isEditing) {
+    <div class="user">
+      <h3 class="name">{{data.firstName}} {{data.lastName}}</h3>
+      <span class="status" [ngClass]="data.status === 'online' ? 'green' : 'grey'">
+        <div class="status-container">
+          <span class="dot" [ngClass]="data.status === 'online' ? 'bg-green' : 'bg-grey'"></span>{{data.status}}
+        </div>
+        @if(getLoggedUser()?.userId == data.userId) {
+        <span class="edit" (click)="toggleEditMode()">Bearbeiten</span>
+        }
+      </span>
+    </div>
+    <div class="contact">
+      <p class="title"><mat-icon class="outline-icon">mail</mat-icon>E-Mail-Adresse</p>
+      <a href="mailto:{{data.email}}" class="email">{{data.email}}</a>
+    </div>
+    } @else {
+    <div class="user">
+      <p class="title"><mat-icon class="outline-icon">account_circle</mat-icon>Vollständiger Name</p>
+
+      <div class="input-group">
+        <mat-form-field>
+          <input class="input" matInput placeholder="Vorname" formControlName="firstName">
+          <mat-error
+            *ngIf="profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched">
+            Der Vorname darf nicht leer sein.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input class="input" matInput placeholder="Nachname" formControlName="lastName">
+          <mat-error *ngIf="profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched">
+            Der Nachname darf nicht leer sein.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="contact">
+      <p class="title"><mat-icon class="outline-icon">mail</mat-icon>E-Mail-Adresse</p>
+      <mat-form-field>
+        <input class="input" matInput placeholder="E-Mail" formControlName="email">
+        <mat-error *ngIf="profileForm.get('email')?.hasError('required') && profileForm.get('email')?.touched">
+          Die E-Mail-Adresse darf nicht leer sein.
+        </mat-error>
+        <mat-error *ngIf="profileForm.get('email')?.hasError('email') && profileForm.get('email')?.touched">
+          Bitte eine gültige E-Mail-Adresse eingeben.
+        </mat-error>
+      </mat-form-field>
+    </div>
+    }
+  </form>
+</mat-dialog-content>
+
+@if(getLoggedUser()?.userId != data.userId) {
+<mat-dialog-actions class="dialog-actions">
+  <button (click)="setActiveUser()" class="message">
+    <mat-icon class="outline-icon">mode_comment</mat-icon> Nachricht
+  </button>
+</mat-dialog-actions>
+}
+
+@if(isEditing) {
+<mat-dialog-actions class="dialog-edit-actions">
+  <button class="btn-edit cancel" (click)="toggleEditMode()">Abbrechen</button>
+  <button class="btn-edit save" (click)="saveEditChanges()" [disabled]="profileForm.invalid">Speichern</button>
 </mat-dialog-actions>
 }

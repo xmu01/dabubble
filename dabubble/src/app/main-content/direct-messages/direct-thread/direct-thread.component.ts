@@ -53,6 +53,7 @@ export class DirectThreadComponent {
   inputTrigger = true;
 
   @ViewChild('messageContainer', { static: false }) messageContainer!: ElementRef;
+  @ViewChild('inputFocus') inputFocus!: ElementRef;
 
   ngAfterViewInit() {
     if (this.messageContainer) {
@@ -84,6 +85,10 @@ export class DirectThreadComponent {
       });
     } else {
       console.error('Element #messageContainer nicht gefunden.');
+    }
+
+    if (this.inputFocus) {
+      this.inputFocus.nativeElement.focus();
     }
   }
 

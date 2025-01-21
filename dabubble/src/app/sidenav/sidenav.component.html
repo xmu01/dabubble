@@ -45,11 +45,12 @@
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                         <ul class="list">
-                            @for(channel of channels(); track channel) {
-                            <li (click)="getChannel(channel.id!, drawer)"><mat-icon
-                                    class="tag">tag</mat-icon>{{channel.name}}</li>
+                            @for(channel of filteredChannels(); track channel) {
+                              <li (click)="getChannel(channel.id!, drawer)">
+                                <mat-icon class="tag">tag</mat-icon>{{channel.name}}
+                              </li>
                             }
-                        </ul>
+                          </ul>
                         <ul class="list">
                             <li class="add-channel" (click)="openDialog()">
                                 <mat-icon>add_circle_outline</mat-icon>Channel hinzufügen

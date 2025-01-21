@@ -1,16 +1,82 @@
-<h2 mat-dialog-title>Channel erstellen</h2>  <mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
+<!-- <h2 mat-dialog-title>Channel erstellen</h2>  <mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
 <mat-dialog-content>
   <p>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein  #marketing zum Beispiel.</p>
   <h3>Channel-Name</h3>
   <mat-form-field class="input-group">
-    <input class="name-input" matInput [(ngModel)]="data.name" placeholder="z.B. Kooperationsprojekte">
+    <input 
+      class="name-input" 
+      matInput 
+      [(ngModel)]="data.name" 
+      placeholder="z.B. Kooperationsprojekte"
+      (input)="checkChannelName()"
+    >
     <span matTextPrefix>#</span>
-  </mat-form-field>
+    @if(channelExist) {
+      <mat-hint style="color: red">Dieser Channel-Name ist bereits vergeben.</mat-hint>
+    }
+    
+  </mat-form-field>  
   <h3>Beschreibung <span>(optional)</span></h3>
   <mat-form-field>
     <textarea class="no-scrollbar" matInput [(ngModel)]="data.description" placeholder="Dein Text hier" cdkTextareaAutosize cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button class="create-button" mat-button [mat-dialog-close]="data" cdkFocusInitial>Erstellen</button>
+  <button [disabled]="channelExist" class="create-button" mat-button [mat-dialog-close]="data" cdkFocusInitial>Erstellen</button>
+</mat-dialog-actions> -->
+
+<h2 mat-dialog-title>Channel erstellen</h2>
+<mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
+
+<mat-dialog-content>
+  <p>Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.</p>
+  
+  <h3>Channel-Name</h3>
+  <mat-form-field class="input-group">
+    <input
+      class="name-input"
+      matInput
+      [formControl]="channelNameControl"
+      placeholder="z.B. Kooperationsprojekte"
+      (input)="checkChannelName()"
+    >
+    <span matTextPrefix>#</span>
+    
+    @if(channelExist) {
+      <mat-hint style="color: red">Dieser Channel-Name ist bereits vergeben.</mat-hint>
+    }
+    
+    @if(channelNameControl.hasError('required') && channelNameControl.touched) {
+      <mat-error>Der Channel-Name ist erforderlich.</mat-error>
+    }
+    
+    @if(channelNameControl.hasError('pattern') && channelNameControl.touched) {
+      <mat-error>Nur ein Wort erlaubt.</mat-error>
+    }
+  </mat-form-field>
+
+  <h3>Beschreibung <span>(optional)</span></h3>
+  <mat-form-field>
+    <textarea
+      class="no-scrollbar"
+      matInput
+      [(ngModel)]="data.description"
+      placeholder="Dein Text hier"
+      cdkTextareaAutosize
+      cdkAutosizeMinRows="1"
+      cdkAutosizeMaxRows="5"
+    ></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+    [disabled]="channelExist || channelNameControl.invalid"
+    class="create-button"
+    mat-button
+    [mat-dialog-close]="data"
+    cdkFocusInitial
+  >
+    Erstellen
+  </button>
 </mat-dialog-actions>

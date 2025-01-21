@@ -110,7 +110,7 @@
       <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu"
         #menuTrigger="matMenuTrigger"></button>
 
-      <textarea [(ngModel)]="newMessage" rows="2" placeholder="Antworten ..."
+      <textarea #inputFocus [(ngModel)]="newMessage" rows="2" placeholder="Antworten ..."
         (input)="onInput($event)" #textarea (focus)="showEmojis = false">
       </textarea>
 

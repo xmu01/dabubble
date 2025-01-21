@@ -18,11 +18,12 @@ import { DialogShowMembersComponent } from './dialog-show-members/dialog-show-me
 import { DialogAddMembersComponent } from './dialog-add-members/dialog-add-members.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MentionLinkPipe } from '../../../shared/pipes/mention-link.pipe';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-channel-messages',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, MatMenuModule, PickerComponent, CommonModule, FormsModule, ThreadComponent, MentionLinkPipe],
+  imports: [MatCardModule, MatIconModule, MatMenuModule, PickerComponent, CommonModule, FormsModule, ThreadComponent, MentionLinkPipe, MatButtonModule],
   templateUrl: './channel-messages.component.html',
   styleUrl: './channel-messages.component.scss'
 })
@@ -59,6 +60,18 @@ export class ChannelMessagesComponent implements AfterViewInit {
   inputTrigger = true;
 
   @ViewChild('messageContainer', { static: false }) messageContainer!: ElementRef;
+  @ViewChild('inputFocus') inputFocus!: ElementRef;
+
+  addMember(): void {
+    const userId = this.loggedUser()?.uid;
+    if (!userId || !this.activeChannel) return; // Stelle sicher, dass ein Kanal existiert
+
+    if (!this.activeChannel()!.members.includes(userId)) {
+      this.channelService.addMembers([userId]);
+    } else {
+      console.log('User is already a member of this channel.');
+    }
+  }
 
   ngAfterViewInit() {
     if (this.messageContainer) {
@@ -90,6 +103,10 @@ export class ChannelMessagesComponent implements AfterViewInit {
       });
     } else {
       console.error('Element #messageContainer nicht gefunden.');
+    }
+
+    if (this.inputFocus) {
+      this.inputFocus.nativeElement.focus();
     }
   }
 
@@ -133,6 +150,9 @@ export class ChannelMessagesComponent implements AfterViewInit {
         this.triggerScrollToBottom();
       }
       this.channelService.channelMessageChanged();
+      if (this.inputFocus) {
+        this.inputFocus.nativeElement.focus();
+      }
 
     });
 
@@ -177,7 +197,7 @@ export class ChannelMessagesComponent implements AfterViewInit {
     this.editMessageId = messageId;
     this.temporaryMessage = message;
   }
-  
+
   toggleEditMenu(): void {
     this.menuOpen = !this.menuOpen;
   }
@@ -232,17 +252,17 @@ export class ChannelMessagesComponent implements AfterViewInit {
   setHoveredMessageId(messageId: string | undefined): void {
     if (messageId && !this.menuOpen) {
       this.hoveredMessageId = messageId;
-    } 
+    }
   }
-  
+
   clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
     const target = event.relatedTarget as HTMLElement | null;
-  
+
     if (!this.menuOpen && (!target || !target.closest('.message-container'))) {
       this.hoveredMessageId = null;
     }
   }
-  
+
 
   addEditEmoji(event: any): void {
     const emoji = event.emoji.native;
@@ -282,17 +302,17 @@ export class ChannelMessagesComponent implements AfterViewInit {
     const input = event.target as HTMLTextAreaElement;
     const cursorPosition = input.selectionStart;
     const value = input.value;
-  
+
     // Prüfe, ob das '@'-Zeichen direkt vor der aktuellen Cursorposition steht
     if (cursorPosition > 0 && value[cursorPosition - 1] === '#') {
       this.inputTrigger = false;
       this.check = false;
       this.menuTrigger.openMenu();
-    } else if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {         
+    } else if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {
       this.inputTrigger = true;
       this.check = false;
       this.menuTrigger.openMenu();
-    } 
+    }
   }
 
   toggleMenu() {
@@ -307,7 +327,7 @@ export class ChannelMessagesComponent implements AfterViewInit {
   addToMessage(selectedItem: string, viaButton: boolean = false): void {
     const textarea = this.messageInput.nativeElement;
     const cursorPosition = textarea.selectionStart;
-    
+
     // Prüfen, ob das letzte Zeichen ein "@" ist
     const isAtSymbolBefore = this.newMessage[cursorPosition - 1] === '@';
 
@@ -319,11 +339,11 @@ export class ChannelMessagesComponent implements AfterViewInit {
     }
 
     // Füge den Text an der aktuellen Cursorposition ein
-    this.newMessage = 
-      this.newMessage.slice(0, cursorPosition) + 
-      mentionText + 
+    this.newMessage =
+      this.newMessage.slice(0, cursorPosition) +
+      mentionText +
       this.newMessage.slice(cursorPosition);
-    
+
     // Fokus zurück ins Textarea setzen und Cursor hinter dem eingefügten Text positionieren
     setTimeout(() => {
       textarea.focus();
@@ -541,4 +561,12 @@ export class ChannelMessagesComponent implements AfterViewInit {
       this.dialog.open(DialogAddMembersComponent);
     }
   }
+
+  isMember(): boolean {
+    const userId = this.loggedUser()?.uid;
+    if (!userId || !this.activeChannel) return false; // Falls kein Benutzer oder Kanal vorhanden ist
+
+    return this.activeChannel()!.members.includes(userId);
+  }
+
 }

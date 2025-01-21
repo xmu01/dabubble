@@ -1,4 +1,4 @@
-<h2 mat-dialog-title><span class="name-prefix" matTextPrefix>#</span>{{ data.name }}</h2>
+<!-- <h2 mat-dialog-title><span class="name-prefix" matTextPrefix>#</span>{{ data.name }}</h2>
 <mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
 
 <mat-dialog-content class="no-scrollbar">
@@ -69,4 +69,110 @@
   <button [disabled]="(data!.members.length || 0) < 2" class="leave-button" mat-button [mat-dialog-close]="data">
     Channel verlassen
   </button>
+</mat-dialog-actions> -->
+
+<h2 mat-dialog-title><span class="name-prefix" matTextPrefix>#</span>{{ data.name }}</h2>
+<mat-icon class="close-button" (click)="onNoClick()">close</mat-icon>
+
+<mat-dialog-content class="no-scrollbar">
+  <div class="channel-name">
+    <div class="space-between">
+      <h3>Channel-Name</h3>
+      @if(isMember() || newMember) {
+      <button 
+        class="edit-button" 
+        mat-button 
+        (click)="toggleEdit('name')"
+        [disabled]="isEditing.name && channelNameControl.invalid"
+      >
+        @if(channelExist) {
+          {{ channelExist ? 'Abbrechen' : 'Bearbeiten' }}
+        } @else {
+        {{ isEditing.name ? 'Speichern' : 'Bearbeiten' }}
+      }
+      </button>
+    }
+    </div>
+
+    <p *ngIf="!isEditing.name">
+      <span class="name-prefix" matTextPrefix>#</span>{{ data.name }}
+    </p>
+
+    <mat-form-field class="input-group" *ngIf="isEditing.name">
+      <input
+        class="name-input"
+        matInput
+        [formControl]="channelNameControl"
+        placeholder="z.B. Kooperationsprojekte"
+        (input)="checkChannelName()"
+      />
+      <span matTextPrefix>#</span>
+      @if(channelExist) {
+        <mat-hint style="color: red">Dieser Channel-Name ist bereits vergeben.</mat-hint>
+      }
+      
+      @if (channelNameControl.hasError('required') && channelNameControl.touched) {
+        <mat-error>Der Channel-Name ist erforderlich.</mat-error>
+      }
+
+      @if (channelNameControl.hasError('pattern') && channelNameControl.touched) {
+        <mat-error>Nur ein Wort erlaubt.</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="channel-description">
+    <div class="space-between">
+      <h3>Beschreibung</h3>
+      @if(isMember() || newMember) {
+              <button 
+        class="edit-button" 
+        mat-button 
+        (click)="toggleEdit('description')"
+      >
+        {{ isEditing.description ? 'Speichern' : 'Bearbeiten' }}
+      </button>
+      }
+
+    </div>
+    <p *ngIf="!isEditing.description">{{ data.description }}</p>
+    <mat-form-field *ngIf="isEditing.description">
+      <textarea 
+        class="no-scrollbar" 
+        matInput 
+        [(ngModel)]="data.description" 
+        placeholder="Dein Text hier"
+        cdkTextareaAutosize 
+        cdkAutosizeMinRows="1" 
+        cdkAutosizeMaxRows="5"
+      ></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="created_by">
+    <h3>Erstellt von</h3>
+    <p class="creator-name">{{ data.created_by }}</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  @if(isMember() || newMember) {
+    <button 
+    [disabled]="(data!.members.length || 0) < 2" 
+    class="leave-button" 
+    mat-button 
+    [mat-dialog-close]="data"
+  >
+    Channel verlassen
+  </button>
+  } @else {
+
+  <button 
+  class="leave-button" 
+  mat-button 
+  (click)="addMember()"
+  >
+  Channel beitreten
+</button>
+}
 </mat-dialog-actions>

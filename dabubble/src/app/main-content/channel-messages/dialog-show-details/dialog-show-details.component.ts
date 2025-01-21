@@ -9,7 +9,7 @@ import {
   MatDialogClose,
 } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -35,7 +35,8 @@ import { DialogProfileComponent } from '../../../dialog-profile/dialog-profile.c
     MatDialogActions,
     MatDialogClose,
     MatIconModule,
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ],
   templateUrl: './dialog-show-details.component.html',
   styleUrl: './dialog-show-details.component.scss'
@@ -49,6 +50,14 @@ export class DialogShowDetailsComponent {
 
   channel = this.channelService.activeChannel();
   loggedUser = this.authService.getLoggedInUser()?.uid;
+  channels = this.channelService.channels;
+  channelExist = false;
+  newMember = false;
+
+  channelNameControl = new FormControl(this.data.name, [
+    Validators.required,
+    Validators.pattern('^[^\\s]+$') // Erlaubt nur ein Wort
+  ]);
 
   constructor(
     public dialogRef: MatDialogRef<DialogShowDetailsComponent>,
@@ -97,12 +106,58 @@ export class DialogShowDetailsComponent {
     description: false,
   };
 
-  toggleEdit(field: 'name' | 'description', text: string): void {
-    if (this.isEditing[field]) {
-      this.channelService.updateChannel(field, text); // Speichere die Daten in Firestore
+  // toggleEdit(field: 'name' | 'description', text: string): void {
+  //   if (this.isEditing[field]) {
+  //     this.channelService.updateChannel(field, text); // Speichere die Daten in Firestore
+  //   }
+  //   this.isEditing[field] = !this.isEditing[field];
+  // }
+  toggleEdit(field: 'name' | 'description'): void {
+    if (field === 'name') {
+      if (!this.isEditing.name) {
+        // Initialisierung des FormControls mit aktuellem Wert beim Bearbeiten
+        this.channelNameControl = new FormControl(this.data.name, [
+          Validators.required,
+          Validators.pattern('^[^\\s]+$') // Nur ein Wort erlaubt
+        ]);
+      } else {
+        this.saveChanges('name');
+        this.channelExist = !this.channelExist;
+      }
+      this.isEditing.name = !this.isEditing.name;
+    } else if (field === 'description') {
+      this.isEditing.description = !this.isEditing.description;
     }
-    this.isEditing[field] = !this.isEditing[field];
   }
 
+  saveChanges(field: 'name' | 'description') {
+    if (field === 'name' && this.channelNameControl.valid) {
+      this.data.name = this.channelNameControl.value!; // Speichern des neuen Wertes
+      this.channelService.updateChannel(field, this.channelNameControl.value!);
+    }
+  }
 
+  checkChannelName() {
+    const name = this.channelNameControl.value?.toLowerCase() || '';
+      this.channelExist = this.channels().some(channel => channel.name.toLowerCase() === name);
+  }
+
+  isMember(): boolean {
+    const userId = this.loggedUser;
+    if (!userId || !this.channel) return false; // Falls kein Benutzer oder Kanal vorhanden ist
+  
+    return this.channel.members.includes(userId);
+  }
+
+  addMember(): void {
+    const userId = this.loggedUser;
+    if (!userId || !this.channel) return; // Stelle sicher, dass ein Kanal existiert
+  
+    if (!this.channel.members.includes(userId)) {
+      this.channelService.addMembers([userId]);
+      this.newMember = true;
+    } else {
+      console.log('User is already a member of this channel.');
+    }
+  }
 }

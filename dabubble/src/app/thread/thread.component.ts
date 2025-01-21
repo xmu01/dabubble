@@ -52,6 +52,7 @@ export class ThreadComponent implements AfterViewInit{
   inputTrigger = true;
 
   @ViewChild('messageContainer', { static: false }) messageContainer!: ElementRef;
+  @ViewChild('inputFocus') inputFocus!: ElementRef;
 
   ngAfterViewInit() {
     if (this.messageContainer) {
@@ -83,6 +84,10 @@ export class ThreadComponent implements AfterViewInit{
       });
     } else {
       console.error('Element #messageContainer nicht gefunden.');
+    }
+
+    if (this.inputFocus) {
+      this.inputFocus.nativeElement.focus();
     }
   }
 

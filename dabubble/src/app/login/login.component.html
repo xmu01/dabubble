@@ -50,10 +50,10 @@
                         <mat-form-field>
                             <input matInput type="password" formControlName="password" matInput
                                 [type]="hide ? 'password' : 'text'" placeholder="Passwort">
-                            <button mat-icon-button matPrefix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                            <span  matPrefix [attr.aria-label]="'Hide password'"
                                 [attr.aria-pressed]="hide">
-                                <mat-icon fontSet="material-icons-outlined">{{hide ? 'lock' : 'lock_open'}}</mat-icon>
-                            </button>
+                                <mat-icon style="padding-left: 12px; padding-right: 12px; display: ruby; cursor: pointer;" (click)="hide = !hide" fontSet="material-icons-outlined">{{hide ? 'lock' : 'lock_open'}}</mat-icon>
+                        </span>
                             @if (passwordControl?.touched && passwordControl?.invalid) {
                             <mat-error>
                                 @if (passwordControl?.hasError('required')) {

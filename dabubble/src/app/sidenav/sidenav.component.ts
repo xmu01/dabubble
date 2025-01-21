@@ -152,6 +152,11 @@ export class SidenavComponent {
     });
   }
 
+  filteredChannels() {
+    const userId = this.loggedUser()?.uid;
+    return userId ? this.channels().filter(channel => channel.members.includes(userId)) : [];
+  }
+
   setAddMessage(drawer?: any) {
     this.addMessageService.setAddMessage();
     if (this.isMobileView) {

@@ -25,9 +25,9 @@
                          [matAutocomplete]="auto">
                          <mat-icon matSuffix>search</mat-icon>
 
-                  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  <mat-autocomplete (optionSelected)="openChat()" autoActiveFirstOption #auto="matAutocomplete">
                     @for (option of filteredOptions | async; track option.id) {
-                      <mat-option (click)="openChat()" [value]="option.display">
+                      <mat-option [value]="option.display">
                         {{ option.display }}
                       </mat-option>
                     }

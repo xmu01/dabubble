@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { AuthService } from '../../../shared/services/auth.service';
 import { UsersService } from '../../../shared/services/users.service';
@@ -24,7 +24,7 @@ import { Users } from '../../../shared/interfaces/users';
   templateUrl: './new-message.component.html',
   styleUrl: './new-message.component.scss'
 })
-export class NewMessageComponent {
+export class NewMessageComponent implements AfterViewInit {
   private firestore = inject(Firestore);
   private firestoreService = inject(UsersService);
   private channelService = inject(ChannelService);
@@ -33,6 +33,7 @@ export class NewMessageComponent {
 
   activeUser = this.firestoreService.activeUser;
   users = this.firestoreService.users;
+  channels = this.channelService.channels;
   loggedUser = this.auth.userSignal;
   groupedMessages = this.firestoreService.groupedMessages;
   today = signal(new Date().toISOString().split('T')[0]);
@@ -45,13 +46,21 @@ export class NewMessageComponent {
   selectedChat: string = '';
   selectedType: string = '';
   selectedName: string = '';
+  inputTrigger = true;
+  @ViewChild('inputFocus') inputFocus!: ElementRef;
 
+  ngAfterViewInit(): void {
+    if (this.inputFocus) {
+      this.inputFocus.nativeElement.focus();
+    }
+  }
+  
   constructor() {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),
     );
-
+  
     this.myControl.valueChanges.subscribe(value => {
       const selectedItem = this._filter(value || '').find(
         item => item.display === value
@@ -80,19 +89,21 @@ export class NewMessageComponent {
     const value = input.value;
   
     // Prüfe, ob das '@'-Zeichen direkt vor der aktuellen Cursorposition steht
-    if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {
+    if (cursorPosition > 0 && value[cursorPosition - 1] === '#') {
+      this.inputTrigger = false;
       this.check = false;
       this.menuTrigger.openMenu();
-    } else {
-      this.menuTrigger.closeMenu();
-    }
+    } else if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {         
+      this.inputTrigger = true;
+      this.check = false;
+      this.menuTrigger.openMenu();
+    } 
   }
-  
 
   toggleMenu() {
+    this.inputTrigger = true;
     this.menuTrigger.toggleMenu();
     this.check = !this.check;
-
   }
 
   // addToMessage(selectedItem: string): void {

@@ -58,6 +58,8 @@ export class DirectMessagesComponent implements AfterViewInit {
   inputTrigger = true;
 
   @ViewChild('messageContainer', { static: false }) messageContainer!: ElementRef;
+  @ViewChild('inputFocus') inputFocus!: ElementRef;
+
 
   ngAfterViewInit() {
     if (this.messageContainer) {
@@ -89,6 +91,10 @@ export class DirectMessagesComponent implements AfterViewInit {
       });
     } else {
       console.error('Element #messageContainer nicht gefunden.');
+    }
+
+    if (this.inputFocus) {
+      this.inputFocus.nativeElement.focus();
     }
   }
 
@@ -154,6 +160,9 @@ export class DirectMessagesComponent implements AfterViewInit {
       }
 
       this.firestoreService.messageChanged();
+      if (this.inputFocus) {
+        this.inputFocus.nativeElement.focus();
+      }
     });
 
     effect(() => {

@@ -104,10 +104,10 @@ export class HeaderComponent {
   openDialog() {   
     if (!this.isMobileView) {
       this.dialog.open(DialogProfileComponent, {
-        position: {
-          top: '120px',
-          right: '40px',
-        },
+        // position: {
+        //   top: '120px',
+        //   right: '40px',
+        // },
         data: this.getLoggedUser(),
       });
     } 

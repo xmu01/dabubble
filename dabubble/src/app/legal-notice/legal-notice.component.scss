@@ -1,7 +1,17 @@
+.main-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;;
+}
+
 .top-login {
     padding: 18px;
     display: flex;
     justify-content: space-between;
+    max-width: 1024px;
+    width: 100%;
 
     img {
         height: 70px;

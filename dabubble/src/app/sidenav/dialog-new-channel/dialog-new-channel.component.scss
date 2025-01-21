@@ -124,6 +124,11 @@ mat-form-field {
     &:hover {
         opacity: 0.8;
     }
+
+    &:disabled {
+        background: #b7baf0;
+        cursor: not-allowed;
+    }
 }
 
 ::ng-deep .mat-mdc-dialog-actions {

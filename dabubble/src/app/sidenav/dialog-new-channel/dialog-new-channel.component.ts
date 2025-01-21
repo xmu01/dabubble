@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import {
   MatDialog,
   MAT_DIALOG_DATA,
@@ -9,11 +9,13 @@ import {
   MatDialogClose,
 } from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { Channels } from '../../../shared/interfaces/channels';
 import { MatIconModule } from '@angular/material/icon';
+import { ChannelService } from '../../../shared/services/channel.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dialog-new-channel',
@@ -26,12 +28,25 @@ import { MatIconModule } from '@angular/material/icon';
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-    MatIconModule
+    MatIconModule, 
+    CommonModule,
+    ReactiveFormsModule
   ],
   templateUrl: './dialog-new-channel.component.html',
   styleUrl: './dialog-new-channel.component.scss'
 })
 export class DialogNewChannelComponent {
+  private channelService = inject(ChannelService);
+
+  // FormControl mit Validatoren für die Eingabe
+  channelNameControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern('^[^\\s]+$') // Erlaubt nur ein Wort
+  ]);
+
+  channels = this.channelService.channels;
+  channelExist = false;
+
   constructor(
     public dialogRef: MatDialogRef<DialogNewChannelComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Channels,
@@ -39,5 +54,10 @@ export class DialogNewChannelComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  checkChannelName() {
+    const name = this.channelNameControl.value?.toLowerCase() || '';
+    this.channelExist = this.channels().some(channel => channel.name.toLowerCase() === name);
   }
 }

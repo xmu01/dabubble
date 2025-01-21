@@ -6,6 +6,7 @@
         <mat-icon fontIcon="tag"></mat-icon><span class="userName">{{ activeChannel()?.name }}</span>
         <mat-icon fontIcon="keyboard_arrow_down"></mat-icon>
       </mat-card-title>
+      @if(isMember()) {
       <div class="members-container">
         @if(!isMobileView) {
         <div class="members-images" (click)="openMembersDialog()">
@@ -29,9 +30,11 @@
         </button>
         }
       </div>
+    }
     </mat-card-header>
 
     <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false">
+      @if(isMember()) {
       <div class="date-elements" #messageContainer>
         @for (group of groupedChannelMessages(); track group.date) {
         <div class="date-element">
@@ -176,12 +179,15 @@
         }
 
       </div>
+    }
     </mat-card-content>
     <div class="direct-message-input">
+      @if(isMember()) {
+
       <button class="add-person-placeholder" mat-button [matMenuTriggerFor]="aboveMenu"
         #menuTrigger="matMenuTrigger"></button>
 
-      <textarea [(ngModel)]="newMessage" rows="2" placeholder="Nachricht an # {{ activeChannel()?.name }}"
+      <textarea #inputFocus [(ngModel)]="newMessage" rows="2" placeholder="Nachricht an # {{ activeChannel()?.name }}"
         (input)="onInput($event)" #textarea (focus)="showEmojis = false">
       </textarea>
 
@@ -215,8 +221,11 @@
           <mat-icon>send</mat-icon>
         </div>
       </div>
+    } @else {
+      <h2 style="text-align: center;">Bitte dem Channel beitreten, um Nachrichten erfassen und sehen zu können</h2>
+      <button mat-button (click)="addMember()">Channel jetzt beitreten</button>
+    }
     </div>
-
   </mat-card>
   }
   @if(openThread()) {
