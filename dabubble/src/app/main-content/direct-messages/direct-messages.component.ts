@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, computed, effect, ElementRef, inject, Renderer2, signal, ViewChild, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,24 +13,32 @@ import { DirectThreadComponent } from './direct-thread/direct-thread.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogProfileComponent } from '../../dialog-profile/dialog-profile.component';
+import { MentionLinkPipe } from '../../../shared/pipes/mention-link.pipe';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ChannelService } from '../../../shared/services/channel.service';
 
 @Component({
   selector: 'app-direct-messages',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, FormsModule, CommonModule, PickerComponent, MatMenuModule, MatTooltipModule, DirectThreadComponent],
+  imports: [MatCardModule, MatIconModule, FormsModule, CommonModule, PickerComponent, MatMenuModule, MatTooltipModule, DirectThreadComponent, MentionLinkPipe],
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss'
 })
-export class DirectMessagesComponent {
+export class DirectMessagesComponent implements AfterViewInit {
   private firestore = inject(Firestore);
   private firestoreService = inject(UsersService);
+  private channelService = inject(ChannelService);
   private auth = inject(AuthService);
   private breakpointObserver = inject(BreakpointObserver);
   private changeDetectorRef = inject(ChangeDetectorRef);
   public dialog = inject(MatDialog)
+  private renderer = inject(Renderer2);
+  private sanitizer = inject(DomSanitizer);
 
   activeUser = this.firestoreService.activeUser;
+  activeChannel = this.channelService.activeChannel;
   users = this.firestoreService.users;
+  channels = this.channelService.channels;
   loggedUser = this.auth.userSignal;
   groupedMessages = this.firestoreService.groupedMessages;
   today = signal(new Date().toISOString().split('T')[0]);
@@ -47,7 +55,70 @@ export class DirectMessagesComponent {
   openThreadMobile = this.firestoreService.openThreadMobile;
   isMobileView: boolean = false;
   menuOpen: boolean = false;
+  inputTrigger = true;
 
+  @ViewChild('messageContainer', { static: false }) messageContainer!: ElementRef;
+
+  ngAfterViewInit() {
+    if (this.messageContainer) {
+      this.renderer.listen(this.messageContainer.nativeElement, 'click', (event: Event) => {
+        const target = event.target as HTMLElement;
+
+        // Behandlung für @Erwähnungen
+        if (target && target.classList.contains('mention-link')) {
+          const firstName = target.getAttribute('data-firstname');
+          const lastName = target.getAttribute('data-lastname');
+
+          if (firstName && lastName) {
+            this.searchUser(firstName, lastName);
+          } else {
+            console.error('FirstName oder LastName nicht gefunden.');
+          }
+        }
+
+        // Behandlung für #Hashtags
+        if (target && target.classList.contains('hashtag-link')) {
+          const name = target.getAttribute('data-name');
+
+          if (name) {
+            this.searchHashtag(name);
+          } else {
+            console.error('Hashtag-Name nicht gefunden.');
+          }
+        }
+      });
+    } else {
+      console.error('Element #messageContainer nicht gefunden.');
+    }
+  }
+
+  searchUser(firstName: string, lastName: string): void {
+    // Benutzer anhand Vor- und Nachname suchen
+    const foundUser = this.users().find(
+      (user) => user.firstName === firstName && user.lastName === lastName
+    );
+
+    if (foundUser) {
+      console.log(`Benutzer gefunden: ${foundUser.firstName} ${foundUser.lastName}, ID: ${foundUser.userId}`);
+      this.activeChannel.set(null);
+      this.activeUser.set(foundUser);
+    } else {
+      console.warn('Benutzer nicht gefunden');
+    }
+  }
+
+  searchHashtag(name: string): void {
+    const foundChannel = this.channels().find(
+      (channel) => channel.name === name
+    );
+    if (foundChannel) {
+      console.log(`Benutzer gefunden: ${foundChannel.name}, ID: ${foundChannel.id}`);
+      this.activeUser.set(null);
+      this.activeChannel.set(foundChannel);
+    } else {
+      console.warn('Benutzer nicht gefunden');
+    }
+  }
 
   loadThread(messageId: string) {
     if (!this.firestoreService.showThread()) {
@@ -143,12 +214,12 @@ export class DirectMessagesComponent {
   setHoveredMessageId(messageId: string | undefined): void {
     if (messageId && !this.menuOpen) {
       this.hoveredMessageId = messageId;
-    } 
+    }
   }
-  
+
   clearHoveredMessageId(messageId: string | undefined, event: MouseEvent): void {
     const target = event.relatedTarget as HTMLElement | null;
-  
+
     if (!this.menuOpen && (!target || !target.closest('.message-container'))) {
       this.hoveredMessageId = null;
     }
@@ -195,31 +266,30 @@ export class DirectMessagesComponent {
     const value = input.value;
   
     // Prüfe, ob das '@'-Zeichen direkt vor der aktuellen Cursorposition steht
-    if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {
+    if (cursorPosition > 0 && value[cursorPosition - 1] === '#') {
+      this.inputTrigger = false;
       this.check = false;
       this.menuTrigger.openMenu();
-    } else {
-      this.menuTrigger.closeMenu();
-    }
+    } else if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {         
+      this.inputTrigger = true;
+      this.check = false;
+      this.menuTrigger.openMenu();
+    } 
   }
-  
 
   toggleMenu() {
+    this.inputTrigger = true;
     this.menuTrigger.toggleMenu();
     this.check = !this.check;
-
   }
 
-  // addToMessage(selectedItem: string): void {
-  //   this.newMessage += `@${selectedItem} `;
-  // }
   @ViewChild('textarea') messageInput!: ElementRef<HTMLTextAreaElement>;
   check = false;
 
   addToMessage(selectedItem: string, viaButton: boolean = false): void {
     const textarea = this.messageInput.nativeElement;
     const cursorPosition = textarea.selectionStart;
-    
+
     // Prüfen, ob das letzte Zeichen ein "@" ist
     const isAtSymbolBefore = this.newMessage[cursorPosition - 1] === '@';
 
@@ -231,11 +301,11 @@ export class DirectMessagesComponent {
     }
 
     // Füge den Text an der aktuellen Cursorposition ein
-    this.newMessage = 
-      this.newMessage.slice(0, cursorPosition) + 
-      mentionText + 
+    this.newMessage =
+      this.newMessage.slice(0, cursorPosition) +
+      mentionText +
       this.newMessage.slice(cursorPosition);
-    
+
     // Fokus zurück ins Textarea setzen und Cursor hinter dem eingefügten Text positionieren
     setTimeout(() => {
       textarea.focus();
@@ -386,7 +456,7 @@ export class DirectMessagesComponent {
     this.editMessageId = messageId;
     this.temporaryMessage = message;
   }
-  
+
   toggleEditMenu(): void {
     this.menuOpen = !this.menuOpen;
   }

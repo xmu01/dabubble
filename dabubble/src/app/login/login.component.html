@@ -1,27 +1,19 @@
 <div class="splash-screen" *ngIf="showSplashScreen" [@backgroundFade]>
 
-  </div>
-  
-  <div class="splash-content" 
-  [@finalMoveAnimation]="moveToCorner ? 'moved' : 'initial'"
-  (@finalMoveAnimation.done)="onFinalMoveDone()">
+</div>
 
-<img src="./assets/img/logo-without-text.png" 
-    alt="Logo" 
-    class="splash-logo" 
-    [@logoAnimation] 
-    [@logoResizeAnimation]="moveToCorner ? 'moved' : 'initial'"
-    (@logoAnimation.done)="onLogoAnimationDone()">
+<div class="splash-content" *ngIf="showLogoAnimation" [@finalMoveAnimation]="moveToCorner ? 'moved' : 'initial'"
+    (@finalMoveAnimation.done)="onFinalMoveDone()">
 
-<span class="splash-text" 
-     *ngIf="textVisible" 
-     [@textAnimation] 
-     [@textStyleAnimation]="moveToCorner ? 'moved' : 'initial'"
-     (@textAnimation.done)="onTextAnimationDone()">
- DABubble
-</span>
+    <img src="./assets/img/logo-without-text.png" alt="Logo" class="splash-logo" [@logoAnimation]
+        [@logoResizeAnimation]="moveToCorner ? 'moved' : 'initial'" (@logoAnimation.done)="onLogoAnimationDone()">
 
-</div> 
+    <span class="splash-text" *ngIf="textVisible" [@textAnimation]
+        [@textStyleAnimation]="moveToCorner ? 'moved' : 'initial'" (@textAnimation.done)="onTextAnimationDone()">
+        DABubble
+    </span>
+
+</div>
 
 <div class="main-content">
     <div class="top-login">
@@ -89,7 +81,7 @@
                     </div>
 
                     <button class="login-btn" type="submit" [disabled]="loginForm.invalid">Anmelden</button>
-                    <button class="guest-btn" (click)="loginGuest()">Gäste Login</button>
+                    <button class="guest-btn" type="button" (click)="loginGuest()">Gäste Login</button>
                 </form>
             </mat-card-content>
         </mat-card>

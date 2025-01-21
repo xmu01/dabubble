@@ -164,11 +164,9 @@ export class ChannelService {
     // Erstelle das Hauptdokument (Channel)
     return addDoc(channelCollectionRef, newChannel)
       .then((channelDocRef) => {
-        console.log('Channel saved successfully:', channelDocRef.id);
 
       })
       .then(() => {
-        console.log('Messages subcollection initialized successfully.');
       })
       .catch((error) => {
         console.error('Error saving channel or initializing messages:', error);
@@ -185,7 +183,6 @@ export class ChannelService {
 
     return addDoc(userDocRef, newMessage)
       .then(() => {
-        console.log('Message saved successfully');
       })
       .catch((error) => {
         console.error('Error saving message:', error);
@@ -202,7 +199,6 @@ export class ChannelService {
 
     return addDoc(userDocRef, newMessage)
       .then(() => {
-        console.log('Message saved successfully');
       })
       .catch((error) => {
         console.error('Error saving message:', error);

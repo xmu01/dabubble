@@ -31,8 +31,13 @@ export class SignupComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
+  twoWordsRegex = /^(?:\S+\s+){1,}\S+$/;
+
   loginForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [
+      Validators.required,
+      Validators.pattern(this.twoWordsRegex)
+    ]),  
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     policy: new FormControl(false, [Validators.requiredTrue]),

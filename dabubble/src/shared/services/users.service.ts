@@ -167,7 +167,6 @@ export class UsersService {
 
     return addDoc(userDocRef, newMessage)
       .then(() => {
-        console.log('Message saved successfully');
       })
       .catch((error) => {
         console.error('Error saving message:', error);
@@ -184,7 +183,6 @@ export class UsersService {
   
       return addDoc(userDocRef, newMessage)
         .then(() => {
-          console.log('Message saved successfully');
         })
         .catch((error) => {
           console.error('Error saving message:', error);
@@ -304,7 +302,6 @@ export class UsersService {
   
     return setDoc(userDocRef, newUser) // `setDoc` statt `addDoc` verwenden
       .then(() => {
-        console.log('User saved successfully with ID:', user.userId);
       })
       .catch((error) => {
         console.error('Error creating a user: ', error);

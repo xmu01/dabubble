@@ -12,7 +12,8 @@
           @if (memberAvatars()!.length > 0) {
           @for (avatar of memberAvatars(); track avatar; let i = $index;) {
           <img class="members-image" [style.right.px]="memberAvatars()!.length == 1 ? -10 : (-25 + (i * 15))"
-            [src]="avatar ? './assets/img/profile-pictures/' + avatar : './assets/img/profile-pictures/profile_default.png'" alt="Member {{ i + 1 }}" />
+            [src]="avatar ? './assets/img/profile-pictures/' + avatar : './assets/img/profile-pictures/profile_default.png'"
+            alt="Member {{ i + 1 }}" />
           }
           }
           <span class="members-count" [innerHTML]="memberAvatars()!.length"></span>
@@ -22,16 +23,16 @@
         <button mat-mini-fab class="button-add-person" (click)="openAddMemberDialog()">
           <mat-icon fontSet="material-icons-outlined">person_add</mat-icon>
         </button>
-      } @else {
+        } @else {
         <button mat-mini-fab class="button-add-person" (click)="openMembersDialog()">
           <mat-icon fontSet="material-icons-outlined">person_add</mat-icon>
         </button>
-      }
+        }
       </div>
     </mat-card-header>
 
     <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false">
-      <div class="date-elements">
+      <div class="date-elements" #messageContainer>
         @for (group of groupedChannelMessages(); track group.date) {
         <div class="date-element">
           <span class="date">@if (group.date === (today() | date: 'yyyy-MM-dd')) {
@@ -57,14 +58,15 @@
               <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined"
                 (click)="loadThread(message.id!)">comment</mat-icon>
               @if(message.senderId == loggedUser()?.uid){
-              <mat-icon class="reaction-bar-symbol"
-                fontSet="material-icons-outlined" [matMenuTriggerFor]="editMessage" (click)="toggleEditMenu()">more_vert</mat-icon>
-                <mat-menu class="edit-message-menu" #editMessage="matMenu" (closed)="toggleEditMenu()">
-                  <button class="edit-message-button" mat-menu-item (click)="startEditingMessage(message.id, message.message!)">
-                    Nachricht bearbeiten
-                  </button>
-                </mat-menu>
-                
+              <mat-icon class="reaction-bar-symbol" fontSet="material-icons-outlined" [matMenuTriggerFor]="editMessage"
+                (click)="toggleEditMenu()">more_vert</mat-icon>
+              <mat-menu class="edit-message-menu" #editMessage="matMenu" (closed)="toggleEditMenu()">
+                <button class="edit-message-button" mat-menu-item
+                  (click)="startEditingMessage(message.id, message.message!)">
+                  Nachricht bearbeiten
+                </button>
+              </mat-menu>
+
               }
             </div>
 
@@ -74,7 +76,8 @@
               [showPreview]="false" [enableSearch]="false" [exclude]="['recent']" [style]="'position: fixed'"
               [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden' }"
               *ngIf="activeEmojiPickerMessageId === message.id" [perLine]="6"></emoji-mart>
-              <mat-icon *ngIf="activeEmojiPickerMessageId === message.id" class="emoji-close" fontSet="material-icons-outlined" (click)="toggleEmojiPicker(message.id)">close</mat-icon>
+            <mat-icon *ngIf="activeEmojiPickerMessageId === message.id" class="emoji-close"
+              fontSet="material-icons-outlined" (click)="toggleEmojiPicker(message.id)">close</mat-icon>
 
             <img [src]="message.senderId != loggedUser()?.uid 
                       ? './assets/img/profile-pictures/' + (getUserAvatar(message.senderId!) | async)
@@ -96,8 +99,8 @@
                   <emoji-mart #emojEditiPicker [set]="'google'" class="emojis" (emojiClick)="addEditEmoji($event)"
                     [showPreview]="false"
                     [i18n]="{ search: 'Suche', notfound: 'Keine Emojis gefunden', categories: { search: 'Suchergebnisse', recent: 'Zuletzt verwendet' } }"
-                    showSkinTones="true" [enableSearch]="false" [exclude]="['recent']"
-                    [style]="'position: fixed'" [perLine]="6"></emoji-mart>
+                    showSkinTones="true" [enableSearch]="false" [exclude]="['recent']" [style]="'position: fixed'"
+                    [perLine]="6"></emoji-mart>
                   }
                 </div>
               </div>
@@ -106,9 +109,11 @@
                 <p>{{ message.senderName }}</p>
                 <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
               </div>
-              <p [ngClass]="message.senderId == getLoggedUser()?.userId ? 'text-right' : 'text-left'">
+              <p [ngClass]="message.senderId == getLoggedUser()?.userId ? 'text-left' : 'text-right'" [innerHTML]="message.message | mentionLink"></p>
+
+              <!-- <p [ngClass]="message.senderId == getLoggedUser()?.userId ? 'text-right' : 'text-left'">
                 {{ message.message }}
-              </p>
+              </p> -->
               }
               <div class="reaction-container">
                 @for(reaction of message.reactionsGrouped || []; track reaction.reaction; let i = $index; let c =
@@ -181,10 +186,18 @@
       </textarea>
 
       <mat-menu #aboveMenu="matMenu" yPosition="above">
+        @if(inputTrigger === true) {
         @for (user of users(); track user) {
         <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName, false)">
           {{ user.firstName }} {{ user.lastName }}
         </button>
+        }
+        } @else {
+        @for (channel of channels(); track channel) {
+        <button mat-menu-item (click)="addToMessage(channel.name , false)">
+          {{ channel.name }}
+        </button>
+        }
         }
       </mat-menu>
 

@@ -63,13 +63,20 @@
 
 /* Hauptinhaltscontainer versteckt, wenn Splash-Screen aktiv ist */
 .main-content {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;;
+    height: 100vh;
 }
 
 .top-login {
     padding: 18px;
     display: flex;
     justify-content: space-between;
+    max-width: 1024px;
+    width: 100%;
 
     img {
         height: 70px;
@@ -90,10 +97,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
     text-align: center;
-
-
+    height: 100%;
+    max-width: 1024px;
+    width: 100%;
+    margin-bottom: 106px;
 
     ::ng-deep mat-card {
         border-top-left-radius: 20px !important;
@@ -102,7 +110,6 @@
         border-top-right-radius: 20px !important;
         height: 560px;
         width: 500px;
-        margin-top: 50px;
     }
 
     .inside-mat-card {

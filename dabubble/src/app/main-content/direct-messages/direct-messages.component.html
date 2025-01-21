@@ -14,7 +14,7 @@
         </mat-card-header>
 
         <mat-card-content class="direct-message-content" #scrollContainer (click)="showEmojis = false; ">
-            <div class="date-elements">
+            <div class="date-elements" #messageContainer>
                 @for (group of groupedMessages(); track group.date) {
                 <div class="date-element">
                     <span class="date">@if (group.date === (today() | date: 'yyyy-MM-dd')) {
@@ -93,9 +93,10 @@
                                 <p>{{ message.senderName }}</p>
                                 <p class="time">{{ message.timestamp.toDate() | date: 'HH:mm' }}</p>
                             </div>
-                            <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'">
-                                {{ message.message }}
-                            </p>
+                                <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'" [innerHTML]="message.message | mentionLink"></p>
+                            <!-- <p [ngClass]="message.senderId == activeUser()?.userId ? 'text-left' : 'text-right'" [innerHTML]="message.message! | mentionLink"> -->
+                                <!-- {{ message.message }} -->
+                            <!-- </p> -->
 
                             }
                             <div class="reaction-container">
@@ -180,11 +181,19 @@
         </textarea>
 
             <mat-menu #aboveMenu="matMenu" yPosition="above">
-                @for (user of users(); track user) {
-                <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName, false)">
-                    {{ user.firstName }} {{ user.lastName }}
-                </button>
-                }
+                @if(inputTrigger === true) {
+                    @for (user of users(); track user) {
+                    <button mat-menu-item (click)="addToMessage(user.firstName + ' ' + user.lastName, false)">
+                      {{ user.firstName }} {{ user.lastName }}
+                    </button>
+                    }
+                    } @else {
+                    @for (channel of channels(); track channel) {
+                    <button mat-menu-item (click)="addToMessage(channel.name , false)">
+                      {{ channel.name }}
+                    </button>
+                    }
+                    }
             </mat-menu>
 
             <div class="message-icon-bar">

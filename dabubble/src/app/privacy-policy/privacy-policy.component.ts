@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-privacy-policy',
@@ -15,7 +16,8 @@ import { CommonModule } from '@angular/common';
       MatInputModule,
       ReactiveFormsModule,
       MatIconModule,
-      FormsModule],
+      FormsModule,
+    RouterLink],
   templateUrl: './privacy-policy.component.html',
   styleUrl: './privacy-policy.component.scss'
 })

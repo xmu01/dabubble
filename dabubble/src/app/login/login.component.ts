@@ -78,7 +78,7 @@ import { Router, RouterLink } from '@angular/router';
 
 
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private userService = inject(UsersService);
   private router = inject(Router);
@@ -92,7 +92,8 @@ export class LoginComponent {
   errorMessage = '';
   hide = true;
 
-  showSplashScreen: boolean = true;
+  showSplashScreen: boolean = false;
+  showLogoAnimation: boolean = false;
 
   textVisible = false;
   moveToCorner = false;
@@ -155,6 +156,19 @@ export class LoginComponent {
         });
     }
 
+    ngOnInit() {
+      const isFirstVisit = sessionStorage.getItem('firstVisit') === null;
+  
+      if (isFirstVisit) {
+        this.showSplashScreen = true;
+        this.showLogoAnimation =true
+        sessionStorage.setItem('firstVisit', 'true'); 
+        setTimeout(() => {
+          this.showSplashScreen = false;
+          this.showLogoAnimation = false
+        }, 2500); 
+      }
+    }
 
   signInWithGoogle() {
     this.authService

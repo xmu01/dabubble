@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, effect, ElementRef, HostListener, inject, signal, ViewChild, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, effect, ElementRef, HostListener, inject, Renderer2, signal, ViewChild, viewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,15 +12,16 @@ import { from, map, Observable, shareReplay } from 'rxjs';
 import { collection, doc, Firestore, getDoc, onSnapshot, Timestamp } from '@angular/fire/firestore';
 import { Users } from '../../shared/interfaces/users';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MentionLinkPipe } from '../../shared/pipes/mention-link.pipe';
 
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, MatMenuModule, PickerComponent, CommonModule, FormsModule],
+  imports: [MatCardModule, MatIconModule, MatMenuModule, PickerComponent, CommonModule, FormsModule, MentionLinkPipe],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
-export class ThreadComponent {
+export class ThreadComponent implements AfterViewInit{
   newMessage: string = '';
   firestore = inject(Firestore);
   auth = inject(AuthService);
@@ -28,11 +29,13 @@ export class ThreadComponent {
   channelService = inject(ChannelService);
   private breakpointObserver = inject(BreakpointObserver);
   private changeDetectorRef = inject(ChangeDetectorRef);
-
+    private renderer = inject(Renderer2);
+  
   users = this.user.users;
+  channels = this.channelService.channels;
   loggedUser = this.auth.userSignal;
   activeUser = this.user.activeUser;
-  activeChannel = this.channelService.activeChannel();
+  activeChannel = this.channelService.activeChannel;
   showEmojis = false;
   contentElement = viewChild<ElementRef<HTMLDivElement>>('scrollThread');
   groupedChannelAnswers = this.channelService.groupedChannelAnswers;
@@ -46,7 +49,70 @@ export class ThreadComponent {
   showEditEmojis = false;
   isMobileView: boolean = false;
   openThreadMobile = this.channelService.openThreadMobile;
+  inputTrigger = true;
 
+  @ViewChild('messageContainer', { static: false }) messageContainer!: ElementRef;
+
+  ngAfterViewInit() {
+    if (this.messageContainer) {
+      this.renderer.listen(this.messageContainer.nativeElement, 'click', (event: Event) => {
+        const target = event.target as HTMLElement;
+
+        // Behandlung für @Erwähnungen
+        if (target && target.classList.contains('mention-link')) {
+          const firstName = target.getAttribute('data-firstname');
+          const lastName = target.getAttribute('data-lastname');
+
+          if (firstName && lastName) {
+            this.searchUser(firstName, lastName);
+          } else {
+            console.error('FirstName oder LastName nicht gefunden.');
+          }
+        }
+
+        // Behandlung für #Hashtags
+        if (target && target.classList.contains('hashtag-link')) {
+          const name = target.getAttribute('data-name');
+
+          if (name) {
+            this.searchHashtag(name);
+          } else {
+            console.error('Hashtag-Name nicht gefunden.');
+          }
+        }
+      });
+    } else {
+      console.error('Element #messageContainer nicht gefunden.');
+    }
+  }
+
+  searchUser(firstName: string, lastName: string): void {
+    // Benutzer anhand Vor- und Nachname suchen
+    const foundUser = this.users().find(
+      (user) => user.firstName === firstName && user.lastName === lastName
+    );
+
+    if (foundUser) {
+      console.log(`Benutzer gefunden: ${foundUser.firstName} ${foundUser.lastName}, ID: ${foundUser.userId}`);
+      this.activeChannel.set(null);
+      this.activeUser.set(foundUser);
+    } else {
+      console.warn('Benutzer nicht gefunden');
+    }
+  }
+
+  searchHashtag(name: string): void {
+    const foundChannel = this.channels().find(
+      (channel) => channel.name === name
+    );
+    if (foundChannel) {
+      console.log(`Benutzer gefunden: ${foundChannel.name}, ID: ${foundChannel.id}`);
+      this.activeUser.set(null);
+      this.activeChannel.set(foundChannel);
+    } else {
+      console.warn('Benutzer nicht gefunden');
+    }
+  }
 
   constructor() {
     effect(() => {
@@ -205,24 +271,23 @@ export class ThreadComponent {
     const value = input.value;
   
     // Prüfe, ob das '@'-Zeichen direkt vor der aktuellen Cursorposition steht
-    if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {
+    if (cursorPosition > 0 && value[cursorPosition - 1] === '#') {
+      this.inputTrigger = false;
       this.check = false;
       this.menuTrigger.openMenu();
-    } else {
-      this.menuTrigger.closeMenu();
-    }
+    } else if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {         
+      this.inputTrigger = true;
+      this.check = false;
+      this.menuTrigger.openMenu();
+    } 
   }
-  
 
   toggleMenu() {
+    this.inputTrigger = true;
     this.menuTrigger.toggleMenu();
     this.check = !this.check;
-
   }
 
-  // addToMessage(selectedItem: string): void {
-  //   this.newMessage += `@${selectedItem} `;
-  // }
   @ViewChild('textarea') messageInput!: ElementRef<HTMLTextAreaElement>;
   check = false;
 
@@ -329,7 +394,7 @@ export class ThreadComponent {
   }
 
   loadReactions(messageId: string): void {
-    const reactionsCollection = collection(this.firestore, `channels/${this.activeChannel!.id}/messages/${this.channelService.activeAnswer()}/answers/${messageId}/reactions`);
+    const reactionsCollection = collection(this.firestore, `channels/${this.activeChannel()!.id}/messages/${this.channelService.activeAnswer()}/answers/${messageId}/reactions`);
 
     onSnapshot(reactionsCollection, (querySnapshot) => {
       const reactionsMap = new Map<string, { count: number; userNames: string[] }>();

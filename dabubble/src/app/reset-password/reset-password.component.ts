@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { confirmPasswordReset, getAuth } from '@angular/fire/auth';
 import { AuthService } from '../../shared/services/auth.service';
 
@@ -27,10 +27,12 @@ import { AuthService } from '../../shared/services/auth.service';
 export class ResetPasswordComponent {
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private fb = inject(FormBuilder);
 
   // Signal für den oobCode
   oobCode = signal<string | null>(null);
+  success: boolean = false;
 
   // Formulargruppe
   resetPasswordForm: FormGroup = this.fb.group(
@@ -58,6 +60,11 @@ export class ResetPasswordComponent {
 
     if (oobCodeValue && password) {
       this.authService.setNewPassword(oobCodeValue, password);
+      this.success = true;
     }
+
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }, 1000);
   }
 }

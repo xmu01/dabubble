@@ -80,7 +80,7 @@ export class AuthService {
   setNewPassword(oobCodeValue: string, newPassword: string) {
     confirmPasswordReset(this.auth, oobCodeValue, newPassword)
       .then(() => {
-        alert('Passwort erfolgreich zurückgesetzt.');
+        
       })
       .catch((error) => {
         console.error('Fehler beim Zurücksetzen des Passworts:', error);
@@ -92,7 +92,6 @@ export class AuthService {
   async sendEmailForPasswordReset(email: string): Promise<{ success: boolean; message: string }> {
     try {
       await sendPasswordResetEmail(this.auth, email);
-      console.log('Erfolgreich versendet');
       return { success: true, message: 'E-Mail zum Zurücksetzen des Passworts wurde gesendet.' };
     } catch (error: any) {
       const errorCode = error.code;

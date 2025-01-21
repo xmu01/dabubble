@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, computed, effect, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, computed, effect, ElementRef, inject, Renderer2, signal, ViewChild, viewChild } from '@angular/core';
 import { collection, doc, Firestore, getDoc, onSnapshot, Timestamp } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -17,15 +17,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogShowMembersComponent } from './dialog-show-members/dialog-show-members.component';
 import { DialogAddMembersComponent } from './dialog-add-members/dialog-add-members.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MentionLinkPipe } from '../../../shared/pipes/mention-link.pipe';
 
 @Component({
   selector: 'app-channel-messages',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, MatMenuModule, PickerComponent, CommonModule, FormsModule, ThreadComponent],
+  imports: [MatCardModule, MatIconModule, MatMenuModule, PickerComponent, CommonModule, FormsModule, ThreadComponent, MentionLinkPipe],
   templateUrl: './channel-messages.component.html',
   styleUrl: './channel-messages.component.scss'
 })
-export class ChannelMessagesComponent {
+export class ChannelMessagesComponent implements AfterViewInit {
   newMessage: string = '';
   private firestore = inject(Firestore);
   private firestoreService = inject(UsersService);
@@ -33,8 +34,10 @@ export class ChannelMessagesComponent {
   private auth = inject(AuthService);
   private breakpointObserver = inject(BreakpointObserver);
   private changeDetectorRef = inject(ChangeDetectorRef);
+  private renderer = inject(Renderer2);
 
   users = this.firestoreService.users;
+  channels = this.channelService.channels;
   loggedUser = this.auth.userSignal;
   activeUser = this.firestoreService.activeUser;
   activeChannel = this.channelService.activeChannel;
@@ -53,6 +56,70 @@ export class ChannelMessagesComponent {
   isMobileView: boolean = false;
   openThreadMobile = this.channelService.openThreadMobile;
   menuOpen: boolean = false;
+  inputTrigger = true;
+
+  @ViewChild('messageContainer', { static: false }) messageContainer!: ElementRef;
+
+  ngAfterViewInit() {
+    if (this.messageContainer) {
+      this.renderer.listen(this.messageContainer.nativeElement, 'click', (event: Event) => {
+        const target = event.target as HTMLElement;
+
+        // Behandlung für @Erwähnungen
+        if (target && target.classList.contains('mention-link')) {
+          const firstName = target.getAttribute('data-firstname');
+          const lastName = target.getAttribute('data-lastname');
+
+          if (firstName && lastName) {
+            this.searchUser(firstName, lastName);
+          } else {
+            console.error('FirstName oder LastName nicht gefunden.');
+          }
+        }
+
+        // Behandlung für #Hashtags
+        if (target && target.classList.contains('hashtag-link')) {
+          const name = target.getAttribute('data-name');
+
+          if (name) {
+            this.searchHashtag(name);
+          } else {
+            console.error('Hashtag-Name nicht gefunden.');
+          }
+        }
+      });
+    } else {
+      console.error('Element #messageContainer nicht gefunden.');
+    }
+  }
+
+  searchUser(firstName: string, lastName: string): void {
+    // Benutzer anhand Vor- und Nachname suchen
+    const foundUser = this.users().find(
+      (user) => user.firstName === firstName && user.lastName === lastName
+    );
+
+    if (foundUser) {
+      console.log(`Benutzer gefunden: ${foundUser.firstName} ${foundUser.lastName}, ID: ${foundUser.userId}`);
+      this.activeChannel.set(null);
+      this.activeUser.set(foundUser);
+    } else {
+      console.warn('Benutzer nicht gefunden');
+    }
+  }
+
+  searchHashtag(name: string): void {
+    const foundChannel = this.channels().find(
+      (channel) => channel.name === name
+    );
+    if (foundChannel) {
+      console.log(`Benutzer gefunden: ${foundChannel.name}, ID: ${foundChannel.id}`);
+      this.activeUser.set(null);
+      this.activeChannel.set(foundChannel);
+    } else {
+      console.warn('Benutzer nicht gefunden');
+    }
+  }
 
   constructor(public dialog: MatDialog) {
 
@@ -217,22 +284,22 @@ export class ChannelMessagesComponent {
     const value = input.value;
   
     // Prüfe, ob das '@'-Zeichen direkt vor der aktuellen Cursorposition steht
-    if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {
+    if (cursorPosition > 0 && value[cursorPosition - 1] === '#') {
+      this.inputTrigger = false;
       this.check = false;
       this.menuTrigger.openMenu();
-    } else {
-      this.menuTrigger.closeMenu();
-    }
+    } else if (cursorPosition > 0 && value[cursorPosition - 1] === '@') {         
+      this.inputTrigger = true;
+      this.check = false;
+      this.menuTrigger.openMenu();
+    } 
   }
+
   toggleMenu() {
+    this.inputTrigger = true;
     this.menuTrigger.toggleMenu();
     this.check = !this.check;
-
   }
-
-  // addToMessage(selectedItem: string): void {
-  //   this.newMessage += ` ${selectedItem}`;
-  // }
 
   @ViewChild('textarea') messageInput!: ElementRef<HTMLTextAreaElement>;
   check = false;
